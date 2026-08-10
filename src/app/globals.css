@@ -24,35 +24,41 @@
   --color-labelashb-error: #b3261e;
   --color-labelashb-error-soft: #f8e9e8;
 
-  /* Type: one family, extreme size contrast */
+  /* Type: one family, extreme size contrast
+   * Namespace is --text-*, NOT --font-size-* - verified against
+   * node_modules/tailwindcss/theme.css and the compiled engine's own
+   * resolveWith(value, ["--text"], ["--line-height","--letter-spacing",
+   * "--font-weight"]) call. Using --font-size-* here silently produced
+   * zero utilities sitewide (every text-labelashb-* class rendered at
+   * the browser default 16px) until caught by visual review. */
   --font-labelashb-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
 
-  --font-size-labelashb-display: 4.5rem;
-  --font-size-labelashb-display--line-height: 1.03;
-  --font-size-labelashb-display--letter-spacing: -0.02em;
+  --text-labelashb-display: 4.5rem;
+  --text-labelashb-display--line-height: 1.03;
+  --text-labelashb-display--letter-spacing: -0.02em;
 
-  --font-size-labelashb-h1: 3rem;
-  --font-size-labelashb-h1--line-height: 1.08;
-  --font-size-labelashb-h1--letter-spacing: -0.015em;
+  --text-labelashb-h1: 3rem;
+  --text-labelashb-h1--line-height: 1.08;
+  --text-labelashb-h1--letter-spacing: -0.015em;
 
-  --font-size-labelashb-h2: 2rem;
-  --font-size-labelashb-h2--line-height: 1.15;
+  --text-labelashb-h2: 2rem;
+  --text-labelashb-h2--line-height: 1.15;
 
-  --font-size-labelashb-h3: 1.5rem;
-  --font-size-labelashb-h3--line-height: 1.25;
+  --text-labelashb-h3: 1.5rem;
+  --text-labelashb-h3--line-height: 1.25;
 
-  --font-size-labelashb-body-lg: 1.125rem;
-  --font-size-labelashb-body-lg--line-height: 1.6;
+  --text-labelashb-body-lg: 1.125rem;
+  --text-labelashb-body-lg--line-height: 1.6;
 
-  --font-size-labelashb-body: 1rem;
-  --font-size-labelashb-body--line-height: 1.6;
+  --text-labelashb-body: 1rem;
+  --text-labelashb-body--line-height: 1.6;
 
-  --font-size-labelashb-small: 0.875rem;
-  --font-size-labelashb-small--line-height: 1.5;
+  --text-labelashb-small: 0.875rem;
+  --text-labelashb-small--line-height: 1.5;
 
-  --font-size-labelashb-eyebrow: 0.75rem;
-  --font-size-labelashb-eyebrow--line-height: 1.4;
-  --font-size-labelashb-eyebrow--letter-spacing: 0.12em;
+  --text-labelashb-eyebrow: 0.75rem;
+  --text-labelashb-eyebrow--line-height: 1.4;
+  --text-labelashb-eyebrow--letter-spacing: 0.12em;
 
   /* Radius: near-flat, minimal */
   --radius-labelashb-sm: 1px;
