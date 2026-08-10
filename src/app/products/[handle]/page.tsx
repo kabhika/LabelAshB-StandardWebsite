@@ -1,8 +1,32 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/lib/shopify/catalog";
 import { Gallery } from "@/components/catalog/Gallery";
 import { SizeSelector } from "@/components/catalog/SizeSelector";
 import { demoteH1 } from "@/lib/html";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { breadcrumbJsonLd, productJsonLd, truncateDescription } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/products/[handle]">): Promise<Metadata> {
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
+  if (!product) return {};
+
+  const description = truncateDescription(product.description);
+
+  return {
+    title: product.title,
+    description,
+    alternates: { canonical: `/products/${product.handle}` },
+    openGraph: product.images[0]
+      ? {
+          images: [{ url: product.images[0].url }],
+        }
+      : undefined,
+  };
+}
 
 function formatPrice(amount: number, currencyCode: string) {
   return new Intl.NumberFormat("en-IN", {
@@ -36,6 +60,14 @@ export default async function ProductPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
+      <JsonLd data={productJsonLd(product)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Shop All", path: "/products" },
+          { name: product.title, path: `/products/${product.handle}` },
+        ])}
+      />
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <Gallery images={product.images} productTitle={product.title} />
 

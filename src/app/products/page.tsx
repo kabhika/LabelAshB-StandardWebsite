@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import { getCatalog } from "@/lib/shopify/catalog";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ProductFilters } from "@/components/catalog/ProductFilters";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Shop All",
+  description:
+    "Browse the full Label AshB collection of linen, silk and cotton dresses, tops and co-ord sets, filterable by category and fabric.",
+  alternates: { canonical: "/products" },
+};
 
 export default async function ProductsPage({
   searchParams,
@@ -18,6 +28,12 @@ export default async function ProductsPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Shop All", path: "/products" },
+        ])}
+      />
       <h1 className="text-labelashb-h1 text-labelashb-ink">Shop All</h1>
       <p className="mt-2 text-labelashb-body text-labelashb-ink-soft">
         {products.length} {products.length === 1 ? "piece" : "pieces"}
