@@ -3,11 +3,13 @@
 import { useState } from "react";
 import type { NormalizedVariant } from "@/lib/shopify/catalog";
 import { Button } from "@/components/ui/Button";
+import { useCart } from "@/components/cart/CartContext";
 
 export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
   const firstAvailable = variants.find((v) => v.available);
   const [selectedId, setSelectedId] = useState(firstAvailable?.id ?? null);
   const selected = variants.find((v) => v.id === selectedId);
+  const { addToCart, isLoading, error } = useCart();
 
   return (
     <div>
@@ -39,17 +41,22 @@ export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
       </div>
 
       <div className="mt-6">
-        <Button variant="primary" disabled={!selected} className="w-full sm:w-auto">
-          {selected ? "Add to cart" : "Out of stock"}
+        <Button
+          variant="primary"
+          disabled={!selected || isLoading}
+          className="w-full sm:w-auto"
+          onClick={() => selected && addToCart(selected.id, 1)}
+        >
+          {selected ? (isLoading ? "Adding..." : "Add to cart") : "Out of stock"}
         </Button>
         {!firstAvailable && (
           <p className="mt-2 text-labelashb-small text-labelashb-error">
             All sizes are currently out of stock.
           </p>
         )}
-        <p className="mt-2 text-labelashb-small text-labelashb-ink-soft">
-          Cart and checkout land in Phase 4 — this button is a placeholder.
-        </p>
+        {error && (
+          <p className="mt-2 text-labelashb-small text-labelashb-error">{error}</p>
+        )}
       </div>
     </div>
   );
