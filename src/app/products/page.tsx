@@ -1,7 +1,8 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getCatalog } from "@/lib/shopify/catalog";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { ProductFilters } from "@/components/catalog/ProductFilters";
+import { ProductFilters, materialLabel } from "@/components/catalog/ProductFilters";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
@@ -26,6 +27,13 @@ export default async function ProductsPage({
     return true;
   });
 
+  // Real materials this category actually comes in (not the full KNOWN_MATERIALS
+  // list) - used to give the empty state a true, useful alternative rather than
+  // a generic "try something else."
+  const availableMaterialsForCategory = category
+    ? [...new Set(catalog.filter((p) => p.category === category).flatMap((p) => p.materials))]
+    : [];
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <JsonLd
@@ -45,15 +53,49 @@ export default async function ProductsPage({
           <ProductFilters activeCategory={category} activeMaterial={material} />
         </aside>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div>
           {products.length === 0 ? (
-            <p className="text-labelashb-body text-labelashb-ink-soft">
-              No pieces match this filter right now.
-            </p>
+            <div className="max-w-md py-8">
+              <p className="text-labelashb-body-lg text-labelashb-ink">
+                {category && material
+                  ? `${category} doesn't come in ${materialLabel(material)}.`
+                  : category
+                    ? `No pieces in ${category} right now.`
+                    : `No pieces in ${materialLabel(material ?? "")} right now.`}
+              </p>
+
+              {category && availableMaterialsForCategory.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft mb-2">
+                    {category} comes in
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {availableMaterialsForCategory.map((m) => (
+                      <Link
+                        key={m}
+                        href={`/products?category=${encodeURIComponent(category)}&material=${encodeURIComponent(m)}`}
+                        className="border border-labelashb-border px-3 py-1.5 text-labelashb-eyebrow uppercase text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink"
+                      >
+                        {materialLabel(m)}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <Link
+                href="/products"
+                className="mt-6 inline-block text-labelashb-small text-labelashb-accent underline"
+              >
+                Clear filters
+              </Link>
+            </div>
           ) : (
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
+            <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           )}
         </div>
       </div>

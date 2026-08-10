@@ -1,3 +1,18 @@
+## Visual QA gate (standing rule)
+
+Before marking any page or component "done," in addition to the existing
+technical gates (build passes, one h1, alt text, etc.), take a screenshot via
+claude-in-chrome and actually look at it. Ask: does this look like a designed
+page, or like functional-but-unstyled defaults? Specifically check for:
+- Generic browser-default form controls (checkboxes, radio buttons, plain
+  borders on buttons/chips)
+- Dead-end empty states with no way back
+- Whether real content is filling the space, or it looks sparse/placeholder-ish
+
+This is a separate check from the build gate, not a replacement for it. A page
+can pass every technical gate and still fail this one — that already happened
+twice on this project (homepage, shop page filters) before this rule existed.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

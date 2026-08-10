@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DISPLAY_CATEGORIES, KNOWN_MATERIALS } from "@/lib/shopify/catalog";
 
-function materialLabel(slug: string): string {
+export function materialLabel(slug: string): string {
   return slug
     .split("-")
     .map((part) => part[0].toUpperCase() + part.slice(1))
@@ -21,6 +21,20 @@ function buildHref(
   return qs ? `/products?${qs}` : "/products";
 }
 
+// Selected state uses accent-soft/accent, not a solid ink fill - chips are
+// toggles, not buttons, and shouldn't compete with the primary CTA's solid
+// treatment. Unselected/hover only move between the existing ink/ink-soft/
+// ground-alt neutrals - no new colors.
+const CHIP_BASE =
+  "border px-3 py-1.5 text-labelashb-eyebrow uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
+const CHIP_SELECTED = "border-labelashb-accent bg-labelashb-accent-soft text-labelashb-accent";
+const CHIP_UNSELECTED =
+  "border-labelashb-border text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink";
+
+function chipClass(selected: boolean) {
+  return `${CHIP_BASE} ${selected ? CHIP_SELECTED : CHIP_UNSELECTED}`;
+}
+
 export function ProductFilters({
   activeCategory,
   activeMaterial,
@@ -31,19 +45,15 @@ export function ProductFilters({
   const current = { category: activeCategory, material: activeMaterial };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div>
-        <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft mb-2">
+        <p className="mb-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
           Category
         </p>
         <div className="flex flex-wrap gap-2">
           <Link
             href={buildHref(current, { category: undefined })}
-            className={`border px-3 py-1.5 text-labelashb-small ${
-              !activeCategory
-                ? "border-labelashb-ink bg-labelashb-ink text-labelashb-ground"
-                : "border-labelashb-border text-labelashb-ink-soft"
-            }`}
+            className={chipClass(!activeCategory)}
           >
             All
           </Link>
@@ -51,11 +61,7 @@ export function ProductFilters({
             <Link
               key={category}
               href={buildHref(current, { category })}
-              className={`border px-3 py-1.5 text-labelashb-small ${
-                activeCategory === category
-                  ? "border-labelashb-ink bg-labelashb-ink text-labelashb-ground"
-                  : "border-labelashb-border text-labelashb-ink-soft"
-              }`}
+              className={chipClass(activeCategory === category)}
             >
               {category}
             </Link>
@@ -64,17 +70,13 @@ export function ProductFilters({
       </div>
 
       <div>
-        <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft mb-2">
+        <p className="mb-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
           Material
         </p>
         <div className="flex flex-wrap gap-2">
           <Link
             href={buildHref(current, { material: undefined })}
-            className={`border px-3 py-1.5 text-labelashb-small ${
-              !activeMaterial
-                ? "border-labelashb-ink bg-labelashb-ink text-labelashb-ground"
-                : "border-labelashb-border text-labelashb-ink-soft"
-            }`}
+            className={chipClass(!activeMaterial)}
           >
             All
           </Link>
@@ -82,11 +84,7 @@ export function ProductFilters({
             <Link
               key={material}
               href={buildHref(current, { material })}
-              className={`border px-3 py-1.5 text-labelashb-small ${
-                activeMaterial === material
-                  ? "border-labelashb-ink bg-labelashb-ink text-labelashb-ground"
-                  : "border-labelashb-border text-labelashb-ink-soft"
-              }`}
+              className={chipClass(activeMaterial === material)}
             >
               {materialLabel(material)}
             </Link>
