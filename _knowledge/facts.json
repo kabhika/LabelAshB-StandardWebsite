@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "purpose": "Non-commerce facts only. All commerce data (price, stock, title, description, images, variants) comes live from the Storefront API at request time and must never be duplicated here.",
+    "source": "Shopify Admin API (Online Store pages) + Shopify Storefront API (shop.*Policy fields)",
+    "domain": "labelashb.in",
+    "myshopifyDomain": "qb5mnk-t4.myshopify.com",
+    "fetchedAt": "2026-08-10"
+  },
+  "brand": {
+    "name": "Label AshB",
+    "shortDescription": "Shop handcrafted linen dresses, co-ord sets, shirts, tops and silk clothing by Label AshB. Ready-to-ship and made-to-order styles designed for comfort, craft and individuality.",
+    "aboutHtml": "<p>Label AshB is a small boutique clothing label built around thoughtful design, careful fabric selection, and honest craftsmanship.</p>\n<p>At our atelier, every design begins on paper. It is then developed as a prototype, refined for fit and comfort, and created with close attention to finish and quality. We do not treat our clothes as batch-processed products. Each piece is made with time, care, and a clear eye for detail.</p>\n<p>Our materials are sourced individually and chosen for their feel, fall, texture, and lasting beauty. We use the best fabrics available to us, without rushing the process or compromising on quality.</p>\n<p>As a young label, we believe in keeping things simple. We spend our energy on the garment itself: the fabric, the fit, the finishing, and the way it feels when worn. Some details are best appreciated in person, where the texture, movement, and quiet elegance of each piece can truly be seen.</p>\n<p>Label AshB is for women who value clothing that feels personal, graceful, and carefully made.</p>",
+    "sourcePage": "Admin > Online Store > Pages > About Us (handle: about-us)"
+  },
+  "contact": {
+    "email": "sales@labelashb.in",
+    "phone": "+91 98107 25683",
+    "whatsapp": "+91 98107 25683",
+    "address": "1030, Sector 17B, Gurugram, Haryana 122001, India",
+    "hours": "Monday to Saturday, 10:00 AM to 6:00 PM IST",
+    "contactPageHtml": "<p>For order queries, custom sizing, or made-to-order support, contact Label AshB by email at sales@labelashb.in or WhatsApp on +91 98107 25683.</p>",
+    "sourcePage": "Admin > Online Store > Pages > Contact (handle: contact)",
+    "note": "sales@labelashb.in / +91 98107 25683 is the public-facing contact. binita.rai@gmail.com is the Shopify account owner email, not for public display."
+  },
+  "sizeGuide": {
+    "bodyHtml": "<p>Find your perfect fit with our Label AshB size guide.</p>\n<p>All measurements are in inches. If you are between sizes, we recommend sizing up for comfort.</p>\n<p>Sizes XXXL and above are made-to-order/customized. Made-to-order/customized pieces may take 2-3 weeks depending on the design.</p>",
+    "pdfUrl": "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/LabelAshB_Size_Guide.pdf",
+    "sourcePage": "Admin > Online Store > Pages > Size Guide (handle: size-guide)"
+  },
+  "careInstructions": {
+    "bodyHtml": "<p>At Label AshB, we use premium fabrics including handloom linen, pure silk crepe, Indian mulberry silk, and other carefully selected materials.</p>\n<p><strong>Dry clean only</strong></p>\n<p>We highly recommend dry cleaning for all our dresses and garments. Natural fibers and intricate handblock prints require gentle, professional handling. Dry cleaning helps prevent shrinkage, color bleeding, and fabric distortion.</p>\n<p><strong>Storage</strong><br>Store your garments in a cool, dry place out of direct sunlight to prevent fading. Use breathable cotton garment bags, especially for silks and crepes.</p>\n<p><strong>Ironing</strong><br>Use a low-heat setting or a professional steamer. Never iron directly on prints or delicate silks. Always iron inside out or use a protective pressing cloth.</p>\n<p><strong>Fragrance</strong><br>Avoid spraying perfumes or deodorants directly onto the fabric, particularly silks, as they can cause stubborn stains.</p>\n<p>For questions about a specific fabric or piece, contact us at sales@labelashb.in or WhatsApp +91 98107 25683.</p>",
+    "sourcePage": "Admin > Online Store > Pages > Care Instructions (handle: care-instructions)"
+  },
+  "faqs": {
+    "bodyHtml": "<h2>Our Brand</h2>\n<h3>What is the style philosophy at Label AshB?</h3>\n<p>We design for the modern woman, whether a multifaceted professional or someone who values refined comfort and individuality.</p>\n<p>Our collection features desk-to-dinner versatility, party wear, relaxed casual styles, and everyday essentials with clean cuts, captivating colors, and careful craftsmanship.</p>\n<h3>What makes your fabrics stand out?</h3>\n<p>Crafted from luxurious, breathable pure linen, silk, and cotton, our dresses are tailored in clean, comfortable cuts.</p>\n<p>They are designed to keep you looking and feeling fresh from 9 AM to 9 PM and beyond.</p>\n<h2>Fit &amp; Customization</h2>\n<h3>Do you offer custom sizing or color options?</h3>\n<p>We offer customizations of the dress and color where the design permits.</p>\n<p>Please contact us via WhatsApp or call +91 98107 25683 to create your bespoke piece with our team.</p>\n<h3>How inclusive is your sizing?</h3>\n<p>We offer sizes XS to 6XL. Most garments feature a relaxed, anti-fit silhouette designed to flatter different body types.</p>\n<p>Refer to our Size Guide or WhatsApp us at +91 98107 25683 for a recommendation.</p>\n<h2>Orders &amp; Payments</h2>\n<h3>How do I place an order?</h3>\n<p>Browse our collections, select your size, add to cart, and proceed to checkout.</p>\n<p>You can also place orders directly by calling or messaging +91 98107 25683 or emailing sales@labelashb.in.</p>\n<h3>What payment methods do you accept?</h3>\n<p>Prepaid payments are accepted through credit cards, debit cards, UPI, Net Banking, and wallets.</p>\n<p>Cash on Delivery is through UPI payments for local orders. Outstation orders require prepayment due to shipping charges.</p>\n<h3>Can I place a bulk or corporate gifting order?</h3>\n<p>Yes. Email sales@labelashb.in to discuss your requirements.</p>\n<h2>Shipping &amp; Delivery</h2>\n<h3>How long does delivery take?</h3>\n<p>Ready-to-ship items are dispatched within 2 working days and delivered within 3-5 business days.</p>\n<p>Made-to-order/customized pieces may take 2-3 weeks depending on the design.</p>\n<h3>What are the shipping charges?</h3>\n<p>We offer free standard shipping on all dress orders within India.</p>\n<p>International orders are shipped via DHL Express, with charges calculated at checkout. Import duties are the customer’s responsibility.</p>\n<h2>Returns &amp; Exchanges</h2>\n<h3>What is your return policy?</h3>\n<p>We operate primarily on a made-to-order model and do not accept general returns.</p>\n<p>We accommodate exchanges for genuine fit issues. The customer is responsible for shipping charges in exchange scenarios.</p>\n<h3>My item arrived damaged. What do I do?</h3>\n<p>Contact us within 48 hours of delivery at sales@labelashb.in or WhatsApp +91 98107 25683.</p>\n<p>Provide photos and an unedited unboxing video. Keep original tags intact and do not wash the item.</p>\n<p>We will offer a free replacement/exchange within 7-10 business days.</p>\n<h3>Can I cancel my order?</h3>\n<p>Each piece is crafted specifically for you, therefore cancellations are generally not accepted.</p>\n<p>Non-customized orders may be cancelled within 24 hours. For urgent modifications, contact us immediately at +91 98107 25683.</p>",
+    "sourcePage": "Admin > Online Store > Pages > FAQs (handle: faqs)"
+  },
+  "policies": {
+    "shipping": {
+      "title": "Shipping Policy",
+      "sourceUrl": "https://checkout.shopify.com/64784597051/policies/32913817659.html?locale=en",
+      "note": "Full body is long-form HTML (13 sections). Fetched via Storefront API shop.shippingPolicy.body and stored verbatim in facts-policies.json to keep this file readable.",
+      "effectiveDate": "2025-01-13"
+    },
+    "refund": {
+      "title": "Refund Policy",
+      "sourceUrl": "https://checkout.shopify.com/64784597051/policies/32913784891.html?locale=en",
+      "note": "Full body is long-form HTML. Fetched via Storefront API shop.refundPolicy.body and stored verbatim in facts-policies.json.",
+      "effectiveDate": "2025-01-13"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sourceUrl": "https://checkout.shopify.com/64784597051/policies/32113000507.html?locale=en",
+      "note": "Full body is long-form HTML. Fetched via Storefront API shop.privacyPolicy.body and stored verbatim in facts-policies.json.",
+      "effectiveDate": "2025-01-13"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "sourceUrl": "https://checkout.shopify.com/64784597051/policies/32913850427.html?locale=en",
+      "note": "Full body is long-form HTML. Fetched via Storefront API shop.termsOfService.body and stored verbatim in facts-policies.json.",
+      "effectiveDate": "2025-01-13"
+    }
+  },
+  "taxonomy": {
+    "note": "Live productType values seen from the catalog: 'Dress', 'Tops', 'outfit sets' (active products) and 'Co-ord Set' (the draft product). Normalize 'outfit sets' and 'Co-ord Set' into a single display category, mapping done in code (src/lib/shopify/catalog.ts), not here.",
+    "displayCategories": {
+      "Dress": "Dresses",
+      "Tops": "Tops",
+      "outfit sets": "Co-ord Sets",
+      "Co-ord Set": "Co-ord Sets"
+    },
+    "materialTagsObserved": ["linen", "crepe-silk", "chanderi-silk", "cotton", "modal-silk"]
+  }
+}

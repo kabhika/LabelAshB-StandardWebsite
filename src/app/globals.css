@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/*
+ * Studio Minimal token set. Every custom token is namespaced
+ * "labelashb-" so it can never collide with Tailwind's built-in scale
+ * names (a bare --spacing-* key, for example, collides with the scale
+ * backing max-w-* and silently breaks widths sitewide — do not add one).
+ *
+ * Accent hex (#34365e) sampled from a real product photo ("The Indigo
+ * Swallow" linen shirt, plain-fabric fold region), not eyeballed or
+ * pulled from a generic example palette. See PLAN.md §3.
+ */
+@theme {
+  /* Color: monochrome ink/ground + one indigo accent */
+  --color-labelashb-ink: #17181c;
+  --color-labelashb-ink-soft: #55575f;
+  --color-labelashb-ground: #faf9f7;
+  --color-labelashb-ground-alt: #f1efec;
+  --color-labelashb-border: #e2dfda;
+  --color-labelashb-accent: #34365e;
+  --color-labelashb-accent-hover: #262740;
+  --color-labelashb-accent-foreground: #f5f4f2;
+  --color-labelashb-accent-soft: #e6e6ee;
+  --color-labelashb-error: #b3261e;
+  --color-labelashb-error-soft: #f8e9e8;
+
+  /* Type: one family, extreme size contrast */
+  --font-labelashb-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --font-size-labelashb-display: 4.5rem;
+  --font-size-labelashb-display--line-height: 1.03;
+  --font-size-labelashb-display--letter-spacing: -0.02em;
+
+  --font-size-labelashb-h1: 3rem;
+  --font-size-labelashb-h1--line-height: 1.08;
+  --font-size-labelashb-h1--letter-spacing: -0.015em;
+
+  --font-size-labelashb-h2: 2rem;
+  --font-size-labelashb-h2--line-height: 1.15;
+
+  --font-size-labelashb-h3: 1.5rem;
+  --font-size-labelashb-h3--line-height: 1.25;
+
+  --font-size-labelashb-body-lg: 1.125rem;
+  --font-size-labelashb-body-lg--line-height: 1.6;
+
+  --font-size-labelashb-body: 1rem;
+  --font-size-labelashb-body--line-height: 1.6;
+
+  --font-size-labelashb-small: 0.875rem;
+  --font-size-labelashb-small--line-height: 1.5;
+
+  --font-size-labelashb-eyebrow: 0.75rem;
+  --font-size-labelashb-eyebrow--line-height: 1.4;
+  --font-size-labelashb-eyebrow--letter-spacing: 0.12em;
+
+  /* Radius: near-flat, minimal */
+  --radius-labelashb-sm: 1px;
+  --radius-labelashb-md: 2px;
+}
+
+body {
+  font-family: var(--font-labelashb-sans);
+}
