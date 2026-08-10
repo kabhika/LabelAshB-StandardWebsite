@@ -93,13 +93,15 @@ function normalizeCategory(productType: string): string {
   return CATEGORY_MAP[key] ?? productType;
 }
 
-const KNOWN_MATERIALS = [
+export const KNOWN_MATERIALS = [
   "linen",
   "crepe-silk",
   "chanderi-silk",
   "cotton",
   "modal-silk",
 ];
+
+export const DISPLAY_CATEGORIES = [...new Set(Object.values(CATEGORY_MAP))];
 
 function extractMaterials(tags: string[]): string[] {
   return tags.filter((tag) => KNOWN_MATERIALS.includes(tag.toLowerCase()));
