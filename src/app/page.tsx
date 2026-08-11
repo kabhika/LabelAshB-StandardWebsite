@@ -84,7 +84,7 @@ export default async function Home() {
             <h1 className="text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
               Linen. Silk. Cotton.
             </h1>
-            <p className="mt-6 line-clamp-4 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
+            <p className="mt-6 line-clamp-3 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
               Made with time, care, and a clear eye for detail.{" "}
               {facts.brand.shortDescription}
             </p>
@@ -104,10 +104,15 @@ export default async function Home() {
       <section className="px-6 py-20 sm:px-10">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex items-baseline justify-between">
-            <h2 className="text-labelashb-h2 text-labelashb-ink">Featured</h2>
+            {/* Border-bottom accent, not a separate decorative mark - reuses
+                the same accent-underline language as SiteNav's active
+                indicator instead of inventing a new device. */}
+            <h2 className="inline-block border-b-2 border-labelashb-accent pb-2 text-labelashb-h2 text-labelashb-ink">
+              Featured
+            </h2>
             <Link
               href="/products"
-              className="text-labelashb-small text-labelashb-accent underline"
+              className="text-labelashb-small text-labelashb-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
             >
               View all
             </Link>
@@ -119,7 +124,7 @@ export default async function Home() {
               </p>
               <Link
                 href="/products"
-                className="mt-6 inline-block text-labelashb-small text-labelashb-accent underline"
+                className="mt-6 inline-block text-labelashb-small text-labelashb-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
               >
                 Browse the full catalog
               </Link>
