@@ -32,7 +32,10 @@ export default function ContactPage() {
         <div>
           <dt className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">Email</dt>
           <dd className="text-labelashb-ink">
-            <a href={`mailto:${contact.email}`} className="underline">
+            <a
+              href={`mailto:${contact.email}`}
+              className="underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+            >
               {contact.email}
             </a>
           </dd>

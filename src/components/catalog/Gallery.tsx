@@ -41,7 +41,7 @@ export function Gallery({
               onClick={() => setActiveIndex(index)}
               aria-label={`Show image ${index + 1} of ${images.length}`}
               aria-current={index === activeIndex}
-              className={`relative h-20 w-16 shrink-0 overflow-hidden border ${
+              className={`relative h-20 w-16 shrink-0 overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
                 index === activeIndex
                   ? "border-labelashb-ink"
                   : "border-labelashb-border"

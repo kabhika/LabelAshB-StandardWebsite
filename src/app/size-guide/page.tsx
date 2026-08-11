@@ -31,7 +31,7 @@ export default function SizeGuidePage() {
         href={sizeGuide.pdfUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 inline-block text-labelashb-body text-labelashb-accent underline"
+        className="mt-4 inline-block text-labelashb-body text-labelashb-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
       >
         Download the full size guide (PDF)
       </a>

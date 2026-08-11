@@ -26,7 +26,7 @@ export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
               disabled={!variant.available}
               aria-pressed={isSelected}
               onClick={() => setSelectedId(variant.id)}
-              className={`min-w-12 border px-3 py-2 text-labelashb-small transition-colors ${
+              className={`min-w-12 border px-3 py-2 text-labelashb-small transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
                 !variant.available
                   ? "border-labelashb-border text-labelashb-ink-soft/50 line-through cursor-not-allowed"
                   : isSelected

@@ -31,7 +31,10 @@ export default function GlobalError({
         <Button variant="primary" onClick={reset}>
           Try again
         </Button>
-        <Link href="/" className="text-labelashb-small text-labelashb-accent underline">
+        <Link
+          href="/"
+          className="text-labelashb-small text-labelashb-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+        >
           Back to home
         </Link>
       </div>

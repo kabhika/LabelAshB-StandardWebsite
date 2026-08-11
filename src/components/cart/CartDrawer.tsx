@@ -35,7 +35,7 @@ export function CartDrawer() {
             type="button"
             onClick={closeCart}
             aria-label="Close cart"
-            className="text-labelashb-body text-labelashb-ink-soft"
+            className="text-labelashb-body text-labelashb-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
           >
             Close
           </button>
@@ -86,7 +86,7 @@ export function CartDrawer() {
                         type="button"
                         disabled={isLoading || line.quantity <= 1}
                         onClick={() => updateLine(line.id, line.quantity - 1)}
-                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40"
+                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         -
                       </button>
@@ -101,7 +101,7 @@ export function CartDrawer() {
                             line.quantity >= line.merchandise.quantityAvailable)
                         }
                         onClick={() => updateLine(line.id, line.quantity + 1)}
-                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40"
+                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         +
                       </button>
@@ -109,7 +109,7 @@ export function CartDrawer() {
                         type="button"
                         disabled={isLoading}
                         onClick={() => removeLine(line.id)}
-                        className="ml-2 text-labelashb-small text-labelashb-ink-soft underline"
+                        className="ml-2 text-labelashb-small text-labelashb-ink-soft underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         Remove
                       </button>
