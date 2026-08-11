@@ -26,7 +26,7 @@ function buildHref(
 // treatment. Unselected/hover only move between the existing ink/ink-soft/
 // ground-alt neutrals - no new colors.
 const CHIP_BASE =
-  "inline-flex min-h-11 items-center border px-3 text-labelashb-eyebrow uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
+  "inline-flex min-h-11 items-center border px-4 text-labelashb-small font-semibold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
 const CHIP_SELECTED = "border-labelashb-accent bg-labelashb-accent-soft text-labelashb-accent";
 const CHIP_UNSELECTED =
   "border-labelashb-border text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink";
@@ -47,7 +47,7 @@ export function ProductFilters({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="mb-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
+        <p className="mb-3 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft">
           Category
         </p>
         <div className="flex flex-wrap gap-2">
@@ -70,7 +70,7 @@ export function ProductFilters({
       </div>
 
       <div>
-        <p className="mb-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
+        <p className="mb-3 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft">
           Material
         </p>
         <div className="flex flex-wrap gap-2">
