@@ -73,12 +73,12 @@ export default async function ProductPage({
 
         <div>
           <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
-            {product.category}
+            {product.category} · Handcrafted in India
           </p>
           <h1 className="mt-2 text-labelashb-h1 text-labelashb-ink">
             {product.title}
           </h1>
-          <p className="mt-3 text-labelashb-h3 text-labelashb-ink">{priceLabel}</p>
+          <p className="mt-3 text-labelashb-h3 text-labelashb-ink tabular-nums">{priceLabel}</p>
 
           {product.materials.length > 0 && (
             <p className="mt-2 text-labelashb-small text-labelashb-ink-soft">

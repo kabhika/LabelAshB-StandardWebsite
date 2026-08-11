@@ -36,12 +36,12 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
       </div>
       <div className="pt-4">
         <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
-          {product.category}
+          {product.category} · Handcrafted in India
         </p>
         <h3 className="mt-1 text-labelashb-body-lg text-labelashb-ink">
           {product.title}
         </h3>
-        <p className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+        <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">
           {priceLabel}
         </p>
       </div>
