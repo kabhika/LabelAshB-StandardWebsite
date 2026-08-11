@@ -54,6 +54,11 @@ export default async function ProductsPage({
         </aside>
 
         <div>
+          {/* Product titles below render as h3 (ProductCard) - this closes
+              the h1->h3 gap so the heading outline doesn't skip a level. */}
+          <h2 className="sr-only">
+            {category ? `${category} products` : "All products"}
+          </h2>
           {products.length === 0 ? (
             <div className="max-w-md py-8">
               <p className="text-labelashb-body-lg text-labelashb-ink">
@@ -74,7 +79,7 @@ export default async function ProductsPage({
                       <Link
                         key={m}
                         href={`/products?category=${encodeURIComponent(category)}&material=${encodeURIComponent(m)}`}
-                        className="border border-labelashb-border px-3 py-1.5 text-labelashb-eyebrow uppercase text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink"
+                        className="inline-flex min-h-11 items-center border border-labelashb-border px-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink"
                       >
                         {materialLabel(m)}
                       </Link>

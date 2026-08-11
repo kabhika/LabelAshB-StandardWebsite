@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/components/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SITE_URL } from "@/lib/site";
 
 const instrumentSans = Instrument_Sans({
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <CartProvider>
           <SiteHeader />
           {children}
+          <SiteFooter />
           <CartDrawer />
         </CartProvider>
       </body>

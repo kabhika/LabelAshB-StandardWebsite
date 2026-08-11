@@ -75,7 +75,7 @@ export function CartDrawer() {
                     <p className="text-labelashb-small text-labelashb-ink-soft">
                       {line.merchandise.title}
                     </p>
-                    <p className="mt-1 text-labelashb-small text-labelashb-ink">
+                    <p className="mt-1 text-labelashb-small text-labelashb-ink tabular-nums">
                       {formatPrice(
                         line.merchandise.price.amount,
                         line.merchandise.price.currencyCode,
@@ -90,7 +90,7 @@ export function CartDrawer() {
                       >
                         -
                       </button>
-                      <span className="text-labelashb-small text-labelashb-ink">
+                      <span className="text-labelashb-small text-labelashb-ink tabular-nums">
                         {line.quantity}
                       </span>
                       <button
@@ -125,18 +125,16 @@ export function CartDrawer() {
           <div className="border-t border-labelashb-border pt-4">
             <div className="flex items-center justify-between text-labelashb-body-lg text-labelashb-ink">
               <span>Subtotal</span>
-              <span>
+              <span className="tabular-nums">
                 {formatPrice(
                   cart.cost.subtotalAmount.amount,
                   cart.cost.subtotalAmount.currencyCode,
                 )}
               </span>
             </div>
-            <a href={cart.checkoutUrl} className="mt-4 block">
-              <Button variant="primary" className="w-full">
-                Checkout
-              </Button>
-            </a>
+            <Button href={cart.checkoutUrl} variant="primary" className="mt-4 block w-full">
+              Checkout
+            </Button>
           </div>
         )}
       </div>
