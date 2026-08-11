@@ -33,11 +33,13 @@
    * the browser default 16px) until caught by visual review. */
   --font-labelashb-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Fluid: 44px at narrow mobile up to the full 72px by ~1100px, one
-     token, no breakpoint variants needed at call sites. Critique found
-     the fixed 4.5rem value wrapped even a short 3-word headline to 3
-     stacked full-size lines at 390px. */
-  --text-labelashb-display: clamp(2.75rem, 1.75rem + 4vw, 4.5rem);
+  /* Fluid: 36px at 375px (the narrowest real device width, keeps this
+     3-word headline on one line) up to the full 72px by ~1100px, one
+     token, no breakpoint variants needed at call sites. First pass had
+     a 44px floor and still wrapped to 3 lines at 390px; recalibrated
+     the same linear segment to pass through (375px, 36px) instead of
+     (390px, 44px). */
+  --text-labelashb-display: clamp(2.25rem, 1.1rem + 5vw, 4.5rem);
   --text-labelashb-display--line-height: 1.03;
   --text-labelashb-display--letter-spacing: -0.02em;
 

@@ -72,7 +72,16 @@ export default async function Home() {
       <section className="flex flex-col border-b border-labelashb-border md:min-h-[85vh] md:flex-row">
         <div className="order-2 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:w-[42%] md:px-14 lg:px-20">
           <Reveal>
-            <h1 className="text-[2.25rem] leading-[1.1] tracking-[-0.01em] text-labelashb-ink sm:text-labelashb-display">
+            {/* text-labelashb-display is viewport-relative (vw), which is
+                correct for a full-width context like style-tile but wrong
+                here: this column is 42% of viewport from md: up, so the
+                token's natural value overshoots and wraps to 3 lines
+                across roughly 768-1200px (verified against live DOM
+                measurements, not just arithmetic - the naive vw-vs-column
+                math was off twice before this held). The md:/xl: override
+                is a real container-width correction, not a duplicate of
+                the token's own mobile-safety clamp. */}
+            <h1 className="text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
               Linen. Silk. Cotton.
             </h1>
             <p className="mt-6 line-clamp-4 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
