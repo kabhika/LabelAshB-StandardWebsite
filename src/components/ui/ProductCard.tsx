@@ -17,7 +17,10 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
       : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
 
   return (
-    <a href={`/products/${product.handle}`} className="group block">
+    <a
+      href={`/products/${product.handle}`}
+      className="group block transition-transform duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+    >
       <div className="relative aspect-[3/4] overflow-hidden bg-labelashb-ground-alt">
         {image && (
           <Image
@@ -38,7 +41,7 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
         <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
           {product.category} · Handcrafted in India
         </p>
-        <h3 className="mt-1 text-labelashb-body-lg text-labelashb-ink">
+        <h3 className="mt-1 text-labelashb-body-lg text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
           {product.title}
         </h3>
         <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">

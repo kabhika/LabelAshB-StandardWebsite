@@ -60,7 +60,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         {slides.map((slide, i) => (
           <div
             key={slide.url}
-            className="absolute inset-0 transition-opacity duration-700 ease-out"
+            className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-700 ease-out"
             style={{ opacity: i === index ? 1 : 0 }}
             aria-hidden={i !== index}
           >
@@ -70,7 +70,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               fill
               sizes="(min-width: 768px) 58vw, 100vw"
               priority={i === 0}
-              className="pointer-events-none object-cover"
+              className="pointer-events-none object-contain"
             />
           </div>
         ))}
@@ -85,7 +85,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               aria-label={`Show slide ${i + 1} of ${count}`}
               aria-current={i === index}
               onClick={() => goTo(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1 ${
                 i === index
                   ? "w-6 bg-labelashb-ground"
                   : "w-1.5 bg-labelashb-ground/50 hover:bg-labelashb-ground/80"

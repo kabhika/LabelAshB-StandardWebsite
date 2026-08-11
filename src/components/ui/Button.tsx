@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 import Link from "next/link";
 
 const base =
-  "inline-flex items-center justify-center px-6 py-3 text-labelashb-body font-medium transition-colors rounded-labelashb-sm disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
+  "inline-flex items-center justify-center px-6 py-3 text-labelashb-body font-medium transition-[color,background-color,border-color,transform] duration-150 active:scale-[0.98] rounded-labelashb-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
 
 const variants = {
   primary:
