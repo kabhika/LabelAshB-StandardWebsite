@@ -79,7 +79,7 @@ export default async function ProductsPage({
                       <Link
                         key={m}
                         href={`/products?category=${encodeURIComponent(category)}&material=${encodeURIComponent(m)}`}
-                        className="inline-flex min-h-11 items-center border border-labelashb-border px-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink"
+                        className="inline-flex min-h-11 items-center border border-labelashb-border px-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         {materialLabel(m)}
                       </Link>
@@ -90,13 +90,13 @@ export default async function ProductsPage({
 
               <Link
                 href="/products"
-                className="mt-6 inline-block text-labelashb-small text-labelashb-accent underline"
+                className="mt-6 inline-block text-labelashb-small text-labelashb-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
               >
                 Clear filters
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
