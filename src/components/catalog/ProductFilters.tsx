@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DISPLAY_CATEGORIES, KNOWN_MATERIALS } from "@/lib/shopify/catalog";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export function materialLabel(slug: string): string {
   return slug
@@ -21,19 +22,21 @@ function buildHref(
   return qs ? `/products?${qs}` : "/products";
 }
 
-// Selected state uses accent-soft/accent, not a solid ink fill - chips are
-// toggles, not buttons, and shouldn't compete with the primary CTA's solid
-// treatment. Unselected/hover only move between the existing ink/ink-soft/
-// ground-alt neutrals - no new colors.
-const CHIP_BASE =
-  "inline-flex min-h-11 items-center border px-4 text-labelashb-small font-semibold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
-const CHIP_SELECTED = "border-labelashb-accent bg-labelashb-accent-soft text-labelashb-accent";
-const CHIP_UNSELECTED =
-  "border-labelashb-border text-labelashb-ink-soft hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink";
+const ALL_VALUE = "all";
 
-function chipClass(selected: boolean) {
-  return `${CHIP_BASE} ${selected ? CHIP_SELECTED : CHIP_UNSELECTED}`;
-}
+// ToggleGroupItem composed with render={<Link/>} so it's still real
+// navigation (URL search params drive the actual selection, server-side)
+// - the "pressed" state is purely a reflection of activeCategory/
+// activeMaterial via ToggleGroup's controlled `value`, never client toggle
+// state. rounded-none overrides shadcn's default rounded-lg to match this
+// brand's near-flat identity; data-pressed gives the solid accent fill
+// the outline/tint treatment couldn't (selected must read as clearly
+// selected, not just a faint tint). Uses data-pressed, not data-state=on -
+// composing ToggleGroupItem with render={<Link/>} doesn't carry data-state
+// through onto the rendered <a> (verified in the browser), but data-pressed
+// and aria-pressed do.
+const CHIP_CLASS =
+  "min-h-11 rounded-none border border-labelashb-border bg-transparent px-4 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft transition-colors duration-200 active:scale-[0.97] hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 data-pressed:border-labelashb-accent data-pressed:bg-labelashb-accent data-pressed:text-labelashb-accent-foreground data-pressed:hover:border-labelashb-accent-hover data-pressed:hover:bg-labelashb-accent-hover";
 
 export function ProductFilters({
   activeCategory,
@@ -50,46 +53,60 @@ export function ProductFilters({
         <p className="mb-3 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft">
           Category
         </p>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href={buildHref(current, { category: undefined })}
-            className={chipClass(!activeCategory)}
+        <ToggleGroup
+          value={[activeCategory ?? ALL_VALUE]}
+          className="flex-wrap gap-2"
+        >
+          <ToggleGroupItem
+            value={ALL_VALUE}
+            nativeButton={false}
+            className={CHIP_CLASS}
+            render={<Link href={buildHref(current, { category: undefined })} />}
           >
             All
-          </Link>
+          </ToggleGroupItem>
           {DISPLAY_CATEGORIES.map((category) => (
-            <Link
+            <ToggleGroupItem
               key={category}
-              href={buildHref(current, { category })}
-              className={chipClass(activeCategory === category)}
+              value={category}
+              nativeButton={false}
+              className={CHIP_CLASS}
+              render={<Link href={buildHref(current, { category })} />}
             >
               {category}
-            </Link>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
       </div>
 
       <div>
         <p className="mb-3 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft">
           Material
         </p>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href={buildHref(current, { material: undefined })}
-            className={chipClass(!activeMaterial)}
+        <ToggleGroup
+          value={[activeMaterial ?? ALL_VALUE]}
+          className="flex-wrap gap-2"
+        >
+          <ToggleGroupItem
+            value={ALL_VALUE}
+            nativeButton={false}
+            className={CHIP_CLASS}
+            render={<Link href={buildHref(current, { material: undefined })} />}
           >
             All
-          </Link>
+          </ToggleGroupItem>
           {KNOWN_MATERIALS.map((material) => (
-            <Link
+            <ToggleGroupItem
               key={material}
-              href={buildHref(current, { material })}
-              className={chipClass(activeMaterial === material)}
+              value={material}
+              nativeButton={false}
+              className={CHIP_CLASS}
+              render={<Link href={buildHref(current, { material })} />}
             >
               {materialLabel(material)}
-            </Link>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
       </div>
     </div>
   );
