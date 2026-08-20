@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, type PanInfo } from "framer-motion";
+import { motion, type PanInfo } from "motion/react";
 
 export interface HeroSlide {
   url: string;

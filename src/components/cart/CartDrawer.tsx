@@ -1,8 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { useCart } from "./CartContext";
 import { Button } from "@/components/ui/Button";
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function formatPrice(amount: string, currencyCode: string) {
   return new Intl.NumberFormat("en-IN", {
@@ -15,6 +19,48 @@ function formatPrice(amount: string, currencyCode: string) {
 export function CartDrawer() {
   const { cart, isOpen, isLoading, error, closeCart, updateLine, removeLine } =
     useCart();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+  // closeCart isn't memoized in CartContext (new function identity every
+  // render) - a ref keeps this effect from tearing down/re-attaching its
+  // listeners and re-capturing previouslyFocused on every unrelated
+  // re-render while the drawer is open, while still calling the latest
+  // closeCart.
+  const closeCartRef = useRef(closeCart);
+  closeCartRef.current = closeCart;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    panelRef.current?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeCartRef.current();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused.current?.focus();
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -28,7 +74,14 @@ export function CartDrawer() {
         onClick={closeCart}
         className="absolute inset-0 bg-labelashb-ink/40"
       />
-      <div className="relative flex h-full w-full max-w-md flex-col bg-labelashb-ground p-6">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Your cart"
+        tabIndex={-1}
+        className="relative flex h-full w-full max-w-md flex-col bg-labelashb-ground p-6 focus:outline-none"
+      >
         <div className="flex items-center justify-between">
           <h2 className="text-labelashb-h3 text-labelashb-ink">Your Cart</h2>
           <button
@@ -86,7 +139,8 @@ export function CartDrawer() {
                         type="button"
                         disabled={isLoading || line.quantity <= 1}
                         onClick={() => updateLine(line.id, line.quantity - 1)}
-                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+                        aria-label="Decrease quantity"
+                        className="flex min-h-11 min-w-11 items-center justify-center border border-labelashb-border text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         -
                       </button>
@@ -101,7 +155,8 @@ export function CartDrawer() {
                             line.quantity >= line.merchandise.quantityAvailable)
                         }
                         onClick={() => updateLine(line.id, line.quantity + 1)}
-                        className="border border-labelashb-border px-2 text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+                        aria-label="Increase quantity"
+                        className="flex min-h-11 min-w-11 items-center justify-center border border-labelashb-border text-labelashb-small disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                       >
                         +
                       </button>
