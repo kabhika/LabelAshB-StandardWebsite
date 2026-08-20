@@ -30,6 +30,30 @@
   --color-labelashb-error: #b3261e;
   --color-labelashb-error-soft: #f8e9e8;
 
+  /* Homepage editorial redesign only (src/app/page.tsx). Sitewide
+   * --color-labelashb-accent (indigo, sampled from a real product photo)
+   * stays the transactional color for Button/nav/focus rings everywhere -
+   * these tokens are additive, never a replacement, and are not referenced
+   * outside the homepage. Terracotta is the deep accent; the six named
+   * tones are a decorative flourish pulled from fashion-copy color names
+   * (blush, azure, alabaster, celeste, coral, claret), used as small
+   * static swatches, never as text/background color swaps requiring
+   * runtime interpolation (Tailwind needs the literal class names in
+   * source to generate them - see the SWATCH_CLASSES array in page.tsx). */
+  --color-labelashb-paper: #f6efe2;
+  /* Darkened from the original #b85c38 sample: that value measured
+     ~4.0:1 against --color-labelashb-paper, under the 4.5:1 AA minimum
+     for normal text (it's used as real link text, not just a decorative
+     hairline/border, which only needs 3:1). This value measures ~5.2:1 -
+     same hue, same "deep accent" read, passes AA with margin. */
+  --color-labelashb-terracotta: #a34e2e;
+  --color-labelashb-blush: #deb8ae;
+  --color-labelashb-azure: #7c93a8;
+  --color-labelashb-alabaster: #e4dacb;
+  --color-labelashb-celeste: #a7bfb0;
+  --color-labelashb-coral: #d97650;
+  --color-labelashb-claret: #6e2a38;
+
   /* Type: one family, extreme size contrast
    * Namespace is --text-*, NOT --font-size-* - verified against
    * node_modules/tailwindcss/theme.css and the compiled engine's own
@@ -82,6 +106,21 @@
 
 body {
   font-family: var(--font-labelashb-sans);
+}
+
+/* Tailwind v4 only recognizes the three fixed theme keys --font-sans/
+   --font-serif/--font-mono (verified against node_modules/tailwindcss/
+   theme.css) - a custom-namespaced @theme key like --font-labelashb-*
+   is silently dropped, never reaching :root as a real CSS variable
+   (same reason font-labelashb-sans above is a dead class; body{} above
+   only reads Geist correctly because html gets it separately via the
+   real font-sans utility). Reference next/font's own generated
+   variable directly instead of routing through a dead custom token.
+   --font-fraunces is scoped by the `fraunces.variable` class on the
+   homepage's <main> (src/app/page.tsx), so this class only resolves to
+   Fraunces there and falls through to inherited Geist elsewhere. */
+.font-labelashb-serif {
+  font-family: var(--font-fraunces), "Fraunces", ui-serif, Georgia, serif;
 }
 
 /*
@@ -178,47 +217,12 @@ body {
   --sidebar-ring: var(--color-labelashb-accent);
 }
 
-/*
- ---break---
- */
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
-/*
- ---break---
- */
+/* .dark value block removed: nothing in this app ever toggles a .dark
+   class onto any element (no theme provider, no next-themes, no
+   toggle) - dark mode isn't a stated product requirement, so this was
+   dead CSS from the shadcn scaffold. The @custom-variant dark
+   declaration above stays: toggle.tsx/tabs.tsx reference dark: utility
+   classes that need it to compile, even though it never activates. */
 
 @layer base {
   * {
@@ -229,5 +233,55 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Opt-in paper-grain texture - not applied to body/html, so it stays
+   scoped to whatever element takes the class (currently only the
+   homepage <main> in page.tsx) instead of texturing the whole site.
+   Static SVG feTurbulence noise, tiled, very low opacity + multiply so
+   it reads as paper tooth, not visible static. */
+.labelashb-grain {
+  position: relative;
+}
+.labelashb-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+.labelashb-grain > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Plain-CSS fade+rise, for elements that can't go through the Reveal
+   framer-motion component (src/components/motion/Reveal.tsx): Reveal's
+   motion.div applies an inline `transform`, and any element with a
+   transform becomes a CSS containing block for absolutely/percentage-
+   positioned descendants - which collapses HeroCarousel's h-full chain
+   to 0 height. Animating the already-positioned, already-sized element
+   (the hero image column) directly sidesteps that instead of nesting. */
+@keyframes labelashb-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.labelashb-reveal {
+  animation: labelashb-reveal 0.5s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .labelashb-reveal {
+    animation: none;
   }
 }
