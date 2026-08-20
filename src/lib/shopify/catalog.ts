@@ -103,6 +103,19 @@ export const KNOWN_MATERIALS = [
 
 export const DISPLAY_CATEGORIES = [...new Set(Object.values(CATEGORY_MAP))];
 
+// Fabric-collection groups for nav/homepage display - the 3 silk tags
+// (crepe-silk, chanderi-silk, modal-silk) combine into one "Silk" group
+// rather than three thin ones, per the verified catalog distribution
+// (PLACEHOLDER-POLICY.md). Shared by the homepage's fabric showcase and
+// the header's Collections dropdown so the grouping can't drift between
+// the two - consumers decide for themselves what "present" means (any
+// in-stock match, a representative image, etc.).
+export const MATERIAL_GROUPS: { label: string; slugs: string[] }[] = [
+  { label: "Linen", slugs: ["linen"] },
+  { label: "Cotton", slugs: ["cotton"] },
+  { label: "Silk", slugs: ["crepe-silk", "chanderi-silk", "modal-silk"] },
+];
+
 function extractMaterials(tags: string[]): string[] {
   return tags.filter((tag) => KNOWN_MATERIALS.includes(tag.toLowerCase()));
 }

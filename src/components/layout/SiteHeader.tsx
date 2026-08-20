@@ -1,9 +1,36 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SiteNav } from "@/components/layout/SiteNav";
+import { DISPLAY_CATEGORIES, MATERIAL_GROUPS, getCatalog } from "@/lib/shopify/catalog";
+import { SiteNav, type NavLink } from "@/components/layout/SiteNav";
 import { MobileNav } from "@/components/layout/MobileNav";
 
-export function SiteHeader() {
+// Same derive-from-live-catalog pattern as TabbedProductCarousel (categories)
+// and the homepage's fabric showcase (materials) - never a hardcoded
+// category/collection that isn't actually in stock right now.
+async function getNavLinks(): Promise<{ categories: NavLink[]; collections: NavLink[] }> {
+  const catalog = await getCatalog();
+  const inStock = catalog.filter((p) => p.inStock);
+
+  const categories = DISPLAY_CATEGORIES.filter((category) =>
+    inStock.some((p) => p.category === category),
+  ).map((category) => ({
+    label: category,
+    href: `/products?category=${encodeURIComponent(category)}`,
+  }));
+
+  const collections = MATERIAL_GROUPS.filter(({ slugs }) =>
+    inStock.some((p) => p.materials.some((m) => slugs.includes(m))),
+  ).map(({ label, slugs }) => ({
+    label,
+    href: `/products?material=${encodeURIComponent(slugs.join(","))}`,
+  }));
+
+  return { categories, collections };
+}
+
+export async function SiteHeader() {
+  const { categories, collections } = await getNavLinks();
+
   return (
     <header className="relative border-b border-labelashb-border">
       <div className="bg-labelashb-ink px-4 py-1 text-center text-[0.6875rem] text-labelashb-ground sm:py-1.5 sm:text-labelashb-small">
@@ -37,12 +64,12 @@ export function SiteHeader() {
             />
           </Link>
           <div className="justify-self-end">
-            <MobileNav />
+            <MobileNav categories={categories} collections={collections} />
           </div>
         </div>
 
         <div className="mt-3 hidden justify-center sm:flex">
-          <SiteNav />
+          <SiteNav categories={categories} collections={collections} />
         </div>
       </div>
     </header>

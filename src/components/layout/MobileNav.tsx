@@ -3,11 +3,49 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartContext";
+import type { NavLink } from "@/components/layout/SiteNav";
 
 const LINK_CLASS =
   "block min-h-11 py-3 text-labelashb-body text-labelashb-ink border-b border-labelashb-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
 
-export function MobileNav() {
+const SUBLINK_CLASS =
+  "block min-h-11 py-3 pl-4 text-labelashb-body text-labelashb-ink-soft border-b border-labelashb-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1";
+
+// <details>/<summary> for the two catalog-derived groups, not another
+// useState toggle - native progressive disclosure, no extra open/close
+// state to wire up for what's a strict subset of the mobile menu's own
+// open/close lifecycle already managed below.
+function NavGroup({
+  label,
+  links,
+  onNavigate,
+}: {
+  label: string;
+  links: NavLink[];
+  onNavigate: () => void;
+}) {
+  if (links.length === 0) return null;
+  return (
+    <details className="border-b border-labelashb-border">
+      <summary className="flex min-h-11 cursor-pointer items-center py-3 text-labelashb-body text-labelashb-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1">
+        {label}
+      </summary>
+      {links.map(({ href, label: linkLabel }) => (
+        <Link key={href} href={href} className={SUBLINK_CLASS} onClick={onNavigate}>
+          {linkLabel}
+        </Link>
+      ))}
+    </details>
+  );
+}
+
+export function MobileNav({
+  categories,
+  collections,
+}: {
+  categories: NavLink[];
+  collections: NavLink[];
+}) {
   const [open, setOpen] = useState(false);
   const { cart, openCart } = useCart();
   const count = cart?.totalQuantity ?? 0;
@@ -62,6 +100,16 @@ export function MobileNav() {
 
       {open && (
         <div className="absolute inset-x-0 top-full z-40 bg-labelashb-ground px-6">
+          <NavGroup
+            label="Categories"
+            links={categories}
+            onNavigate={() => setOpen(false)}
+          />
+          <NavGroup
+            label="Collections"
+            links={collections}
+            onNavigate={() => setOpen(false)}
+          />
           <Link href="/products" className={LINK_CLASS} onClick={() => setOpen(false)}>
             Shop
           </Link>

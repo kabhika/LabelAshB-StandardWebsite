@@ -1,6 +1,7 @@
-import { getProductByHandle } from "@/lib/shopify/catalog";
+import { getCatalog, getProductByHandle } from "@/lib/shopify/catalog";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
 import { Reveal } from "@/components/motion/Reveal";
 import { PaletteGrid } from "@/components/dev/PaletteGrid";
 import facts from "../../../_knowledge/facts.json";
@@ -11,6 +12,12 @@ export default async function StyleTilePage() {
   const product = await getProductByHandle(
     "the-indigo-swallow",
   );
+  // Isolated preview for ProductCardExpanded (homepage/collection card,
+  // not wired into page.tsx yet) — real catalog data, first three
+  // products so the hover-cycle gallery has something with 2+ photos to
+  // demonstrate.
+  const catalog = await getCatalog();
+  const previewProducts = catalog.slice(0, 3);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16 space-y-24">
@@ -105,6 +112,28 @@ export default async function StyleTilePage() {
           <p className="text-labelashb-error">
             Could not load a live product for this card. Check Storefront API
             connectivity.
+          </p>
+        )}
+      </section>
+
+      {/* ProductCardExpanded preview — isolated, not wired into page.tsx */}
+      <section aria-labelledby="card-expanded-heading">
+        <h2
+          id="card-expanded-heading"
+          className="text-labelashb-h3 text-labelashb-ink-soft mb-6"
+        >
+          Product card expanded — hover-swap gallery, size pills, quick add
+          (live data)
+        </h2>
+        {previewProducts.length > 0 ? (
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3">
+            {previewProducts.map((p) => (
+              <ProductCardExpanded key={p.id} product={p} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-labelashb-error">
+            Could not load catalog products for this preview.
           </p>
         )}
       </section>

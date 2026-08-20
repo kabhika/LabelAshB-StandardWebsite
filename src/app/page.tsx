@@ -1,12 +1,25 @@
-import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
-import { getCatalog, type NormalizedProduct } from "@/lib/shopify/catalog";
+import {
+  DISPLAY_CATEGORIES,
+  MATERIAL_GROUPS,
+  getCatalog,
+  type NormalizedProduct,
+} from "@/lib/shopify/catalog";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
+import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
+import { PromoTileGrid, type PromoTile } from "@/components/home/PromoTileGrid";
+import {
+  HorizontalImageScroller,
+  type ScrollerImage,
+} from "@/components/home/HorizontalImageScroller";
+import { NewsletterSignup } from "@/components/home/NewsletterSignup";
+import { WhatsAppFloat } from "@/components/home/WhatsAppFloat";
 import { SITE_URL } from "@/lib/site";
 import facts from "../../_knowledge/facts.json";
 
@@ -20,24 +33,10 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
-// Secondary tones named in existing brand/product copy (blush, azure,
-// alabaster, celeste, coral, claret), used only as static decorative
-// swatches. Written as complete literal class names (not built from the
-// tone name at runtime) because Tailwind's scanner needs the exact
-// string in source to generate each utility.
-const SWATCH_CLASSES = [
-  "bg-labelashb-blush",
-  "bg-labelashb-azure",
-  "bg-labelashb-alabaster",
-  "bg-labelashb-celeste",
-  "bg-labelashb-coral",
-  "bg-labelashb-claret",
-];
-
 // Per-column vertical offsets for the featured stagger (cycles through
-// the grid's 4-up column position) - a deliberate lookbook rhythm, not
+// the grid's column position) - a deliberate lookbook rhythm, not
 // randomized, so it's identical on every render (no hydration mismatch).
-const STAGGER_OFFSETS_PX = [0, 56, 24, 40];
+const STAGGER_OFFSETS_PX = [0, 32, 12, 44];
 
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
@@ -79,10 +78,54 @@ function pickHeroSlides(products: NormalizedProduct[]): HeroSlide[] {
   });
 }
 
+// One real product image per category, for the 3-tile promo grid - never
+// padded to a 4th tile, the catalog only has 3 real categories
+// (PLACEHOLDER-POLICY.md).
+function pickCategoryTiles(catalog: NormalizedProduct[]): PromoTile[] {
+  const tiles: PromoTile[] = [];
+  for (const category of DISPLAY_CATEGORIES) {
+    const match = catalog.find(
+      (p) => p.inStock && p.category === category && p.images.length > 0,
+    );
+    if (!match) continue;
+    const image = match.images[0];
+    tiles.push({
+      image: { url: image.url, alt: image.altText || match.title },
+      label: category,
+      href: `/products?category=${encodeURIComponent(category)}`,
+    });
+  }
+  return tiles;
+}
+
+// One real product image per material group, for the fabric-collection
+// carousel - verified distribution in PLACEHOLDER-POLICY.md (linen
+// dominant, cotton and combined-silk both present).
+function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
+  const images: ScrollerImage[] = [];
+  for (const { label, slugs } of MATERIAL_GROUPS) {
+    const match = catalog.find(
+      (p) =>
+        p.inStock &&
+        p.images.length > 0 &&
+        p.materials.some((m) => slugs.includes(m)),
+    );
+    if (!match) continue;
+    const image = match.images[0];
+    images.push({ url: image.url, alt: image.altText || match.title, caption: label });
+  }
+  return images;
+}
+
 export default async function Home() {
   const catalog = await getCatalog();
-  const featured = catalog.filter((p) => p.inStock).slice(0, 8);
+  const inStock = catalog.filter((p) => p.inStock);
+  const newIn = inStock.slice(0, 4);
   const heroSlides = pickHeroSlides(catalog);
+  const categoryTiles = pickCategoryTiles(catalog);
+  const materialShowcase = pickMaterialShowcase(catalog);
+  const whyUsProduct = inStock.find((p) => p.category === "Co-ord Sets" && p.images.length > 1) ?? inStock[0];
+  const whyUsImage = whyUsProduct?.images[1] ?? whyUsProduct?.images[0];
 
   // No SearchAction - there's no free-text search on this site, only
   // category/material filters, and claiming one in schema would be
@@ -96,105 +139,267 @@ export default async function Home() {
   };
 
   return (
-    <main
-      className={`${fraunces.variable} labelashb-grain flex flex-1 flex-col bg-labelashb-paper`}
-    >
-      <JsonLd data={websiteJsonLd} />
+    <>
+      <main
+        className={`${fraunces.variable} labelashb-grain flex flex-1 flex-col bg-labelashb-ivory`}
+      >
+        <JsonLd data={websiteJsonLd} />
 
-      {/* Asymmetric editorial split, not the even two-column default:
-          image bleeds to the true viewport edge at roughly two-thirds
-          width, text column holds a third. */}
-      <section className="flex flex-col border-b border-labelashb-border md:min-h-[85vh] md:flex-row">
-        <div className="order-2 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:w-[36%] md:px-14 lg:px-16">
-          <Reveal>
-            {/* text-labelashb-display is viewport-relative (vw), which is
-                correct for a full-width context like style-tile but wrong
-                here: this column is a minority share of viewport from md:
-                up, so the token's natural value overshoots and wraps to 3
-                lines across roughly 768-1200px (verified against live DOM
-                measurements, not just arithmetic - the naive vw-vs-column
-                math was off twice before this held). The md:/xl: override
-                is a real container-width correction, not a duplicate of
-                the token's own mobile-safety clamp. */}
-            <h1 className="font-labelashb-serif text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
-              Linen. Silk. Cotton.
-            </h1>
-            <span
-              aria-hidden="true"
-              className="mt-5 block h-px w-14 bg-labelashb-terracotta"
-            />
-            <p className="mt-5 line-clamp-3 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
-              Made with time, care, and a clear eye for detail.{" "}
-              {facts.brand.shortDescription}
-            </p>
-            <div className="mt-8">
-              <Button href="/products" variant="primary">
-                Shop the collection
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-
-        <div
-          className="labelashb-reveal relative order-1 aspect-[4/3] md:order-2 md:aspect-auto md:w-[64%]"
-          style={{ animationDelay: "0.15s" }}
-        >
-          <HeroCarousel slides={heroSlides} />
-        </div>
-      </section>
-
-      <section className="px-6 py-28 sm:px-10 sm:py-32 lg:py-40">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-14 flex items-baseline justify-between">
-            {/* Border-bottom accent, not a separate decorative mark - reuses
-                the hairline-underline language from the hero rule above
-                instead of inventing a new device. Terracotta here, not the
-                sitewide indigo accent - this heading exists only on this
-                editorial redesign of the homepage. */}
-            <h2 className="font-labelashb-serif inline-block border-b-2 border-labelashb-terracotta pb-2 text-labelashb-h2 text-labelashb-ink">
-              Featured
-            </h2>
-            <Link
-              href="/products"
-              className="text-labelashb-small text-labelashb-terracotta underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
-            >
-              View all
-            </Link>
-          </div>
-          {featured.length === 0 ? (
-            <div className="max-w-md py-8">
-              <p className="text-labelashb-body-lg text-labelashb-ink">
-                Nothing in stock right now - new pieces are on the way.
+        {/* Hero - asymmetric editorial split, not the even two-column
+            default: image bleeds to the true viewport edge at roughly
+            two-thirds width, text column holds a third. */}
+        <section className="flex flex-col border-b border-labelashb-border md:min-h-[85vh] md:flex-row">
+          <div className="order-2 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:w-[36%] md:px-14 lg:px-16">
+            <Reveal>
+              {/* text-labelashb-display is viewport-relative (vw), which is
+                  correct for a full-width context like style-tile but wrong
+                  here: this column is a minority share of viewport from md:
+                  up, so the token's natural value overshoots and wraps to 3
+                  lines across roughly 768-1200px. The md:/xl: override is a
+                  real container-width correction, not a duplicate of the
+                  token's own mobile-safety clamp. */}
+              <h1 className="font-labelashb-serif text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
+                Linen. Silk. Cotton.
+              </h1>
+              <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-indigo" />
+              <p className="mt-5 line-clamp-3 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
+                Made with time, care, and a clear eye for detail.{" "}
+                {facts.brand.shortDescription}
               </p>
-              <Link
-                href="/products"
-                className="mt-6 inline-block text-labelashb-small text-labelashb-terracotta underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
-              >
-                Browse the full catalog
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((product, i) => (
-                <Reveal key={product.id} delay={0.3 + i * 0.07}>
-                  <div
-                    className="sm:translate-y-[var(--stagger)]"
-                    style={{
-                      ["--stagger" as string]: `${STAGGER_OFFSETS_PX[i % STAGGER_OFFSETS_PX.length]}px`,
-                    }}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={`mb-3 block h-[3px] w-8 ${SWATCH_CLASSES[i % SWATCH_CLASSES.length]}`}
-                    />
-                    <ProductCard product={product} />
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+              <div className="mt-8">
+                <Button href="/products" variant="primary">
+                  Shop the collection
+                </Button>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Plain-CSS fade+rise (globals.css .labelashb-reveal), not the
+              Reveal component: Reveal's motion.div applies an inline
+              transform, which becomes a containing block for this column's
+              absolutely-positioned HeroCarousel and collapses its h-full
+              chain to 0 height. */}
+          <div
+            className="labelashb-reveal relative order-1 aspect-[4/3] md:order-2 md:aspect-auto md:w-[64%]"
+            style={{ animationDelay: "0.15s" }}
+          >
+            <HeroCarousel slides={heroSlides} />
+          </div>
+        </section>
+
+        <div className="flex flex-col gap-labelashb-section-generous py-labelashb-section-generous">
+          {/* New in - a short editorial tease, not a second full grid: the
+              tabbed carousel right below is where a shopper actually
+              browses by category. */}
+          {newIn.length > 0 && (
+            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-in-heading">
+              <div className="mx-auto max-w-6xl">
+                <h2
+                  id="new-in-heading"
+                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
+                >
+                  New in
+                </h2>
+                <div className="mt-labelashb-section-compact grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
+                  {newIn.map((product, i) => (
+                    <Reveal key={product.id} delay={0.1 + i * 0.06}>
+                      <div
+                        className="sm:translate-y-[var(--stagger)]"
+                        style={{
+                          ["--stagger" as string]: `${STAGGER_OFFSETS_PX[i % STAGGER_OFFSETS_PX.length]}px`,
+                        }}
+                      >
+                        <ProductCard product={product} />
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
           )}
+
+          {/* Shop by category - tabs derived from the live catalog. */}
+          <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
+            <div className="mx-auto max-w-6xl">
+              <TabbedProductCarousel products={catalog} />
+            </div>
+          </section>
+
+          {/* Fabric collections - Linen / Cotton / Silk, real catalog
+              photography and distribution (PLACEHOLDER-POLICY.md), not a
+              1:1 copy of a reference site's own fabric groupings. */}
+          {materialShowcase.length > 0 && (
+            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="fabric-heading">
+              <div className="mx-auto max-w-6xl">
+                <h2
+                  id="fabric-heading"
+                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-emerald pb-2 text-labelashb-h2 text-labelashb-ink"
+                >
+                  Shop by fabric
+                </h2>
+                <div className="mt-labelashb-section-compact">
+                  <HorizontalImageScroller images={materialShowcase} labelledBy="fabric-heading" />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Category promo grid - 3 real tiles (Dresses / Tops / Co-ord
+              Sets), never padded to a 4th (PLACEHOLDER-POLICY.md). */}
+          {categoryTiles.length > 0 && (
+            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="categories-heading">
+              <div className="mx-auto max-w-6xl">
+                <h2
+                  id="categories-heading"
+                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-wine pb-2 text-labelashb-h2 text-labelashb-ink"
+                >
+                  Shop by category
+                </h2>
+                <div className="mt-labelashb-section-compact">
+                  <PromoTileGrid tiles={categoryTiles} />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Our Studio - atmospheric imagery, no studio photography exists
+              yet. Abstract jewel-tone panels (own visual language, not
+              stock photography of someone else's studio), full visual
+              treatment - mood, not a specific claim (PLACEHOLDER-POLICY.md). */}
+          <section
+            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
+            aria-labelledby="studio-heading"
+          >
+            <div className="mx-auto max-w-6xl">
+              <h2
+                id="studio-heading"
+                className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
+              >
+                Our studio
+              </h2>
+              <div className="mt-labelashb-section-compact">
+                <HorizontalImageScroller
+                  labelledBy="studio-heading"
+                  images={[
+                    { url: "/atmosphere/studio-fabric.jpg", alt: "", caption: "Fabric" },
+                    { url: "/atmosphere/studio-workspace.jpg", alt: "", caption: "Workspace" },
+                    { url: "/atmosphere/studio-handwork.jpg", alt: "", caption: "By hand" },
+                  ]}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Why Label AshB - split section, real product photography and
+              copy grounded in confirmed brand positioning (PRODUCT.md). */}
+          <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="why-heading">
+            <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-center md:gap-16">
+              {whyUsImage && (
+                <div className="relative aspect-labelashb-card w-full overflow-hidden md:w-[42%]">
+                  <Image
+                    src={whyUsImage.url}
+                    alt={whyUsImage.altText || whyUsProduct?.title || ""}
+                    fill
+                    sizes="(min-width: 768px) 42vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              <div className="md:flex-1">
+                <h2
+                  id="why-heading"
+                  className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
+                >
+                  Why Label AshB
+                </h2>
+                <dl className="mt-8 space-y-6">
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">Made to order</dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      Most pieces begin only once you order them - cut and
+                      finished to size over 2-3 weeks, not pulled from a
+                      warehouse shelf.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">
+                      A small atelier, not a factory
+                    </dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      Every design starts on paper, is prototyped, and
+                      refined for fit by hand - never batch-processed.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">Fabric first</dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      Handloom linen, pure silk crepe, and Indian mulberry
+                      silk, chosen for feel and fall before anything else.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">An Indian atelier</dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      Designed, cut, and finished in-house - for women who
+                      want clothing that feels personal and graceful.
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          {/* Process - fabric/craft themes, tile count independent of the
+              3-category constraint above (this is process stages, not
+              catalog categories). Same abstract jewel-tone treatment as
+              Our Studio, no process photography exists yet either. */}
+          <section
+            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
+            aria-labelledby="process-heading"
+          >
+            <div className="mx-auto max-w-6xl">
+              <h2
+                id="process-heading"
+                className="font-labelashb-serif inline-block border-b-2 border-labelashb-wine pb-2 text-labelashb-h2 text-labelashb-ink"
+              >
+                From paper to piece
+              </h2>
+              <div className="mt-labelashb-section-compact">
+                <HorizontalImageScroller
+                  labelledBy="process-heading"
+                  images={[
+                    { url: "/atmosphere/process-cutting.jpg", alt: "", caption: "Cutting" },
+                    { url: "/atmosphere/process-draping.jpg", alt: "", caption: "Draping" },
+                    { url: "/atmosphere/process-stitching.jpg", alt: "", caption: "Stitching" },
+                    { url: "/atmosphere/process-finishing.jpg", alt: "", caption: "Finishing" },
+                  ]}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Testimonials - no real customer quotes exist yet to put in a
+              scroller; a placeholder quote would assert something specific
+              and unverified, which this brand's quiet voice doesn't do
+              (PLACEHOLDER-POLICY.md / PRODUCT.md). Quiet text mode instead,
+              swap to the real carousel once Binita sends quotes. */}
+          <section className="px-6 sm:px-10 lg:px-16" aria-label="Customer stories">
+            <div className="mx-auto max-w-6xl">
+              <HorizontalImageScroller
+                mode="label"
+                text="Customer stories are being gathered - real voices from the women wearing Label AshB, coming soon."
+              />
+            </div>
+          </section>
+
+          {/* Newsletter */}
+          <section className="px-6 sm:px-10 lg:px-16" aria-label="Newsletter signup">
+            <NewsletterSignup />
+          </section>
         </div>
-      </section>
-    </main>
+      </main>
+
+      <WhatsAppFloat phone={facts.contact.whatsapp} />
+    </>
   );
 }

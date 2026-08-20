@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
           </span>
         )}
       </div>
-      <div className="pt-4">
+      <div className="pt-4 text-center">
         <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
           {product.category} · Handcrafted in India
         </p>

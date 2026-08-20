@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartContext";
@@ -28,6 +28,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+};
+
+// viewportFit: "cover" lets content draw under the notch/home-indicator
+// safe areas on modern phones - without it, env(safe-area-inset-*) always
+// resolves to 0, which is what left the homepage's WhatsAppFloat button
+// unaware of the home-indicator area on notched devices.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

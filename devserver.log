@@ -1,0 +1,379 @@
+
+> labelashb@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.5.0.2:3000
+- Environments: .env.local
+✓ Ready in 656ms
+✓ Running next.config.ts took 69ms
+
+ GET / 200 in 830ms (next.js: 302ms, application-code: 528ms)
+ POST / 200 in 957ms (next.js: 7ms, application-code: 950ms)
+  └─ ƒ getCartAction() in 938ms src/app/actions/cart.ts
+ POST / 200 in 463ms (next.js: 4ms, application-code: 459ms)
+  └─ ƒ getCartAction() in 452ms src/app/actions/cart.ts
+ GET / 200 in 369ms (next.js: 13ms, application-code: 357ms)
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/kaftan_2.png?v=1781608233" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST / 200 in 661ms (next.js: 9ms, application-code: 651ms)
+  └─ ƒ getCartAction() in 579ms src/app/actions/cart.ts
+ GET /products/amethyst-tide-layered-linen-dress-set 200 in 1734ms (next.js: 1355ms, application-code: 379ms)
+ POST / 200 in 532ms (next.js: 13ms, application-code: 519ms)
+  └─ ƒ getCartAction() in 498ms src/app/actions/cart.ts
+ POST /products/amethyst-tide-layered-linen-dress-set 200 in 550ms (next.js: 40ms, application-code: 510ms)
+  └─ ƒ getCartAction() in 489ms src/app/actions/cart.ts
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1003-B-Image-2_5f079a16-e2fd-450e-b23d-32bffa47f993.jpg?v=1767353779" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ POST /products/amethyst-tide-layered-linen-dress-set 200 in 516ms (next.js: 28ms, application-code: 488ms)
+  └─ ƒ getCartAction() in 473ms src/app/actions/cart.ts
+✓ Compiled in 388ms
+ GET /products/amethyst-tide-layered-linen-dress-set 200 in 287ms (next.js: 73ms, application-code: 215ms)
+ GET / 200 in 358ms (next.js: 143ms, application-code: 215ms)
+ GET / 200 in 609ms (next.js: 57ms, application-code: 552ms)
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1003-B-Image-2_5f079a16-e2fd-450e-b23d-32bffa47f993.jpg?v=1767353779" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET / 200 in 256ms (next.js: 20ms, application-code: 236ms)
+ POST / 200 in 885ms (next.js: 10ms, application-code: 875ms)
+  └─ ƒ getCartAction() in 862ms src/app/actions/cart.ts
+ POST / 200 in 509ms (next.js: 9ms, application-code: 501ms)
+  └─ ƒ getCartAction() in 484ms src/app/actions/cart.ts
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1010-B-Image-3.jpg?v=1767332878" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET / 200 in 175ms (next.js: 7ms, application-code: 168ms)
+ POST / 200 in 1193ms (next.js: 7ms, application-code: 1186ms)
+  └─ ƒ getCartAction() in 1173ms src/app/actions/cart.ts
+ POST / 200 in 899ms (next.js: 6ms, application-code: 893ms)
+  └─ ƒ getCartAction() in 884ms src/app/actions/cart.ts
+ GET / 200 in 173ms (next.js: 8ms, application-code: 165ms)
+ POST / 200 in 1452ms (next.js: 13ms, application-code: 1439ms)
+  └─ ƒ getCartAction() in 1430ms src/app/actions/cart.ts
+ POST / 200 in 533ms (next.js: 9ms, application-code: 523ms)
+  └─ ƒ getCartAction() in 508ms src/app/actions/cart.ts
+ GET / 200 in 215ms (next.js: 6ms, application-code: 209ms)
+ POST / 200 in 582ms (next.js: 10ms, application-code: 572ms)
+  └─ ƒ getCartAction() in 558ms src/app/actions/cart.ts
+ POST / 200 in 590ms (next.js: 7ms, application-code: 583ms)
+  └─ ƒ getCartAction() in 571ms src/app/actions/cart.ts
+ GET / 200 in 204ms (next.js: 11ms, application-code: 193ms)
+ POST / 200 in 510ms (next.js: 9ms, application-code: 501ms)
+  └─ ƒ getCartAction() in 485ms src/app/actions/cart.ts
+ POST / 200 in 508ms (next.js: 7ms, application-code: 501ms)
+  └─ ƒ getCartAction() in 491ms src/app/actions/cart.ts
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1003-B-Image-2_5f079a16-e2fd-450e-b23d-32bffa47f993.jpg?v=1767353779" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET / 200 in 91ms (next.js: 5ms, application-code: 86ms)
+✓ Compiled in 862ms
+ GET / 200 in 454ms (next.js: 52ms, application-code: 402ms)
+ GET / 200 in 1004ms (next.js: 153ms, application-code: 851ms)
+✓ Compiled in 336ms
+ GET / 200 in 292ms (next.js: 42ms, application-code: 250ms)
+ GET / 200 in 177ms (next.js: 10ms, application-code: 167ms)
+ GET / 200 in 138ms (next.js: 4ms, application-code: 134ms)
+ GET / 200 in 191ms (next.js: 8ms, application-code: 183ms)
+ POST / 200 in 505ms (next.js: 6ms, application-code: 499ms)
+  └─ ƒ getCartAction() in 490ms src/app/actions/cart.ts
+ POST / 200 in 471ms (next.js: 5ms, application-code: 467ms)
+  └─ ƒ getCartAction() in 459ms src/app/actions/cart.ts
+ GET / 200 in 220ms (next.js: 13ms, application-code: 208ms)
+ POST / 200 in 513ms (next.js: 9ms, application-code: 505ms)
+  └─ ƒ getCartAction() in 494ms src/app/actions/cart.ts
+ POST / 200 in 486ms (next.js: 9ms, application-code: 477ms)
+  └─ ƒ getCartAction() in 460ms src/app/actions/cart.ts
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1003-B-Image-2_5f079a16-e2fd-450e-b23d-32bffa47f993.jpg?v=1767353779" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_052852962_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.3s (next.js: 7.3s, application-code: 72ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_052852962_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.3s (next.js: 7.3s, application-code: 72ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_063705323_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.0s (next.js: 7.0s, application-code: 14ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_063705323_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.0s (next.js: 7.0s, application-code: 15ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_052724981_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 38ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_052724981_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 39ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_060353356_iOS.png%3Fv%3D1775360368&w=640&q=75 500 in 7.1s (next.js: 7.1s, application-code: 33ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_060353356_iOS.png%3Fv%3D1775360368&w=640&q=75 500 in 7.1s (next.js: 7.1s, application-code: 33ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_053026039_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 30ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_053026039_iOS.png%3Fv%3D1775360260&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 30ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_060545009_iOS.png%3Fv%3D1775360368&w=640&q=75 500 in 7.0s (next.js: 7.0s, application-code: 16ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_060545009_iOS.png%3Fv%3D1775360368&w=640&q=75 500 in 7.0s (next.js: 7.0s, application-code: 16ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_055929763_iOS.png%3Fv%3D1775360367&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 29ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_055929763_iOS.png%3Fv%3D1775360367&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 29ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_064031635_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 16ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_064031635_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 16ms)
+Error [TimeoutError]: The operation was aborted due to timeout
+    at ignore-listed frames {
+  code: 23,
+  INDEX_SIZE_ERR: 1,
+  DOMSTRING_SIZE_ERR: 2,
+  HIERARCHY_REQUEST_ERR: 3,
+  WRONG_DOCUMENT_ERR: 4,
+  INVALID_CHARACTER_ERR: 5,
+  NO_DATA_ALLOWED_ERR: 6,
+  NO_MODIFICATION_ALLOWED_ERR: 7,
+  NOT_FOUND_ERR: 8,
+  NOT_SUPPORTED_ERR: 9,
+  INUSE_ATTRIBUTE_ERR: 10,
+  INVALID_STATE_ERR: 11,
+  SYNTAX_ERR: 12,
+  INVALID_MODIFICATION_ERR: 13,
+  NAMESPACE_ERR: 14,
+  INVALID_ACCESS_ERR: 15,
+  VALIDATION_ERR: 16,
+  TYPE_MISMATCH_ERR: 17,
+  SECURITY_ERR: 18,
+  NETWORK_ERR: 19,
+  ABORT_ERR: 20,
+  URL_MISMATCH_ERR: 21,
+  QUOTA_EXCEEDED_ERR: 22,
+  TIMEOUT_ERR: 23,
+  INVALID_NODE_TYPE_ERR: 24,
+  DATA_CLONE_ERR: 25
+}
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_063842290_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 24ms)
+ GET /_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0647%2F8459%2F7051%2Ffiles%2F20260227_063842290_iOS.png%3Fv%3D1775360782&w=640&q=75 500 in 7.1s (next.js: 7.0s, application-code: 24ms)
+ GET / 200 in 229ms (next.js: 6ms, application-code: 223ms)
+ POST / 200 in 1352ms (next.js: 6ms, application-code: 1346ms)
+  └─ ƒ getCartAction() in 1333ms src/app/actions/cart.ts
+ POST / 200 in 494ms (next.js: 5ms, application-code: 490ms)
+  └─ ƒ getCartAction() in 482ms src/app/actions/cart.ts
+ GET / 200 in 196ms (next.js: 4ms, application-code: 193ms)
+ POST / 200 in 534ms (next.js: 11ms, application-code: 523ms)
+  └─ ƒ getCartAction() in 509ms src/app/actions/cart.ts
+ POST / 200 in 508ms (next.js: 9ms, application-code: 499ms)
+  └─ ƒ getCartAction() in 487ms src/app/actions/cart.ts
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1003-B-Image-2_5f079a16-e2fd-450e-b23d-32bffa47f993.jpg?v=1767353779" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[browser] Image with src "https://cdn.shopify.com/s/files/1/0647/8459/7051/files/Dress-1010-B-Image-3.jpg?v=1767332878" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[?25h

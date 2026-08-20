@@ -1,10 +1,25 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCatalog } from "@/lib/shopify/catalog";
+import { getCatalog, MATERIAL_GROUPS } from "@/lib/shopify/catalog";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ProductFilters, materialLabel } from "@/components/catalog/ProductFilters";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
+
+// A comma-joined material value (the header's Collections dropdown, e.g.
+// "Silk" = crepe-silk,chanderi-silk,modal-silk) reads as one group name in
+// copy, not a raw slug list - falls back to the plain single-slug label
+// when the value isn't an exact group match (or has none).
+function materialDisplayLabel(material: string): string {
+  const slugs = material.split(",");
+  if (slugs.length > 1) {
+    const group = MATERIAL_GROUPS.find(
+      (g) => g.slugs.length === slugs.length && g.slugs.every((s) => slugs.includes(s)),
+    );
+    if (group) return group.label;
+  }
+  return materialLabel(material);
+}
 
 export const metadata: Metadata = {
   title: "Shop All",
@@ -19,11 +34,16 @@ export default async function ProductsPage({
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
   const material = typeof params.material === "string" ? params.material : undefined;
+  // Comma-separated is the header's Collections dropdown asking for a
+  // fabric group (e.g. "Silk" = crepe-silk,chanderi-silk,modal-silk) - the
+  // single-slug case (the sidebar's own material chips) still works
+  // identically since split(",") on a value with no comma is a 1-item array.
+  const materialSlugs = material?.split(",");
 
   const catalog = await getCatalog();
   const products = catalog.filter((p) => {
     if (category && p.category !== category) return false;
-    if (material && !p.materials.includes(material)) return false;
+    if (materialSlugs && !materialSlugs.some((m) => p.materials.includes(m))) return false;
     return true;
   });
 
@@ -63,10 +83,10 @@ export default async function ProductsPage({
             <div className="max-w-md py-8">
               <p className="text-labelashb-body-lg text-labelashb-ink">
                 {category && material
-                  ? `${category} doesn't come in ${materialLabel(material)}.`
+                  ? `${category} doesn't come in ${materialDisplayLabel(material)}.`
                   : category
                     ? `No pieces in ${category} right now.`
-                    : `No pieces in ${materialLabel(material ?? "")} right now.`}
+                    : `No pieces in ${materialDisplayLabel(material ?? "")} right now.`}
               </p>
 
               {category && availableMaterialsForCategory.length > 0 && (

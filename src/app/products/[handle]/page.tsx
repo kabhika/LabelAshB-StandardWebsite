@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/lib/shopify/catalog";
 import { Gallery } from "@/components/catalog/Gallery";
 import { SizeSelector } from "@/components/catalog/SizeSelector";
+import { PdpOffers } from "@/components/catalog/PdpOffers";
 import { demoteH1 } from "@/lib/html";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { breadcrumbJsonLd, productJsonLd, truncateDescription } from "@/lib/seo";
@@ -88,6 +89,7 @@ export default async function ProductPage({
 
           <div className="mt-8">
             <SizeSelector variants={product.variants} />
+            <PdpOffers />
           </div>
 
           {product.descriptionHtml && (

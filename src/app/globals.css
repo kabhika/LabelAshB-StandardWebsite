@@ -30,29 +30,57 @@
   --color-labelashb-error: #b3261e;
   --color-labelashb-error-soft: #f8e9e8;
 
-  /* Homepage editorial redesign only (src/app/page.tsx). Sitewide
-   * --color-labelashb-accent (indigo, sampled from a real product photo)
-   * stays the transactional color for Button/nav/focus rings everywhere -
-   * these tokens are additive, never a replacement, and are not referenced
-   * outside the homepage. Terracotta is the deep accent; the six named
-   * tones are a decorative flourish pulled from fashion-copy color names
-   * (blush, azure, alabaster, celeste, coral, claret), used as small
-   * static swatches, never as text/background color swaps requiring
-   * runtime interpolation (Tailwind needs the literal class names in
-   * source to generate them - see the SWATCH_CLASSES array in page.tsx). */
-  --color-labelashb-paper: #f6efe2;
-  /* Darkened from the original #b85c38 sample: that value measured
-     ~4.0:1 against --color-labelashb-paper, under the 4.5:1 AA minimum
-     for normal text (it's used as real link text, not just a decorative
-     hairline/border, which only needs 3:1). This value measures ~5.2:1 -
-     same hue, same "deep accent" read, passes AA with margin. */
-  --color-labelashb-terracotta: #a34e2e;
-  --color-labelashb-blush: #deb8ae;
-  --color-labelashb-azure: #7c93a8;
-  --color-labelashb-alabaster: #e4dacb;
-  --color-labelashb-celeste: #a7bfb0;
-  --color-labelashb-coral: #d97650;
-  --color-labelashb-claret: #6e2a38;
+  /* Homepage rebuild, jewel-tone-on-ivory system (src/app/page.tsx).
+   * Replaces the old paper/terracotta/blush/azure/alabaster/celeste/
+   * coral/claret set entirely - that palette is gone, not kept alongside
+   * this one. --color-labelashb-ink above (#17181c) is reused as this
+   * system's near-black text color rather than a second near-duplicate -
+   * it already sits within 5 units per channel of the requested #1c1a17.
+   *
+   * Sitewide --color-labelashb-accent (#34365e) previously doubled as the
+   * Button primary fill too ("indistinguishable from indigo at UI sizes,
+   * so no second color"). That reasoning is retired: Button's primary
+   * variant now fills with --color-labelashb-wine directly (Button.tsx),
+   * a deliberate, visible move off indigo as the sitewide CTA color -
+   * verified at ~11.6:1 contrast against --color-labelashb-accent-foreground,
+   * comfortably past WCAG AAA's 7:1 for a filled button label. --accent
+   * itself is untouched and still drives every focus ring sitewide
+   * (including the wine button's own) - that's a systemic "one focus
+   * color everywhere" convention independent of any element's own fill,
+   * not something this change should fork. */
+  --color-labelashb-ivory: #f7f2e9;
+  --color-labelashb-indigo: #2d3557;
+  --color-labelashb-emerald: #1f4d3f;
+  --color-labelashb-wine: #5c1a2e;
+  /* ~25% darker than --color-labelashb-wine, same hue - mirrors the
+     --color-labelashb-accent / -accent-hover value-step pairing so the
+     button's hover state reads as "the same color, pressed in," not a
+     different color. */
+  --color-labelashb-wine-hover: #451423;
+
+  /* Structural: section rhythm, card anatomy, carousel (homepage rebuild).
+   * All under --spacing-labelashb-* so they extend Tailwind's spacing
+   * scale (gap-*, p-*, m-*, w-*, h-*, ...) instead of colliding with the
+   * bare --spacing-* multiplier - same reasoning as the top-of-file note
+   * on why a bare --spacing-* key is never added here. */
+
+  /* Section vertical rhythm. Generous is the default gap between major
+     homepage sections; standard/compact are for tighter internal groups
+     (e.g. a section's own header-to-content gap). Fluid so rhythm scales
+     with viewport instead of jumping at a breakpoint. */
+  --spacing-labelashb-section-compact: clamp(2rem, 1.5rem + 2vw, 3rem);
+  --spacing-labelashb-section-standard: clamp(3rem, 2rem + 4vw, 5rem);
+  --spacing-labelashb-section-generous: clamp(4rem, 2rem + 8vw, 8rem);
+
+  /* Card anatomy, for image-swap product galleries. */
+  --aspect-labelashb-card: 4 / 5;
+  --spacing-labelashb-card-caption: 1rem;
+
+  /* Carousel. Control size is a 44px touch target (WCAG 2.5.5); dot is
+     the small visual indicator, not the tappable hit area around it. */
+  --spacing-labelashb-carousel-gap: 1.25rem;
+  --spacing-labelashb-carousel-control: 2.75rem;
+  --spacing-labelashb-carousel-dot: 0.5rem;
 
   /* Type: one family, extreme size contrast
    * Namespace is --text-*, NOT --font-size-* - verified against
@@ -99,9 +127,14 @@
   --text-labelashb-eyebrow--line-height: 1.4;
   --text-labelashb-eyebrow--letter-spacing: 0.12em;
 
-  /* Radius: near-flat, minimal */
-  --radius-labelashb-sm: 1px;
-  --radius-labelashb-md: 2px;
+  /* Radius: softened (Phase 8) from the original near-flat 1px/2px pair -
+   * buttons and size pills read as sharp/rectangular next to the nav
+   * dropdown's already-rounded popup. Every button and size pill in the
+   * product card and PDP references one of these two tokens directly
+   * (never a one-off rounded-* value), so this stays the single place
+   * that controls all of them at once. */
+  --radius-labelashb-sm: 6px;
+  --radius-labelashb-md: 8px;
 }
 
 body {
@@ -121,6 +154,22 @@ body {
    Fraunces there and falls through to inherited Geist elsewhere. */
 .font-labelashb-serif {
   font-family: var(--font-fraunces), "Fraunces", ui-serif, Georgia, serif;
+}
+
+/* Card hover-swap transition duration. Plain custom property, NOT
+   inside @theme: verified against node_modules/tailwindcss/theme.css -
+   there is no dynamic --duration-<name> scale namespace (only the fixed
+   --default-transition-duration), so a --duration-labelashb-* @theme
+   entry would silently generate zero utilities, same trap as the
+   --font-labelashb-* note above. An arbitrary-value duration utility
+   referencing this var doesn't work either - Lightning CSS fails to
+   parse a var() reference inside that bracket syntax ("Parsing CSS
+   source code failed... Unexpected token Delim('.')"), and Tailwind's
+   candidate scanner picks up that exact class-shaped text even written
+   in a comment, so don't spell it out here as literal class syntax.
+   Consume via an inline style's transitionDuration instead. */
+:root {
+  --labelashb-duration-card-hover: 400ms;
 }
 
 /*
