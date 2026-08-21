@@ -11,7 +11,7 @@ export function CartButton() {
       type="button"
       onClick={openCart}
       aria-label={`Open cart, ${count} ${count === 1 ? "item" : "items"}`}
-      className="relative text-labelashb-body font-semibold text-labelashb-ink-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+      className="relative text-labelashb-body font-semibold text-labelashb-ground/70 hover:text-labelashb-ground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1"
     >
       Cart
       {count > 0 && (

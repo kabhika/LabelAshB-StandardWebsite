@@ -3,6 +3,7 @@ import Image from "next/image";
 import { DISPLAY_CATEGORIES, MATERIAL_GROUPS, getCatalog } from "@/lib/shopify/catalog";
 import { SiteNav, type NavLink } from "@/components/layout/SiteNav";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 
 // Same derive-from-live-catalog pattern as TabbedProductCarousel (categories)
 // and the homepage's fabric showcase (materials) - never a hardcoded
@@ -32,18 +33,44 @@ export async function SiteHeader() {
   const { categories, collections } = await getNavLinks();
 
   return (
-    <header className="relative border-b border-labelashb-border">
-      <div className="bg-labelashb-ink px-4 py-1 text-center text-[0.6875rem] text-labelashb-ground sm:py-1.5 sm:text-labelashb-small">
-        {/* Abbreviated on mobile - the full sentence wraps to 2 lines at
-            375px and eats into the hero's tight below-the-fold budget
-            (verified: pushed the CTA past the iPhone SE 667px floor). */}
-        <span className="sm:hidden">Ready-to-ship: 3-5 days · Made-to-order: 2-3 weeks</span>
-        <span className="hidden sm:inline">
-          Ready-to-ship: 3-5 business days. Made-to-order/customized: 2-3 weeks.
-        </span>
-      </div>
+    // z-30 (explicit, not left at auto): the labelashb-grain `> *` rule
+    // below puts an explicit z-index on its direct child, which makes that
+    // child its own stacking context - without a z-index here too, that
+    // context gets compared against page content (e.g. the hero section)
+    // independently of this header, and MobileNav's dropdown lost that
+    // fight (rendered translucent over the hero image). An explicit
+    // z-index on header composites this whole subtree as one unit above
+    // the page instead.
+    <header className="relative z-30 border-b border-labelashb-border">
+      {/* Light promo strip - separate band from the nav below, not one
+          flat panel: ivory ground + wine text, the same two jewel-tone
+          tokens as the homepage system (DESIGN.md), not black/gray. */}
+      <AnnouncementBar />
 
-      <div className="px-6 py-2 sm:py-4">
+      {/* Dark nav band - deepens from ink toward indigo at the trailing
+          edge (jewel-tone family, not a new hue) plus the sitewide
+          labelashb-grain texture so it reads as fabric, not flat color.
+          No overflow-hidden here: MobileNav's open dropdown is an
+          absolutely-positioned child that must overflow this band
+          downward, and this div (position: relative, for the grain
+          pseudo-element and radial highlight below) is its containing
+          block - clipping it would hide the mobile menu. The radial
+          highlight itself needs no clipping anyway, it's sized inset-x-0
+          h-full to the band already. */}
+      <div className="labelashb-grain relative bg-gradient-to-r from-labelashb-ink via-labelashb-ink to-labelashb-indigo px-6 py-2 sm:py-4">
+        {/* Warm one-off highlight near the logo, echoing its gold tone -
+            not a new design-system color token, just a local decorative
+            radial scoped to this band. labelashb-grain's own `> *` rule
+            already lifts this above the noise overlay (z-index: 1). */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-full"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 38%, rgba(201,162,90,0.16), transparent 60%)",
+          }}
+        />
+
         {/* 1fr/auto/1fr keeps the logo mathematically centered regardless
             of what sits in the side columns - MobileNav on mobile,
             nothing on desktop (nav moves to its own row below). */}
@@ -52,7 +79,7 @@ export async function SiteHeader() {
           <Link
             href="/"
             aria-label="Label AshB, home"
-            className="inline-block justify-self-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+            className="inline-block justify-self-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1"
           >
             <Image
               src="/label-ashb-logo-transparent.png"

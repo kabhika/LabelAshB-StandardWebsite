@@ -50,7 +50,7 @@ export function SiteNav({
       <NavigationMenuList className="gap-6">
         {categories.length > 0 && (
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ink-soft hover:bg-transparent hover:text-labelashb-ink focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 data-popup-open:bg-transparent data-open:bg-transparent">
+            <NavigationMenuTrigger className="rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ground/70 hover:bg-transparent hover:text-labelashb-ground focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1 data-popup-open:bg-transparent data-open:bg-transparent">
               Categories
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -71,7 +71,7 @@ export function SiteNav({
 
         {collections.length > 0 && (
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ink-soft hover:bg-transparent hover:text-labelashb-ink focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 data-popup-open:bg-transparent data-open:bg-transparent">
+            <NavigationMenuTrigger className="rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ground/70 hover:bg-transparent hover:text-labelashb-ground focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1 data-popup-open:bg-transparent data-open:bg-transparent">
               Collections
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -102,7 +102,7 @@ export function SiteNav({
                 render={
                   <Link
                     href={href}
-                    className="relative rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ink-soft after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-center after:scale-x-0 after:bg-labelashb-accent after:transition-transform after:duration-300 hover:bg-transparent hover:text-labelashb-ink focus-visible:bg-transparent focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 focus-visible:outline-none data-active:bg-transparent data-active:text-labelashb-ink data-active:after:scale-x-100 data-active:hover:bg-transparent data-active:focus:bg-transparent"
+                    className="relative rounded-none bg-transparent p-0 text-labelashb-body font-semibold text-labelashb-ground/70 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-center after:scale-x-0 after:bg-labelashb-ground after:transition-transform after:duration-300 hover:bg-transparent hover:text-labelashb-ground focus-visible:bg-transparent focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1 focus-visible:outline-none data-active:bg-transparent data-active:text-labelashb-ground data-active:after:scale-x-100 data-active:hover:bg-transparent data-active:focus:bg-transparent"
                   />
                 }
               >

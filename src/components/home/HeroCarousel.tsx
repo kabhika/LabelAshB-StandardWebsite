@@ -70,7 +70,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               fill
               sizes="(min-width: 768px) 58vw, 100vw"
               priority={i === 0}
-              className="pointer-events-none object-contain"
+              className="pointer-events-none object-cover"
             />
           </div>
         ))}
