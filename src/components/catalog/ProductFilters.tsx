@@ -29,14 +29,15 @@ const ALL_VALUE = "all";
 // - the "pressed" state is purely a reflection of activeCategory/
 // activeMaterial via ToggleGroup's controlled `value`, never client toggle
 // state. rounded-none overrides shadcn's default rounded-lg to match this
-// brand's near-flat identity; data-pressed gives the solid accent fill
-// the outline/tint treatment couldn't (selected must read as clearly
-// selected, not just a faint tint). Uses data-pressed, not data-state=on -
-// composing ToggleGroupItem with render={<Link/>} doesn't carry data-state
-// through onto the rendered <a> (verified in the browser), but data-pressed
-// and aria-pressed do.
+// brand's near-flat identity. Selected state is the same wine border-
+// highlight pattern as the size pills (SizeSelector.tsx /
+// ProductCardSizePicker.tsx: "border-labelashb-wine text-labelashb-wine",
+// no fill) - not the solid accent fill this used to have. Uses
+// data-pressed, not data-state=on - composing ToggleGroupItem with
+// render={<Link/>} doesn't carry data-state through onto the rendered <a>
+// (verified in the browser), but data-pressed and aria-pressed do.
 const CHIP_CLASS =
-  "min-h-11 rounded-none border border-labelashb-border bg-transparent px-4 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft transition-colors duration-200 active:scale-[0.97] hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 data-pressed:border-labelashb-accent data-pressed:bg-labelashb-accent data-pressed:text-labelashb-accent-foreground data-pressed:hover:border-labelashb-accent-hover data-pressed:hover:bg-labelashb-accent-hover";
+  "min-h-11 rounded-none border border-labelashb-border bg-transparent px-4 text-labelashb-small font-semibold uppercase text-labelashb-ink-soft transition-colors duration-200 active:scale-[0.97] hover:border-labelashb-ink hover:bg-labelashb-ground-alt hover:text-labelashb-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 data-pressed:border-labelashb-wine data-pressed:bg-transparent data-pressed:text-labelashb-wine data-pressed:hover:border-labelashb-wine data-pressed:hover:bg-transparent data-pressed:hover:text-labelashb-wine";
 
 export function ProductFilters({
   activeCategory,

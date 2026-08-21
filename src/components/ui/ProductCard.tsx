@@ -38,13 +38,15 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
         )}
       </div>
       <div className="pt-4 text-center">
-        <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
-          {product.category} · Handcrafted in India
-        </p>
-        <h3 className="mt-1 text-labelashb-body-lg text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
+        <h3 className="text-labelashb-small text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
           {product.title}
         </h3>
-        <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">
+        {/* Price dropped from body(16) to small(14) alongside the name -
+            at the name's old body-lg(18) size, body(16) read as a quieter
+            secondary line; once the name itself is small(14), a body-size
+            price would outsize it and invert the hierarchy. Color
+            (ink-soft vs ink) still separates them at equal size. */}
+        <p className="mt-1 text-labelashb-small text-labelashb-ink-soft tabular-nums">
           {priceLabel}
         </p>
       </div>

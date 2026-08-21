@@ -47,30 +47,27 @@ export async function SiteHeader() {
           tokens as the homepage system (DESIGN.md), not black/gray. */}
       <AnnouncementBar />
 
-      {/* Dark nav band - deepens from ink toward indigo at the trailing
-          edge (jewel-tone family, not a new hue) plus the sitewide
-          labelashb-grain texture so it reads as fabric, not flat color.
-          No overflow-hidden here: MobileNav's open dropdown is an
+      {/* Dark nav band - "Diagonal jewel sweep", winner of the /style-tile
+          nav-band comparison (candidate 1 of 4). Same gradient definition
+          verified there, not re-derived: diagonal wine -> ink -> indigo
+          blend, not the previous flat left-to-right ink/indigo fade.
+          Plus the sitewide labelashb-grain texture so it reads as fabric,
+          not flat color - its ::before noise layer paints above this
+          background, below real content. No child overlay here (the
+          style-tile comparison's other candidates needed one and hit the
+          `> *` position bug documented there; this treatment doesn't).
+          No overflow-hidden: MobileNav's open dropdown is an
           absolutely-positioned child that must overflow this band
           downward, and this div (position: relative, for the grain
-          pseudo-element and radial highlight below) is its containing
-          block - clipping it would hide the mobile menu. The radial
-          highlight itself needs no clipping anyway, it's sized inset-x-0
-          h-full to the band already. */}
-      <div className="labelashb-grain relative bg-gradient-to-r from-labelashb-ink via-labelashb-ink to-labelashb-indigo px-6 py-2 sm:py-4">
-        {/* Warm one-off highlight near the logo, echoing its gold tone -
-            not a new design-system color token, just a local decorative
-            radial scoped to this band. labelashb-grain's own `> *` rule
-            already lifts this above the noise overlay (z-index: 1). */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-full"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 38%, rgba(201,162,90,0.16), transparent 60%)",
-          }}
-        />
-
+          pseudo-element) is its containing block - clipping it would
+          hide the mobile menu. */}
+      <div
+        className="labelashb-grain relative px-6 py-2 sm:py-4"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, var(--color-labelashb-wine), var(--color-labelashb-ink), var(--color-labelashb-indigo))",
+        }}
+      >
         {/* 1fr/auto/1fr keeps the logo mathematically centered regardless
             of what sits in the side columns - MobileNav on mobile,
             nothing on desktop (nav moves to its own row below). */}
