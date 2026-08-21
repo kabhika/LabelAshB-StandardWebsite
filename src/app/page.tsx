@@ -221,7 +221,10 @@ export default async function Home() {
           {/* Shop by category - tabs derived from the live catalog. */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
             <div className="mx-auto max-w-6xl">
-              <TabbedProductCarousel products={catalog} />
+              <TabbedProductCarousel
+                products={catalog}
+                excludeIds={new Set(newIn.map((p) => p.id))}
+              />
             </div>
           </section>
 

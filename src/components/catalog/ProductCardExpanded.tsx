@@ -36,10 +36,7 @@ export function ProductCardExpanded({ product }: { product: NormalizedProduct })
           )}
         </div>
         <div className="mt-labelashb-card-caption text-center">
-          <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
-            {product.category} · Handcrafted in India
-          </p>
-          <h3 className="mt-1 text-labelashb-body-lg text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-indigo">
+          <h3 className="text-labelashb-small text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-indigo">
             {product.title}
           </h3>
           <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">

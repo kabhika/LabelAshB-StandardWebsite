@@ -16,7 +16,22 @@ const UNDERLINE_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 // overlap with the previous view that nothing gets skipped unseen.
 const SCROLL_STEP_RATIO = 0.85;
 
-export function TabbedProductCarousel({ products }: { products: NormalizedProduct[] }) {
+// Below this count a post-exclusion row reads as sparse rather than
+// curated, so fall back to the unfiltered category list instead of a
+// too-short row (see excludeIds below).
+const MIN_ROW_AFTER_EXCLUDE = 2;
+
+export function TabbedProductCarousel({
+  products,
+  excludeIds,
+}: {
+  products: NormalizedProduct[];
+  // Product ids already shown elsewhere on the page (e.g. "New in") -
+  // dropped from each category's initial selection so the two sections
+  // don't open on the same pieces. Falls back to including them per
+  // category when exclusion would leave too few/none.
+  excludeIds?: Set<string>;
+}) {
   const groupId = useId();
   const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
@@ -36,10 +51,13 @@ export function TabbedProductCarousel({ products }: { products: NormalizedProduc
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const visible = useMemo(
-    () => products.filter((p) => p.inStock && p.category === active),
-    [products, active],
-  );
+  const visible = useMemo(() => {
+    const inCategory = products.filter((p) => p.inStock && p.category === active);
+    if (!excludeIds || excludeIds.size === 0) return inCategory;
+
+    const deduped = inCategory.filter((p) => !excludeIds.has(p.id));
+    return deduped.length >= MIN_ROW_AFTER_EXCLUDE ? deduped : inCategory;
+  }, [products, active, excludeIds]);
 
   const updateScrollState = useCallback(() => {
     const el = trackRef.current;
