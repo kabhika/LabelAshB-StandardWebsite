@@ -12,7 +12,9 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
+import { ServiceAssuranceBand } from "@/components/home/ServiceAssuranceBand";
 import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
+import { CraftBadgesBand } from "@/components/home/CraftBadgesBand";
 import { PromoTileGrid, type PromoTile } from "@/components/home/PromoTileGrid";
 import {
   HorizontalImageScroller,
@@ -36,7 +38,10 @@ const fraunces = Fraunces({
 // Per-column vertical offsets for the featured stagger (cycles through
 // the grid's column position) - a deliberate lookbook rhythm, not
 // randomized, so it's identical on every render (no hydration mismatch).
-const STAGGER_OFFSETS_PX = [0, 32, 12, 44];
+// Two-tier alternation, not four distinct values: columns 1/3 must land
+// on the same offset and 2/4 on the same offset, or the row reads as
+// misaligned rather than a deliberate stagger.
+const STAGGER_OFFSETS_PX = [0, 32];
 
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
@@ -265,6 +270,13 @@ export default async function Home() {
             </section>
           )}
 
+          {/* Service assurance - solid wine band. Moved off the top-of-page
+              position (originally right below the header, which duplicated
+              the header's own AnnouncementBar strip too closely) to a
+              middle position: past every featured/category section, right
+              before the brand-story half of the page begins. */}
+          <ServiceAssuranceBand />
+
           {/* Our Studio - atmospheric imagery, no studio photography exists
               yet. Abstract jewel-tone panels (own visual language, not
               stock photography of someone else's studio), full visual
@@ -347,10 +359,30 @@ export default async function Home() {
                       want clothing that feels personal and graceful.
                     </dd>
                   </div>
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">Solar-powered workshop</dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      The workshop runs on solar energy, generated on site
+                      rather than drawn from the grid.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-labelashb-body-lg text-labelashb-ink">Fair opportunity</dt>
+                    <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
+                      The people who cut, stitch, and finish each piece come
+                      from underprivileged backgrounds - skilled work with
+                      real opportunity behind it.
+                    </dd>
+                  </div>
                 </dl>
               </div>
             </div>
           </section>
+
+          {/* Craft badges - full-width indigo trust band, further down the
+              flow next to the claims it backs up (Why Label AshB directly
+              above). Three real, verified badges, not padded to a fourth. */}
+          <CraftBadgesBand />
 
           {/* Process - fabric/craft themes, tile count independent of the
               3-category constraint above (this is process stages, not

@@ -26,6 +26,7 @@ Not a batch-processed apparel brand. Every piece starts on paper, is prototyped,
 - Returns are limited: made-to-order model, exchanges only for genuine fit issues (customer pays return shipping).
 - Care: dry clean only for most pieces (natural fibers, hand-block prints).
 - Direct contact channels (email, WhatsApp, phone) are a first-class ordering path alongside on-site checkout.
+- Fabric is sourced white, then hand-dyed with plant dyes to the requested color before being made into garments. Workshop runs on solar energy and employs people from underprivileged backgrounds. Confirmed directly by Abhishek (Coralstone Services, managing this site for his sister Binita, the business owner) 2026-08-22, not yet on a Shopify Admin page - see `_knowledge/facts.json` craftPractices.
 
 ## Capabilities and Constraints
 

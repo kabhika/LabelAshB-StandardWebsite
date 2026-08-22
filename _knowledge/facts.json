@@ -61,6 +61,15 @@
       "effectiveDate": "2025-01-13"
     }
   },
+  "craftPractices": {
+    "note": "Confirmed directly by Abhishek (Coralstone Services, managing this site on behalf of his sister Binita, the business owner) in-session, not sourced from a Shopify Admin page - carried here as the source of truth until a formal About/Craft page exists.",
+    "confirmedAt": "2026-08-22",
+    "facts": [
+      "Fabric is sourced white, then hand-dyed with plant dyes to the requested color before being made into garments.",
+      "The workshop runs on solar energy.",
+      "The workshop employs people from underprivileged backgrounds."
+    ]
+  },
   "taxonomy": {
     "note": "Live productType values seen from the catalog: 'Dress', 'Tops', 'outfit sets' (active products) and 'Co-ord Set' (the draft product). Normalize 'outfit sets' and 'Co-ord Set' into a single display category, mapping done in code (src/lib/shopify/catalog.ts), not here.",
     "displayCategories": {
