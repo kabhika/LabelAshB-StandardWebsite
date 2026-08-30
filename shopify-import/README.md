@@ -26,7 +26,7 @@ bought.
 
 ## Image URLs - the one edit this file needs
 
-Every `Image Src` points at `https://YOUR-DEPLOYED-SITE-DOMAIN/
+Every `Image Src` points at `https://label-ash-b-standard-website.vercel.app/
 collection/<slug>/01-front-view.jpg` etc. These are the optimized JPGs in
 `public/collection/`. Find-and-replace the placeholder with the deployed
 site's real domain once the site is live (the images must be publicly
