@@ -68,7 +68,10 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               src={slide.url}
               alt={slide.alt}
               fill
-              sizes="(min-width: 768px) 58vw, 100vw"
+              // The hero frame is a 2:3 portrait column sized from the
+              // viewport height (md:h-[82vh], width from the aspect ratio),
+              // so ~55vh approximates its rendered width on md+ screens.
+              sizes="(min-width: 768px) 55vh, 100vw"
               priority={i === 0}
               className="pointer-events-none object-cover"
             />

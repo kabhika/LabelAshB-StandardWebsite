@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
 import {
@@ -7,11 +8,14 @@ import {
   getCatalog,
   type NormalizedProduct,
 } from "@/lib/shopify/catalog";
-import { ProductCard } from "@/components/ui/ProductCard";
+import {
+  collectionGarments,
+  collectionHeroSlides,
+} from "@/data/new-collection";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
+import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ServiceAssuranceBand } from "@/components/home/ServiceAssuranceBand";
 import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
 import { CraftBadgesBand } from "@/components/home/CraftBadgesBand";
@@ -43,6 +47,16 @@ const fraunces = Fraunces({
 // misaligned rather than a deliberate stagger.
 const STAGGER_OFFSETS_PX = [0, 32];
 
+// Category spread for the homepage tease (one top, one co-ord, two
+// dresses; deliberately not the hero slides, so the section adds range
+// rather than repeating the carousel above it).
+const NEW_COLLECTION_TEASE_SLUGS = [
+  "01-mauve-embroidered-shirt",
+  "12-hot-pink-high-low-shirt-set",
+  "16-pink-striped-fringe-a-line-dress",
+  "11-coral-cutwork-mock-neck-long-dress",
+];
+
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
 // template, which would otherwise double the brand name.
@@ -52,36 +66,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// Curates hero slides from the live catalog instead of a hardcoded product
-// handle, so a sold-through hero product doesn't leave a stale image. One
-// product per category first (spreads the carousel across the range), then
-// backfills from remaining in-stock products if fewer than 3 categories
-// exist, so the carousel never drops below a 3-slide floor.
-function pickHeroSlides(products: NormalizedProduct[]): HeroSlide[] {
-  const inStock = products.filter((p) => p.inStock && p.images.length > 0);
-  const seenCategories = new Set<string>();
-  const curated: NormalizedProduct[] = [];
-
-  for (const product of inStock) {
-    if (curated.length >= 5) break;
-    if (seenCategories.has(product.category)) continue;
-    seenCategories.add(product.category);
-    curated.push(product);
-  }
-
-  if (curated.length < 3) {
-    for (const product of inStock) {
-      if (curated.length >= 3) break;
-      if (curated.includes(product)) continue;
-      curated.push(product);
-    }
-  }
-
-  return curated.map((product) => {
-    const image = product.images[1] ?? product.images[0];
-    return { url: image.url, alt: image.altText || product.title };
-  });
-}
+// Hero slides come from the New Collection (src/data/new-collection.ts):
+// consistent 2:3 studio photography of one model, so the carousel reads as
+// one editorial story instead of mismatched catalog shots. Curated there
+// (collectionHeroSlides), not picked from the live catalog here - the old
+// picker used images[1] of arbitrary in-stock products, which both cropped
+// badly in a wide object-cover frame and broke whenever a product's second
+// image was an oversized CDN upload that the optimizer timed out on.
+const heroSlides = collectionHeroSlides();
 
 // One real product image per category, for the 3-tile promo grid - never
 // padded to a 4th tile, the catalog only has 3 real categories
@@ -125,8 +117,6 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
 export default async function Home() {
   const catalog = await getCatalog();
   const inStock = catalog.filter((p) => p.inStock);
-  const newIn = inStock.slice(0, 4);
-  const heroSlides = pickHeroSlides(catalog);
   const categoryTiles = pickCategoryTiles(catalog);
   const materialShowcase = pickMaterialShowcase(catalog);
   const whyUsProduct = inStock.find((p) => p.category === "Co-ord Sets" && p.images.length > 1) ?? inStock[0];
@@ -150,11 +140,13 @@ export default async function Home() {
       >
         <JsonLd data={websiteJsonLd} />
 
-        {/* Hero - asymmetric editorial split, not the even two-column
-            default: image bleeds to the true viewport edge at roughly
-            two-thirds width, text column holds a third. */}
+        {/* Hero - asymmetric editorial split: a portrait 2:3 image column
+            sized by viewport height (width follows from the aspect ratio),
+            text column takes the rest. The frame ratio matches the New
+            Collection photography exactly, so object-cover never crops a
+            garment's head or hem - the old 64%-wide frame always did. */}
         <section className="flex flex-col border-b border-labelashb-border md:min-h-[85vh] md:flex-row">
-          <div className="order-2 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:w-[36%] md:px-14 lg:px-16">
+          <div className="order-2 flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:px-14 lg:px-16">
             <Reveal>
               {/* text-labelashb-display is viewport-relative (vw), which is
                   correct for a full-width context like style-tile but wrong
@@ -185,7 +177,7 @@ export default async function Home() {
               absolutely-positioned HeroCarousel and collapses its h-full
               chain to 0 height. */}
           <div
-            className="labelashb-reveal relative order-1 aspect-[4/3] md:order-2 md:aspect-auto md:w-[64%]"
+            className="labelashb-reveal relative order-1 aspect-[2/3] w-full md:order-2 md:h-[82vh] md:w-auto"
             style={{ animationDelay: "0.15s" }}
           >
             <HeroCarousel slides={heroSlides} />
@@ -193,43 +185,81 @@ export default async function Home() {
         </section>
 
         <div className="flex flex-col gap-labelashb-section-generous py-labelashb-section-generous">
-          {/* New in - a short editorial tease, not a second full grid: the
-              tabbed carousel right below is where a shopper actually
-              browses by category. */}
-          {newIn.length > 0 && (
-            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-in-heading">
-              <div className="mx-auto max-w-6xl">
-                <h2
-                  id="new-in-heading"
-                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
-                >
-                  New in
-                </h2>
-                <div className="mt-labelashb-section-compact grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
-                  {newIn.map((product, i) => (
-                    <Reveal key={product.id} delay={0.1 + i * 0.06}>
+          {/* The New Collection - 18 new pieces (local photography, named
+              and described in src/data/new-collection.ts), browsable in
+              full at /collection. A short editorial tease of four with
+              category spread; the shop carousel below is where the live,
+              purchasable catalog gets browsed. */}
+          <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-collection-heading">
+            <div className="mx-auto max-w-6xl">
+              <h2
+                id="new-collection-heading"
+                className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
+              >
+                The New Collection
+              </h2>
+              <p className="mt-4 max-w-2xl text-labelashb-body text-labelashb-ink-soft">
+                Eighteen new pieces for the season - dresses, shirts, tunics
+                and co-ord sets, each photographed across five views.
+                Pricing and sizing on request.
+              </p>
+              <div className="mt-labelashb-section-compact grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
+                {NEW_COLLECTION_TEASE_SLUGS.map((slug, i) => {
+                  const garment = collectionGarments.find((g) => g.slug === slug);
+                  if (!garment) return null;
+                  return (
+                    <Reveal key={garment.slug} delay={0.1 + i * 0.06}>
                       <div
                         className="sm:translate-y-[var(--stagger)]"
                         style={{
                           ["--stagger" as string]: `${STAGGER_OFFSETS_PX[i % STAGGER_OFFSETS_PX.length]}px`,
                         }}
                       >
-                        <ProductCard product={product} />
+                        <Link
+                          href={`/collection/${garment.slug}`}
+                          className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-4"
+                        >
+                          <div className="relative aspect-[2/3] w-full overflow-hidden bg-labelashb-ground-alt">
+                            <Image
+                              src={garment.views.front}
+                              alt={`${garment.name} - ${garment.shortDescription}`}
+                              fill
+                              sizes="(min-width: 640px) 25vw, 50vw"
+                              className="object-cover transition-opacity duration-500 group-hover:opacity-0"
+                            />
+                            <Image
+                              src={garment.views.threeQuarter}
+                              alt=""
+                              fill
+                              sizes="(min-width: 640px) 25vw, 50vw"
+                              aria-hidden
+                              className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            />
+                          </div>
+                          <p className="mt-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
+                            {garment.category}
+                          </p>
+                          <p className="mt-1 text-labelashb-body-lg text-labelashb-ink group-hover:text-labelashb-accent">
+                            {garment.name}
+                          </p>
+                        </Link>
                       </div>
                     </Reveal>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            </section>
-          )}
+              <div className="mt-10">
+                <Button href="/collection" variant="primary">
+                  View the collection
+                </Button>
+              </div>
+            </div>
+          </section>
 
           {/* Shop by category - tabs derived from the live catalog. */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
             <div className="mx-auto max-w-6xl">
-              <TabbedProductCarousel
-                products={catalog}
-                excludeIds={new Set(newIn.map((p) => p.id))}
-              />
+              <TabbedProductCarousel products={catalog} />
             </div>
           </section>
 

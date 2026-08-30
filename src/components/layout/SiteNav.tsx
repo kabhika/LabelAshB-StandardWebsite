@@ -18,6 +18,7 @@ export interface NavLink {
 }
 
 const LINKS = [
+  { href: "/collection", label: "New Collection" },
   { href: "/products", label: "Shop" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
@@ -91,10 +92,11 @@ export function SiteNav({
         )}
 
         {LINKS.map(({ href, label }) => {
-          const active =
-            href === "/products"
-              ? pathname === href || pathname.startsWith("/products/")
-              : pathname === href;
+          // Prefix match keeps a section root active on its sub-pages
+          // (/products stays active on /products/[handle], /collection on
+          // /collection/[slug]). Safe for these fixed hrefs - none is a
+          // bare "/" that would match every route.
+          const active = pathname === href || pathname.startsWith(`${href}/`);
           return (
             <NavigationMenuItem key={href}>
               <NavigationMenuLink
