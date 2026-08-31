@@ -1,6 +1,13 @@
 // The New Collection - 18 garments supplied as generative re-shoots
 // (new-images/README.md) with a consistent model and studio backdrop.
 //
+// STATUS (Aug 31 2026, evening): this is now a registry, not a browsable
+// lookbook - every garment has a single home on the site: 8 rotate on
+// the homepage hero (HERO_SLUGS below) and 10 serve as presentation
+// imagery on the last mannequin-shot products (PRESENTATION_SWAPS in
+// product-reshoots.ts). The /collection routes and homepage section were
+// removed in the same change so no garment appears in two places.
+//
 // Content rules for this file:
 // - Names follow the brand's poetic-noun voice ("Petal Cascade",
 //   "Meadow Whisper") and are checked against live catalog titles to avoid
@@ -10,6 +17,8 @@
 //   claims (unverifiable from images), no prices (not set yet).
 // - Category assignment follows the garment type, matching the three
 //   catalog categories the rest of the site already filters on.
+
+import { getReshootBySlug } from "./product-reshoots";
 
 export type CollectionCategory = "Dresses" | "Tops" | "Co-ord Sets";
 
@@ -190,23 +199,67 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation: four full-length looks chosen for range (one fuchsia
-// statement, two lights, one multi-colour), always the front view so the
-// garment reads head-to-hem inside the 2:3 hero frame.
+// Hero curation (Sep 1 2026): the rotation has been progressively
+// emptied by the mannequin sweeps - batches 2 and 3 donated six of the
+// eight evening picks to product pages (products win over hero, per the
+// client's precedent). Two slides remain: coral mandarin and purple
+// tunic. Restore variety when the next image batch arrives - candidate
+// garments must not be placed on any product page.
 const HERO_SLUGS = [
-  "07-fuchsia-double-button-maxi-dress",
-  "10-ivory-floral-embroidered-v-neck-dress",
-  "08-mint-butterfly-a-line-dress",
-  "18-cream-teal-mustard-halter-floral-dress",
+  "04-coral-blue-leaf-mandarin-shirt",
+  "03-purple-applique-v-neck-tunic",
 ];
+
+// Kept for future re-shoot hero picks: display names for reshoot slugs
+// (their Shopify titles aren't known at build time).
+const RESHOOT_HERO_NAMES: Record<string, string> = {};
+
+interface HeroGarment {
+  name: string;
+  short: string;
+  front: string;
+  detail: string;
+}
+
+function heroGarment(slug: string): HeroGarment | null {
+  const lookbook = getGarment(slug);
+  if (lookbook) {
+    return {
+      name: lookbook.name,
+      short: lookbook.shortDescription,
+      front: lookbook.views.front,
+      detail: lookbook.views.detail,
+    };
+  }
+  const reshoot = getReshootBySlug(slug);
+  if (reshoot) {
+    return {
+      name: RESHOOT_HERO_NAMES[slug] ?? slug,
+      short: reshoot.description.split(/[.!?]/)[0] + ".",
+      front: reshoot.views[0],
+      detail: reshoot.views[reshoot.views.length - 1],
+    };
+  }
+  return null;
+}
 
 export function collectionHeroSlides() {
   return HERO_SLUGS.map((slug) => {
-    const g = getGarment(slug)!;
+    const g = heroGarment(slug)!;
     return {
-      url: g.views.front,
-      alt: `${g.name} - ${g.shortDescription}`,
+      url: g.front,
+      alt: `${g.name} - ${g.short}`,
       name: g.name,
+    };
+  });
+}
+
+export function collectionHeroDetails() {
+  return HERO_SLUGS.map((slug) => {
+    const g = heroGarment(slug)!;
+    return {
+      url: g.detail,
+      alt: `${g.name} - close-up detail`,
     };
   });
 }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
 import {
@@ -9,7 +8,7 @@ import {
   type NormalizedProduct,
 } from "@/lib/shopify/catalog";
 import {
-  collectionGarments,
+  collectionHeroDetails,
   collectionHeroSlides,
 } from "@/data/new-collection";
 import { Reveal } from "@/components/motion/Reveal";
@@ -39,24 +38,6 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
-// Per-column vertical offsets for the featured stagger (cycles through
-// the grid's column position) - a deliberate lookbook rhythm, not
-// randomized, so it's identical on every render (no hydration mismatch).
-// Two-tier alternation, not four distinct values: columns 1/3 must land
-// on the same offset and 2/4 on the same offset, or the row reads as
-// misaligned rather than a deliberate stagger.
-const STAGGER_OFFSETS_PX = [0, 32];
-
-// Category spread for the homepage tease (one top, one co-ord, two
-// dresses; deliberately not the hero slides, so the section adds range
-// rather than repeating the carousel above it).
-const NEW_COLLECTION_TEASE_SLUGS = [
-  "01-mauve-embroidered-shirt",
-  "12-hot-pink-high-low-shirt-set",
-  "16-pink-striped-fringe-a-line-dress",
-  "11-coral-cutwork-mock-neck-long-dress",
-];
-
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
 // template, which would otherwise double the brand name.
@@ -74,6 +55,7 @@ export const metadata: Metadata = {
 // badly in a wide object-cover frame and broke whenever a product's second
 // image was an oversized CDN upload that the optimizer timed out on.
 const heroSlides = collectionHeroSlides();
+const heroDetails = collectionHeroDetails();
 
 // One real product image per category, for the 3-tile promo grid - never
 // padded to a 4th tile, the catalog only has 3 real categories
@@ -140,121 +122,78 @@ export default async function Home() {
       >
         <JsonLd data={websiteJsonLd} />
 
-        {/* Hero - asymmetric editorial split: a portrait 2:3 image column
-            sized by viewport height (width follows from the aspect ratio),
-            text column takes the rest. The frame ratio matches the New
-            Collection photography exactly, so object-cover never crops a
-            garment's head or hem - the old 64%-wide frame always did. */}
-        <section className="flex flex-col border-b border-labelashb-border md:min-h-[85vh] md:flex-row">
-          <div className="order-2 flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:px-14 lg:px-16">
-            <Reveal>
-              {/* text-labelashb-display is viewport-relative (vw), which is
-                  correct for a full-width context like style-tile but wrong
-                  here: this column is a minority share of viewport from md:
-                  up, so the token's natural value overshoots and wraps to 3
-                  lines across roughly 768-1200px. The md:/xl: override is a
-                  real container-width correction, not a duplicate of the
-                  token's own mobile-safety clamp. */}
-              <h1 className="font-labelashb-serif text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
-                Linen. Silk. Cotton.
-              </h1>
-              <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-indigo" />
-              <p className="mt-5 line-clamp-3 max-w-md text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
-                Made with time, care, and a clear eye for detail.{" "}
-                {facts.brand.shortDescription}
-              </p>
-              <div className="mt-8">
-                <Button href="/products" variant="primary">
-                  Shop the collection
-                </Button>
-              </div>
-            </Reveal>
-          </div>
+        {/* Hero - Apple-style centered composition: the whole hero (copy
+            + imagery) sits in a capped, centered column, so on very wide
+            screens the surplus becomes white space on the OUTER flanks
+            of the page - never more image stretch. Cap is 1720px
+            (raised from 1560 when the client asked for ~10% more spread
+            per side, Sep 1 2026 - below that width the hero runs
+            full-bleed). The full-width hairline below stays full-bleed -
+            only the content is capped.
+            Inside the cap: copy column (max 520px, biased upward) and
+            the image area. The carousel pairs a fixed-2:3 primary frame
+            (the photos are tight full-body shots - measured 0-6%
+            headroom, 2-6% floor - so a wider box would make
+            object-cover eat head/hem) with a flex-1 companion panel of
+            the same garment's close-up detail (HeroCarousel.tsx). The
+            image column stretches to the row height (70vh floor, 780px
+            ceiling) with a 200px companion floor, so the panels fill
+            the band with no dead space at any screen size. */}
+        <section className="border-b border-labelashb-border">
+          {/* No min-height: the row hugs its tallest child (the 70vh/
+              max-780px image column). A former md:min-h-[85vh] left a
+              large dead ivory band below the imagery on tall screens
+              (client: "reduce this gap further", Sep 1 2026). */}
+          <div className="mx-auto flex max-w-[1720px] flex-col md:flex-row">
+            {/* pb-[10vh] biases the copy block above dead-center (client
+                note: "a little bit upward"); pr-6 at lg keeps the copy
+                close to the first image panel. */}
+            <div className="order-2 flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pl-16 lg:pr-6">
+              <Reveal>
+                {/* text-labelashb-display is viewport-relative (vw), which is
+                    correct for a full-width context like style-tile but wrong
+                    here: this column is a minority share of viewport from md:
+                    up, so the token's natural value overshoots and wraps to 3
+                    lines across roughly 768-1200px. The md:/xl: override is a
+                    real container-width correction, not a duplicate of the
+                    token's own mobile-safety clamp. */}
+                <h1 className="font-labelashb-serif text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
+                  Linen. Silk. Cotton.
+                </h1>
+                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-indigo" />
+                <p className="mt-5 line-clamp-3 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
+                  Made with time, care, and a clear eye for detail.{" "}
+                  {facts.brand.shortDescription}
+                </p>
+                <div className="mt-8">
+                  <Button href="/products" variant="primary">
+                    Shop the collection
+                  </Button>
+                </div>
+              </Reveal>
+            </div>
 
-          {/* Plain-CSS fade+rise (globals.css .labelashb-reveal), not the
-              Reveal component: Reveal's motion.div applies an inline
-              transform, which becomes a containing block for this column's
-              absolutely-positioned HeroCarousel and collapses its h-full
-              chain to 0 height. */}
-          <div
-            className="labelashb-reveal relative order-1 aspect-[2/3] w-full md:order-2 md:h-[82vh] md:w-auto"
-            style={{ animationDelay: "0.15s" }}
-          >
-            <HeroCarousel slides={heroSlides} />
+            {/* Plain-CSS fade+rise (globals.css .labelashb-reveal), not the
+                Reveal component: Reveal's motion.div applies an inline
+                transform, which becomes a containing block for this column's
+                absolutely-positioned HeroCarousel and collapses its h-full
+                chain to 0 height. */}
+            <div
+              className="labelashb-reveal relative order-1 aspect-[2/3] w-full md:order-2 md:aspect-auto md:min-h-[70vh] md:max-h-[780px] md:w-auto lg:flex-[1_0_auto]"
+              style={{ animationDelay: "0.15s" }}
+            >
+              <HeroCarousel slides={heroSlides} details={heroDetails} />
+            </div>
           </div>
         </section>
 
         <div className="flex flex-col gap-labelashb-section-generous py-labelashb-section-generous">
-          {/* The New Collection - 18 new pieces (local photography, named
-              and described in src/data/new-collection.ts), browsable in
-              full at /collection. A short editorial tease of four with
-              category spread; the shop carousel below is where the live,
-              purchasable catalog gets browsed. */}
-          <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-collection-heading">
-            <div className="mx-auto max-w-6xl">
-              <h2
-                id="new-collection-heading"
-                className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
-              >
-                The New Collection
-              </h2>
-              <p className="mt-4 max-w-2xl text-labelashb-body text-labelashb-ink-soft">
-                Eighteen new pieces for the season - dresses, shirts, tunics
-                and co-ord sets, each photographed across five views.
-                Pricing and sizing on request.
-              </p>
-              <div className="mt-labelashb-section-compact grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
-                {NEW_COLLECTION_TEASE_SLUGS.map((slug, i) => {
-                  const garment = collectionGarments.find((g) => g.slug === slug);
-                  if (!garment) return null;
-                  return (
-                    <Reveal key={garment.slug} delay={0.1 + i * 0.06}>
-                      <div
-                        className="sm:translate-y-[var(--stagger)]"
-                        style={{
-                          ["--stagger" as string]: `${STAGGER_OFFSETS_PX[i % STAGGER_OFFSETS_PX.length]}px`,
-                        }}
-                      >
-                        <Link
-                          href={`/collection/${garment.slug}`}
-                          className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-4"
-                        >
-                          <div className="relative aspect-[2/3] w-full overflow-hidden bg-labelashb-ground-alt">
-                            <Image
-                              src={garment.views.front}
-                              alt={`${garment.name} - ${garment.shortDescription}`}
-                              fill
-                              sizes="(min-width: 640px) 25vw, 50vw"
-                              className="object-cover transition-opacity duration-500 group-hover:opacity-0"
-                            />
-                            <Image
-                              src={garment.views.threeQuarter}
-                              alt=""
-                              fill
-                              sizes="(min-width: 640px) 25vw, 50vw"
-                              aria-hidden
-                              className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                            />
-                          </div>
-                          <p className="mt-3 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">
-                            {garment.category}
-                          </p>
-                          <p className="mt-1 text-labelashb-body-lg text-labelashb-ink group-hover:text-labelashb-accent">
-                            {garment.name}
-                          </p>
-                        </Link>
-                      </div>
-                    </Reveal>
-                  );
-                })}
-              </div>
-              <div className="mt-10">
-                <Button href="/collection" variant="primary">
-                  View the collection
-                </Button>
-              </div>
-            </div>
-          </section>
+          {/* The New Collection lookbook section and /collection routes
+              were retired when every lookbook garment found a home: 8 on
+              the hero (HERO_SLUGS), 10 as presentation imagery on the
+              remaining mannequin-shot products (PRESENTATION_SWAPS,
+              product-reshoots.ts). One garment, one place on the site -
+              the shop below now carries all of them. */}
 
           {/* Shop by category - tabs derived from the live catalog. */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">

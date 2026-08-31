@@ -57,6 +57,13 @@
      button's hover state reads as "the same color, pressed in," not a
      different color. */
   --color-labelashb-wine-hover: #451423;
+  /* Antique gold from the Label AshB logo's embroidered monogram
+     (public/label-ashb-logo-transparent.png, gold pixels average
+     #b1955d; this is the lifted highlight value for text/lines), where
+     it sits on the dark slate woven fabric (.labelashb-fabric below).
+     Verified ~8.5:1 against the fabric's darkest field, past WCAG AAA
+     for small text. */
+  --color-labelashb-gold: #c9a86a;
 
   /* Structural: section rhythm, card anatomy, carousel (homepage rebuild).
    * All under --spacing-labelashb-* so they extend Tailwind's spacing
@@ -307,6 +314,40 @@ body {
 .labelashb-grain > * {
   position: relative;
   z-index: 1;
+}
+
+/* The logo's fabric, as a reusable band treatment: dark slate woven
+   ground with a radial glow lifting the center and a faint gold sheen
+   in the corners, so gold elements placed on it (the logo, gold text)
+   carry forward the same contrast mechanism the reference uses.
+
+   Colors are pixel-measured quartiles of the dark background in the
+   brand's logo reference image, not eyeballed: #060b0f (darkest 2%),
+   #0e1317 (25%), #161b1e (50%). Every stop keeps B >= G > R - cool
+   slate. The reference's warmer quartiles (#282623+, gold light spill
+   near the embroidery) are represented by the gold sheen layers, not
+   the base. Note: the logo PNG itself is transparent behind the gold
+   monogram - this cloth is the reference backdrop, which is what the
+   bands recreate. An earlier revision used green-teal stops taken from
+   a vision model's verbal description of the logo; the actual pixels
+   are slate, and the client rightly called it out.
+
+   Layer order (first = topmost): corner gold sheen washes -> the twill
+   weave (two 1px-line repeating gradients crossing at +/-32deg, the
+   herringbone read of the reference fabric) -> the radial glow field
+   that sits behind the weave and shows through its transparent gaps.
+   background-color is the plain fallback underneath everything.
+
+   Not combined with .labelashb-grain: the weave is this treatment's own
+   texture, and stacking the noise layer on top muddies both. */
+.labelashb-fabric {
+  background-color: #0e1317;
+  background-image:
+    radial-gradient(60% 80% at 85% 0%, rgba(201, 168, 106, 0.1), transparent 60%),
+    radial-gradient(50% 70% at 10% 100%, rgba(201, 168, 106, 0.06), transparent 60%),
+    repeating-linear-gradient(32deg, rgba(230, 234, 238, 0.028) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(-32deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 5px),
+    radial-gradient(120% 130% at 50% 15%, #23282d 0%, #161b1e 35%, #0e1317 68%, #070b0e 100%);
 }
 
 /* Plain-CSS fade+rise, for elements that can't go through the Reveal

@@ -18,7 +18,6 @@ export interface NavLink {
 }
 
 const LINKS = [
-  { href: "/collection", label: "New Collection" },
   { href: "/products", label: "Shop" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

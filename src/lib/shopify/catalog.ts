@@ -1,5 +1,10 @@
 import { shopifyStorefront } from "./client";
 import { PRODUCTS_QUERY, PRODUCT_BY_HANDLE_QUERY } from "./queries";
+import {
+  reshootsByHandle,
+  swapViews,
+  SWAP_DESCRIPTIONS,
+} from "@/data/product-reshoots";
 
 interface ShopifyMoney {
   amount: string;
@@ -144,7 +149,7 @@ function normalizeProduct(raw: ShopifyProductRaw): NormalizedProduct {
   const prices = variants.map((v) => v.price);
   const images = raw.images.edges.map((e) => e.node);
 
-  return {
+  const normalized: NormalizedProduct = {
     id: raw.id,
     title: raw.title,
     handle: raw.handle,
@@ -161,6 +166,81 @@ function normalizeProduct(raw: ShopifyProductRaw): NormalizedProduct {
     currencyCode: variants[0]?.currencyCode ?? "INR",
     inStock: variants.some((v) => v.available),
   };
+
+  return applyReshoot(normalized);
+}
+
+// Presentation-layer image overrides. Two tiers:
+// 1. Re-shoots (product-reshoots.ts): name-matched on-model photography
+//    for 22 mannequin-shot products, plus the client's spreadsheet
+//    description (it describes the same garment).
+// 2. Presentation swaps (PRESENTATION_SWAPS): mannequin-reading
+//    products (the "zoomout_" batch + client-flagged ICM/IMG shots +
+//    Folk Tale's flat-lay re-shoot) borrow a New Collection lookbook
+//    garment's photos - images only, unless SWAP_DESCRIPTIONS carries
+//    the product's own sheet text. The lookbook garment is a different
+//    design, so its sheet text would mislead.
+// Everything commercial - handle, title, variants, prices, stock - stays
+// Shopify's in both tiers, so checkout keeps working and a future
+// Shopify CSV import can absorb the photography at the source. Cart line
+// items still carry Shopify's own images until then (shopify-import/).
+function applyReshoot(product: NormalizedProduct): NormalizedProduct {
+  const reshoot = reshootsByHandle.get(product.handle);
+  if (reshoot) {
+    const description = reshoot.description.replace(/\n+/g, "\n").trim();
+    const descriptionHtml = description
+      .split("\n")
+      .map((para) => `<p>${para.trim()}</p>`)
+      .join("");
+
+    return {
+      ...product,
+      description,
+      descriptionHtml,
+      images: reshoot.views.map((url, i) => ({
+        url,
+        altText: `${product.title} - view ${i + 1} of ${reshoot.views.length}`,
+        width: 1024,
+        height: 1536,
+      })),
+    };
+  }
+
+  const swappedViews = swapViews(product.handle);
+  if (swappedViews) {
+    // SWAP_DESCRIPTIONS carries the client's sheet text where it
+    // describes the real product (e.g. Folk Tale); otherwise the
+    // product keeps its own Shopify description.
+    const sheetDescription = SWAP_DESCRIPTIONS[product.handle];
+    if (sheetDescription) {
+      const description = sheetDescription.replace(/\n+/g, "\n").trim();
+      return {
+        ...product,
+        description,
+        descriptionHtml: description
+          .split("\n")
+          .map((para) => `<p>${para.trim()}</p>`)
+          .join(""),
+        images: swappedViews.map((url, i) => ({
+          url,
+          altText: `${product.title} - view ${i + 1} of ${swappedViews.length}`,
+          width: 1024,
+          height: 1536,
+        })),
+      };
+    }
+    return {
+      ...product,
+      images: swappedViews.map((url, i) => ({
+        url,
+        altText: `${product.title} - view ${i + 1} of ${swappedViews.length}`,
+        width: 1024,
+        height: 1536,
+      })),
+    };
+  }
+
+  return product;
 }
 
 // Storefront API only serves published/active products — draft and

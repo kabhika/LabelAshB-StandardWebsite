@@ -7,6 +7,7 @@ import { PdpOffers } from "@/components/catalog/PdpOffers";
 import { demoteH1 } from "@/lib/html";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { breadcrumbJsonLd, productJsonLd, truncateDescription } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -23,7 +24,16 @@ export async function generateMetadata({
     alternates: { canonical: `/products/${product.handle}` },
     openGraph: product.images[0]
       ? {
-          images: [{ url: product.images[0].url }],
+          // Re-shoot images are repo-local paths ("/collection/...");
+          // og:image needs an absolute URL, so root those at SITE_URL.
+          // Shopify CDN urls are already absolute and pass through.
+          images: [
+            {
+              url: product.images[0].url.startsWith("/")
+                ? `${SITE_URL}${product.images[0].url}`
+                : product.images[0].url,
+            },
+          ],
         }
       : undefined,
   };

@@ -13,3 +13,9 @@ graphify-out/
 
 # New Collection source PNGs (180MB) - optimized copies live in public/collection/
 new-images/
+
+# Local analysis scratch (contact sheets, manifests, verification)
+.match/
+.catalog-full.json
+.catalog-snapshot.json
+devserver.log

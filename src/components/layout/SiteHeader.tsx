@@ -42,32 +42,26 @@ export async function SiteHeader() {
     // z-index on header composites this whole subtree as one unit above
     // the page instead.
     <header className="relative z-30 border-b border-labelashb-border">
-      {/* Light promo strip - separate band from the nav below, not one
-          flat panel: ivory ground + wine text, the same two jewel-tone
-          tokens as the homepage system (DESIGN.md), not black/gray. */}
+      {/* Promo strip in the logo's fabric - same .labelashb-fabric ground
+          as the nav band below, gold text (see AnnouncementBar). */}
       <AnnouncementBar />
 
-      {/* Dark nav band - "Diagonal jewel sweep", winner of the /style-tile
-          nav-band comparison (candidate 1 of 4). Same gradient definition
-          verified there, not re-derived: diagonal wine -> ink -> indigo
-          blend, not the previous flat left-to-right ink/indigo fade.
-          Plus the sitewide labelashb-grain texture so it reads as fabric,
-          not flat color - its ::before noise layer paints above this
-          background, below real content. No child overlay here (the
-          style-tile comparison's other candidates needed one and hit the
-          `> *` position bug documented there; this treatment doesn't).
+      {/* Dark nav band in the logo's own fabric treatment
+          (.labelashb-fabric, globals.css): dark slate twill with the
+          radial glow and gold corner sheen measured from the brand's
+          logo reference image (the logo PNG is transparent behind the
+          gold monogram - the reference backdrop is the cloth being
+          recreated). Replaces the previous wine -> ink -> indigo
+          diagonal - that band was plummy next to the golden logo; this
+          one is the cloth the logo was embroidered on, so the monogram
+          (and gold text sitewide) carries forward.
+          No labelashb-grain here on purpose: the weave is this band's
+          own texture, grain-on-weave muddies both.
           No overflow-hidden: MobileNav's open dropdown is an
           absolutely-positioned child that must overflow this band
-          downward, and this div (position: relative, for the grain
-          pseudo-element) is its containing block - clipping it would
-          hide the mobile menu. */}
-      <div
-        className="labelashb-grain relative px-6 py-2 sm:py-4"
-        style={{
-          backgroundImage:
-            "linear-gradient(135deg, var(--color-labelashb-wine), var(--color-labelashb-ink), var(--color-labelashb-indigo))",
-        }}
-      >
+          downward, and this div (position: relative) is its containing
+          block - clipping it would hide the mobile menu. */}
+      <div className="labelashb-fabric relative border-b border-labelashb-gold/25 px-6 py-2 sm:py-4">
         {/* 1fr/auto/1fr keeps the logo mathematically centered regardless
             of what sits in the side columns - MobileNav on mobile,
             nothing on desktop (nav moves to its own row below). */}

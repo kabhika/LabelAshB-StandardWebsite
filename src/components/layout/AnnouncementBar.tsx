@@ -46,7 +46,11 @@ export function AnnouncementBar() {
   const message = MESSAGES[index];
 
   return (
-    <div className="overflow-hidden bg-labelashb-ivory px-4 py-1 text-center text-[0.6875rem] text-labelashb-wine sm:py-1.5 sm:text-labelashb-small">
+    // The logo's fabric (.labelashb-fabric, globals.css) with the strip's
+    // text in the logo's antique gold - the top band reads as cut from
+    // the same cloth as the monogram, not a separate ivory promo strip.
+    // Gold hairline at the seam to the nav band echoes the logo's frame.
+    <div className="labelashb-fabric overflow-hidden border-b border-labelashb-gold/20 px-4 py-1 text-center text-[0.6875rem] text-labelashb-gold sm:py-1.5 sm:text-labelashb-small">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={index}
