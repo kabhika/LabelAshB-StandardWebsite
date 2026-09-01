@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { ShopifyCart } from "@/lib/shopify/cart";
+import type { LocalCart } from "@/lib/cart/cart";
 import {
   addToCartAction,
   getCartAction,
@@ -17,7 +17,7 @@ import {
 } from "@/app/actions/cart";
 
 interface CartContextValue {
-  cart: ShopifyCart | null;
+  cart: LocalCart | null;
   isOpen: boolean;
   isLoading: boolean;
   error: string | null;
@@ -31,7 +31,7 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<ShopifyCart | null>(null);
+  const [cart, setCart] = useState<LocalCart | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

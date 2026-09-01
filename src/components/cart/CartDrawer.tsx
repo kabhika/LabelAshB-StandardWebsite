@@ -187,7 +187,7 @@ export function CartDrawer() {
                 )}
               </span>
             </div>
-            <Button href={cart.checkoutUrl} variant="primary" className="mt-4 block w-full">
+            <Button href="/checkout" variant="primary" className="mt-4 block w-full">
               Checkout
             </Button>
           </div>

@@ -116,6 +116,74 @@ trusting it -- flag anything that doesn't compile.
 Renaming `src/lib/shopify/*` to something that doesn't say Shopify is
 left for a follow-up pass, noted in the file's own header comment too.
 
+## Update (1 Sep 2026, Razorpay checkout built)
+
+Test mode confirmed ON in the Razorpay dashboard, website
+(https://labelashb.in/) already Approved, test Key ID and Key Secret
+generated and saved by Abhi directly into `.env.local`
+(`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `NEXT_PUBLIC_RAZORPAY_KEY_ID`).
+Nothing real yet -- test mode only, no money moves, matches the
+test-first plan.
+
+Full checkout flow built against those test keys, cart and orders both on
+Supabase, Shopify cart/checkout gone completely:
+
+- **Cart**: no longer a Shopify cart. `src/lib/cart/storage.ts` keeps just
+  `{variantId, quantity}` pairs in an httpOnly cookie -- no price ever
+  lives in the cookie. `src/lib/cart/cart.ts` builds a display cart
+  (`LocalCart`) by reading current price/stock/image from Supabase on
+  every request. `src/app/actions/cart.ts` rewritten against this instead
+  of Shopify's cartCreate/cartLinesAdd mutations. `CartContext.tsx` only
+  needed a type rename (`ShopifyCart` -> `LocalCart`); `CartDrawer.tsx`'s
+  Checkout button now links to `/checkout` instead of a Shopify
+  `checkoutUrl`. This also fixes the "Add to cart" breakage flagged in the
+  data-layer-wiring update above -- variant ids are Supabase UUIDs
+  end to end now, nothing tries to hand one to Shopify anymore.
+- **`src/lib/supabase/admin.ts`** -- new service-role client, server only.
+  Needed because orders/order_items have zero public RLS policies by
+  design (0001_init.sql) -- only the service role can write them.
+- **`src/lib/razorpay/client.ts`** -- server-only Razorpay SDK instance.
+- **`supabase/migrations/0003_order_number_seq.sql`** -- a Postgres
+  sequence + before-insert trigger that assigns `LAB-1001`, `LAB-1002`,
+  ... on insert, so concurrent checkouts can't collide on order_number.
+  **Not yet run against the project -- run this in the SQL Editor before
+  testing checkout, same way 0001 and 0002 were run.**
+- **`/api/checkout/create-order`** (POST) -- re-reads price and stock for
+  every cart line from Supabase (never trusts the client for money),
+  rejects if a product went inactive or stock is short, inserts the
+  `orders` + `order_items` rows (status `pending`), creates the matching
+  Razorpay order, returns what the client needs to open Checkout.js.
+  Shipping is hardcoded free (`SHIPPING_AMOUNT = 0`) matching the
+  published shipping policy ("free standard shipping... within India") --
+  international shipping is out of scope for this pass, not wired in.
+- **`/api/checkout/verify`** (POST) -- the client's Checkout.js success
+  handler posts here with the payment id/order id/signature Razorpay gave
+  it; this recomputes the HMAC-SHA256 signature server side with the key
+  secret and only then marks the order `paid`/`captured`. This, not the
+  browser callback firing, is what actually confirms a payment.
+- **`/api/webhooks/razorpay`** (POST) -- server-to-server backstop for the
+  case where the browser closes right after a successful charge and
+  `/verify` never runs. No-ops safely until `RAZORPAY_WEBHOOK_SECRET` is
+  set -- **not configured yet**, needs a live URL to point Razorpay at
+  (see setup instructions in the route file itself), so do this after the
+  site is deployed and reachable, not before.
+- **`/checkout`** and **`/checkout/success`** pages -- shipping address
+  form, then opens Razorpay's Checkout.js modal, then redirects to a
+  confirmation page showing the order number on success.
+
+**Not yet run through a real build here either** -- same caveat as the
+data-layer-wiring pass, no `node_modules` in this cloud sandbox. Run
+`npm run build` locally and fix whatever doesn't compile before trusting
+this. The CLAUDE.md visual QA gate (screenshot, not just build passing)
+also still applies to `/checkout` and `/checkout/success` -- neither has
+been looked at rendered yet.
+
+**Assumption made without asking, flagged here per the unattended-session
+rule**: shipping is free and domestic-India-only for this pass, based on
+the live `/shipping` page content, not on anything Binita or Abhi said
+about checkout specifically. If international orders need to work at
+launch, this needs a real shipping-rate decision before going live.
+
 ## Next once Supabase access is back
 
 1. Run `supabase/migrations/0001_init.sql` against the project.
