@@ -30,7 +30,7 @@
 // Image re-uploads use upsert, so re-running does not create duplicate
 // files in storage.
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getCatalog, type NormalizedProduct } from "../src/lib/shopify/catalog";
 
 const IMAGE_BUCKET = "product-images";
@@ -59,7 +59,7 @@ function contentTypeForExtension(ext: string): string {
 // images under public/collection/) untouched -- those aren't a Shopify
 // dependency and re-hosting them would just be extra work for nothing.
 async function selfHostImage(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   productHandle: string,
   index: number,
   url: string,
