@@ -37,8 +37,14 @@ order_items) confirmed live in Table Editor, RLS and policies applied.
 `.env.local` on Abhi's machine (`C:\dev\LabelAshB-Migration-Shopify-To-StandardWebsite`)
 updated with the correct variable names and this project's keys.
 
-Next real blocker: the image hosting decision below, before running
-`npm run migrate:catalog` for real.
+Migration run for real, 1 Sep 2026: 49/49 products migrated, 230 images
+self-hosted into the `product-images` bucket. Verified with
+`select count(*) from product_images where url like '%cdn.shopify.com%'`
+= 0. Database has zero Shopify dependency now.
+
+Fixed along the way: `tsx` doesn't auto-load `.env.local` the way Next.js
+does -- migrate:catalog script needed `--env-file=.env.local` added to
+its npm script.
 
 ## Blocked / pending
 
@@ -73,6 +79,42 @@ Next real blocker: the image hosting decision below, before running
   Shopify or Vercel yet. Needs explicit approval before touching, per
   standing rule -- not happening until the new site is fully built and
   QA'd.
+
+## Update (1 Sep 2026, data layer wired)
+
+Catalog reads (home, PLP, PDP, sitemap, SEO, style-tile, header nav, all
+of `src/components/catalog/*`) now come from Supabase, not Shopify.
+
+Did this the low-risk way: rewrote `src/lib/shopify/catalog.ts` in place
+(kept the path and every exported name/type identical --
+`NormalizedProduct`, `NormalizedVariant`, `getCatalog`,
+`getProductByHandle`, `DISPLAY_CATEGORIES`, `KNOWN_MATERIALS`,
+`MATERIAL_GROUPS`) so all 15 files that import from it needed zero
+changes. New file `src/lib/supabase/client.ts` holds the read-only
+Supabase client (anon key, RLS-scoped to `status = 'active'`). Deleted
+`src/lib/shopify/queries.ts` (dead code once catalog.ts stopped calling
+Shopify). Left `src/lib/shopify/client.ts` and `src/lib/shopify/cart.ts`
+alone -- still needed by the cart/checkout flow until Razorpay replaces
+it.
+
+**Known breakage, expected**: `variant.id` now returns the Supabase
+variant UUID, not the Shopify variant GID. `AddToCartButton` /
+`CartContext` / `src/app/actions/cart.ts` still call Shopify's
+`cartCreate` mutation with that ID, which will reject a UUID as an
+invalid Shopify GID -- so "Add to cart" is broken on the live site right
+now. Not fixed as a stopgap because the real fix (Razorpay + Supabase
+orders, task 5) throws this whole path away tomorrow anyway; patching it
+twice wastes the time. Matches the ask ("switch catalog now so only
+checkout is left once Razorpay keys land") -- checkout being the
+known-broken, known-blocked piece in the meantime.
+
+**Not yet run through a real build.** No `node_modules` in the cloud
+sandbox this was written in, so this hasn't been through
+`npm run build` or `tsc --noEmit`. Run one of those locally before
+trusting it -- flag anything that doesn't compile.
+
+Renaming `src/lib/shopify/*` to something that doesn't say Shopify is
+left for a follow-up pass, noted in the file's own header comment too.
 
 ## Next once Supabase access is back
 

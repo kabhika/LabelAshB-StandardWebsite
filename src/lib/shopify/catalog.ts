@@ -1,55 +1,24 @@
-import { shopifyStorefront } from "./client";
-import { PRODUCTS_QUERY, PRODUCT_BY_HANDLE_QUERY } from "./queries";
-import {
-  reshootsByHandle,
-  swapViews,
-  SWAP_DESCRIPTIONS,
-} from "@/data/product-reshoots";
+// Despite the file path (kept to avoid touching every import site across
+// the app in one diff -- see MIGRATION.md), this reads the catalog from
+// Supabase, not Shopify. Shopify independence, 1 Sep 2026: the migration
+// script (scripts/migrate-shopify-to-supabase.ts) already normalized
+// category, self-hosted every image, and carried materials/prices over,
+// so this file is mostly a shape-preserving read layer -- the exported
+// NormalizedProduct/NormalizedVariant types and function names
+// (getCatalog, getProductByHandle, DISPLAY_CATEGORIES, KNOWN_MATERIALS,
+// MATERIAL_GROUPS) are unchanged so every consumer needed zero edits.
+//
+// TODO next pass: rename this module (and its import path everywhere) to
+// something that doesn't say "shopify". Left as-is for this diff to keep
+// the change reviewable.
 
-interface ShopifyMoney {
-  amount: string;
-  currencyCode: string;
-}
+import { supabaseCatalog } from "@/lib/supabase/client";
 
-interface ShopifyImage {
+export interface NormalizedImage {
   url: string;
   altText: string | null;
   width: number;
   height: number;
-}
-
-interface ShopifyVariantRaw {
-  id: string;
-  sku: string | null;
-  title: string;
-  availableForSale: boolean;
-  quantityAvailable: number | null;
-  price: ShopifyMoney;
-  selectedOptions: { name: string; value: string }[];
-}
-
-interface ShopifyProductRaw {
-  id: string;
-  title: string;
-  handle: string;
-  description: string;
-  descriptionHtml: string;
-  productType: string;
-  tags: string[];
-  featuredImage: ShopifyImage | null;
-  images: { edges: { node: ShopifyImage }[] };
-  variants: { edges: { node: ShopifyVariantRaw }[] };
-}
-
-interface ProductsQueryResult {
-  products: {
-    edges: { cursor: string; node: ShopifyProductRaw }[];
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  };
-}
-
-interface ProductByHandleResult {
-  product: ShopifyProductRaw | null;
 }
 
 export interface NormalizedVariant {
@@ -73,7 +42,7 @@ export interface NormalizedProduct {
   rawProductType: string;
   tags: string[];
   materials: string[];
-  images: ShopifyImage[];
+  images: NormalizedImage[];
   variants: NormalizedVariant[];
   minPrice: number;
   maxPrice: number;
@@ -81,22 +50,9 @@ export interface NormalizedProduct {
   inStock: boolean;
 }
 
-// Collapses inconsistent Shopify productType casing/naming into one
-// display taxonomy. Mapping lives here, not in Shopify — source data is
-// never edited.
-const CATEGORY_MAP: Record<string, string> = {
-  dress: "Dresses",
-  tops: "Tops",
-  top: "Tops",
-  "outfit sets": "Co-ord Sets",
-  "co-ord set": "Co-ord Sets",
-  "co-ord sets": "Co-ord Sets",
-};
-
-function normalizeCategory(productType: string): string {
-  const key = productType.trim().toLowerCase();
-  return CATEGORY_MAP[key] ?? productType;
-}
+// Same normalized taxonomy the migration wrote into products.category --
+// kept here as the display list every filter/nav component reads.
+export const DISPLAY_CATEGORIES = ["Dresses", "Tops", "Co-ord Sets"];
 
 export const KNOWN_MATERIALS = [
   "linen",
@@ -106,172 +62,113 @@ export const KNOWN_MATERIALS = [
   "modal-silk",
 ];
 
-export const DISPLAY_CATEGORIES = [...new Set(Object.values(CATEGORY_MAP))];
-
-// Fabric-collection groups for nav/homepage display - the 3 silk tags
-// (crepe-silk, chanderi-silk, modal-silk) combine into one "Silk" group
-// rather than three thin ones, per the verified catalog distribution
-// (PLACEHOLDER-POLICY.md). Shared by the homepage's fabric showcase and
-// the header's Collections dropdown so the grouping can't drift between
-// the two - consumers decide for themselves what "present" means (any
-// in-stock match, a representative image, etc.).
 export const MATERIAL_GROUPS: { label: string; slugs: string[] }[] = [
   { label: "Linen", slugs: ["linen"] },
   { label: "Cotton", slugs: ["cotton"] },
   { label: "Silk", slugs: ["crepe-silk", "chanderi-silk", "modal-silk"] },
 ];
 
-function extractMaterials(tags: string[]): string[] {
-  return tags.filter((tag) => KNOWN_MATERIALS.includes(tag.toLowerCase()));
+interface ProductRow {
+  id: string;
+  handle: string;
+  title: string;
+  description: string | null;
+  description_html: string | null;
+  category: string;
+  material: string | null;
+  price_min: string | null;
+  price_max: string | null;
+  product_images: {
+    url: string;
+    alt_text: string | null;
+    position: number;
+  }[];
+  product_variants: {
+    id: string;
+    title: string;
+    sku: string | null;
+    price: string;
+    inventory_quantity: number;
+    position: number;
+  }[];
 }
 
-function normalizeVariant(raw: ShopifyVariantRaw): NormalizedVariant {
-  const quantityAvailable = raw.quantityAvailable ?? 0;
+const PRODUCT_SELECT = `
+  id, handle, title, description, description_html, category, material,
+  price_min, price_max,
+  product_images ( url, alt_text, position ),
+  product_variants ( id, title, sku, price, inventory_quantity, position )
+`;
+
+function normalizeRow(row: ProductRow): NormalizedProduct {
+  const images = [...row.product_images]
+    .sort((a, b) => a.position - b.position)
+    .map((img) => ({
+      url: img.url,
+      altText: img.alt_text,
+      width: 1024,
+      height: 1536,
+    }));
+
+  const variants = [...row.product_variants]
+    .sort((a, b) => a.position - b.position)
+    .map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      title: v.title,
+      available: v.inventory_quantity > 0,
+      quantityAvailable: v.inventory_quantity,
+      price: Number(v.price),
+      currencyCode: "INR",
+      options: [{ name: "Size", value: v.title }],
+    }));
+
   return {
-    id: raw.id,
-    // Null SKUs are a real state in this catalog (a handful of variants
-    // have none in Shopify admin) — pass through as null, never fabricate one.
-    sku: raw.sku,
-    title: raw.title,
-    // A variant can be availableForSale:true with quantityAvailable:0 under
-    // continue-selling settings; treat it as unavailable to the shopper
-    // either way so the PDP never offers a size it can't actually ship.
-    available: raw.availableForSale && quantityAvailable > 0,
-    quantityAvailable,
-    price: Number(raw.price.amount),
-    currencyCode: raw.price.currencyCode,
-    options: raw.selectedOptions,
-  };
-}
-
-function normalizeProduct(raw: ShopifyProductRaw): NormalizedProduct {
-  const variants = raw.variants.edges.map((e) => normalizeVariant(e.node));
-  const prices = variants.map((v) => v.price);
-  const images = raw.images.edges.map((e) => e.node);
-
-  const normalized: NormalizedProduct = {
-    id: raw.id,
-    title: raw.title,
-    handle: raw.handle,
-    description: raw.description,
-    descriptionHtml: raw.descriptionHtml,
-    category: normalizeCategory(raw.productType),
-    rawProductType: raw.productType,
-    tags: raw.tags,
-    materials: extractMaterials(raw.tags),
-    images: images.length > 0 ? images : raw.featuredImage ? [raw.featuredImage] : [],
+    id: row.id,
+    title: row.title,
+    handle: row.handle,
+    description: row.description ?? "",
+    descriptionHtml: row.description_html ?? "",
+    category: row.category,
+    rawProductType: row.category,
+    tags: row.material ? [row.material] : [],
+    materials: row.material ? [row.material] : [],
+    images,
     variants,
-    minPrice: prices.length ? Math.min(...prices) : 0,
-    maxPrice: prices.length ? Math.max(...prices) : 0,
-    currencyCode: variants[0]?.currencyCode ?? "INR",
+    minPrice: row.price_min !== null ? Number(row.price_min) : 0,
+    maxPrice: row.price_max !== null ? Number(row.price_max) : 0,
+    currencyCode: "INR",
     inStock: variants.some((v) => v.available),
   };
-
-  return applyReshoot(normalized);
 }
 
-// Presentation-layer image overrides. Two tiers:
-// 1. Re-shoots (product-reshoots.ts): name-matched on-model photography
-//    for 22 mannequin-shot products, plus the client's spreadsheet
-//    description (it describes the same garment).
-// 2. Presentation swaps (PRESENTATION_SWAPS): mannequin-reading
-//    products (the "zoomout_" batch + client-flagged ICM/IMG shots +
-//    Folk Tale's flat-lay re-shoot) borrow a New Collection lookbook
-//    garment's photos - images only, unless SWAP_DESCRIPTIONS carries
-//    the product's own sheet text. The lookbook garment is a different
-//    design, so its sheet text would mislead.
-// Everything commercial - handle, title, variants, prices, stock - stays
-// Shopify's in both tiers, so checkout keeps working and a future
-// Shopify CSV import can absorb the photography at the source. Cart line
-// items still carry Shopify's own images until then (shopify-import/).
-function applyReshoot(product: NormalizedProduct): NormalizedProduct {
-  const reshoot = reshootsByHandle.get(product.handle);
-  if (reshoot) {
-    const description = reshoot.description.replace(/\n+/g, "\n").trim();
-    const descriptionHtml = description
-      .split("\n")
-      .map((para) => `<p>${para.trim()}</p>`)
-      .join("");
-
-    return {
-      ...product,
-      description,
-      descriptionHtml,
-      images: reshoot.views.map((url, i) => ({
-        url,
-        altText: `${product.title} - view ${i + 1} of ${reshoot.views.length}`,
-        width: 1024,
-        height: 1536,
-      })),
-    };
-  }
-
-  const swappedViews = swapViews(product.handle);
-  if (swappedViews) {
-    // SWAP_DESCRIPTIONS carries the client's sheet text where it
-    // describes the real product (e.g. Folk Tale); otherwise the
-    // product keeps its own Shopify description.
-    const sheetDescription = SWAP_DESCRIPTIONS[product.handle];
-    if (sheetDescription) {
-      const description = sheetDescription.replace(/\n+/g, "\n").trim();
-      return {
-        ...product,
-        description,
-        descriptionHtml: description
-          .split("\n")
-          .map((para) => `<p>${para.trim()}</p>`)
-          .join(""),
-        images: swappedViews.map((url, i) => ({
-          url,
-          altText: `${product.title} - view ${i + 1} of ${swappedViews.length}`,
-          width: 1024,
-          height: 1536,
-        })),
-      };
-    }
-    return {
-      ...product,
-      images: swappedViews.map((url, i) => ({
-        url,
-        altText: `${product.title} - view ${i + 1} of ${swappedViews.length}`,
-        width: 1024,
-        height: 1536,
-      })),
-    };
-  }
-
-  return product;
-}
-
-// Storefront API only serves published/active products — draft and
-// unpublished products are structurally absent from this response, not
-// filtered client-side.
 export async function getCatalog(): Promise<NormalizedProduct[]> {
-  const products: NormalizedProduct[] = [];
-  let after: string | null = null;
-  let hasNextPage = true;
+  const { data, error } = await supabaseCatalog
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("status", "active")
+    .order("title");
 
-  while (hasNextPage) {
-    const data: ProductsQueryResult = await shopifyStorefront(
-      PRODUCTS_QUERY,
-      { first: 50, after },
-      { revalidate: 60 },
-    );
-    products.push(...data.products.edges.map((e) => normalizeProduct(e.node)));
-    hasNextPage = data.products.pageInfo.hasNextPage;
-    after = data.products.pageInfo.endCursor;
+  if (error) {
+    throw new Error(`Supabase catalog query failed: ${error.message}`);
   }
 
-  return products;
+  return (data as unknown as ProductRow[]).map(normalizeRow);
 }
 
 export async function getProductByHandle(
   handle: string,
 ): Promise<NormalizedProduct | null> {
-  const data: ProductByHandleResult = await shopifyStorefront(
-    PRODUCT_BY_HANDLE_QUERY,
-    { handle },
-    { revalidate: 60 },
-  );
-  return data.product ? normalizeProduct(data.product) : null;
+  const { data, error } = await supabaseCatalog
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("status", "active")
+    .eq("handle", handle)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Supabase product query failed: ${error.message}`);
+  }
+
+  return data ? normalizeRow(data as unknown as ProductRow) : null;
 }
