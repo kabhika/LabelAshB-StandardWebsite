@@ -23,6 +23,7 @@ import {
   HorizontalImageScroller,
   type ScrollerImage,
 } from "@/components/home/HorizontalImageScroller";
+import { ProcessCarousel, type ProcessStage } from "@/components/home/ProcessCarousel";
 import { NewsletterSignup } from "@/components/home/NewsletterSignup";
 import { WhatsAppFloat } from "@/components/home/WhatsAppFloat";
 import { SITE_URL } from "@/lib/site";
@@ -56,6 +57,33 @@ export const metadata: Metadata = {
 // image was an oversized CDN upload that the optimizer timed out on.
 const heroSlides = collectionHeroSlides();
 const heroDetails = collectionHeroDetails();
+
+const processStages: ProcessStage[] = [
+  {
+    title: "Cutting",
+    images: [
+      { src: "/atmosphere/process/cutting-restored-01.png", alt: "Dusty-rose linen garment pieces in the Label AshB workshop" },
+      { src: "/atmosphere/process/cutting-restored-02.png", alt: "Close view of a dusty-rose linen seam under construction" },
+      { src: "/atmosphere/process/cutting-restored-03.png", alt: "Gathered dusty-rose linen detail during garment construction" },
+    ],
+  },
+  {
+    title: "Draping",
+    images: [
+      { src: "/atmosphere/process/draping-restored-01.png", alt: "Makers assessing a black embroidered garment on a dress form" },
+      { src: "/atmosphere/process/draping-restored-02.png", alt: "White embroidered linen outfit displayed on a dress form" },
+      { src: "/atmosphere/process/draping-restored-03.png", alt: "Maker refining the drape of a red dress on a dress form" },
+    ],
+  },
+  {
+    title: "Stitching",
+    images: [
+      { src: "/atmosphere/process/stitching-restored-01.png", alt: "Two makers reviewing chalk-marked black garment pieces" },
+      { src: "/atmosphere/process/stitching-restored-02.png", alt: "Makers reviewing the lace edge of a printed garment" },
+      { src: "/atmosphere/process/stitching-restored-03.png", alt: "Close workshop view of chalk-marked garment pieces before stitching" },
+    ],
+  },
+];
 
 // One real product image per category, for the 3-tile promo grid - never
 // padded to a 4th tile, the catalog only has 3 real categories
@@ -353,10 +381,9 @@ export default async function Home() {
               above). Three real, verified badges, not padded to a fourth. */}
           <CraftBadgesBand />
 
-          {/* Process - fabric/craft themes, tile count independent of the
-              3-category constraint above (this is process stages, not
-              catalog categories). Same abstract jewel-tone treatment as
-              Our Studio, no process photography exists yet either. */}
+          {/* Process - real atelier moments, sequenced from cutting through
+              draping and stitching. Each stage rotates through three views
+              while retaining direct, accessible image controls. */}
           <section
             className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
             aria-labelledby="process-heading"
@@ -368,16 +395,10 @@ export default async function Home() {
               >
                 From paper to piece
               </h2>
-              <div className="mt-labelashb-section-compact">
-                <HorizontalImageScroller
-                  labelledBy="process-heading"
-                  images={[
-                    { url: "/atmosphere/process-cutting.jpg", alt: "", caption: "Cutting" },
-                    { url: "/atmosphere/process-draping.jpg", alt: "", caption: "Draping" },
-                    { url: "/atmosphere/process-stitching.jpg", alt: "", caption: "Stitching" },
-                    { url: "/atmosphere/process-finishing.jpg", alt: "", caption: "Finishing" },
-                  ]}
-                />
+              <div className="mt-labelashb-section-compact grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {processStages.map((stage) => (
+                  <ProcessCarousel key={stage.title} stage={stage} />
+                ))}
               </div>
             </div>
           </section>
