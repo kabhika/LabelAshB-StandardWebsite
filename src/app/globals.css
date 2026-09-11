@@ -79,8 +79,12 @@
   --spacing-labelashb-section-standard: clamp(3rem, 2rem + 4vw, 5rem);
   --spacing-labelashb-section-generous: clamp(4rem, 2rem + 8vw, 8rem);
 
-  /* Card anatomy, for image-swap product galleries. */
+  /* Card anatomy. Product photography is supplied as a consistent 2:3
+     portrait series, so product cards preserve that native frame rather than
+     cropping every photograph into the more compact editorial-card ratio. */
   --aspect-labelashb-card: 4 / 5;
+  --aspect-labelashb-product: 2 / 3;
+  --aspect-labelashb-process: 3 / 4;
   --spacing-labelashb-card-caption: 1rem;
 
   /* Carousel. Control size is a 44px touch target (WCAG 2.5.5); dot is

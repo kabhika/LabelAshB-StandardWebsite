@@ -58,6 +58,25 @@ export const metadata: Metadata = {
 const heroSlides = collectionHeroSlides();
 const heroDetails = collectionHeroDetails();
 
+// These lead images are deliberately curated from the supplied Drive garment
+// folders, rather than selected by catalogue insertion order. Each one is a
+// front-facing, full-length view, so the homepage does not fall back to a back
+// view or a torso-only crop as the catalogue changes.
+const homepageFeatureImages = {
+  Silk: {
+    url: "/collection/26-ivory-drift-one-shoulder-modal-silk-dress/01.jpg",
+    alt: "Front view of the Ivory Drift modal silk dress",
+  },
+  Dresses: {
+    url: "/collection/28-scarlet-ember-linen-halter-dress/01.jpg",
+    alt: "Front view of the Scarlet Ember linen halter dress",
+  },
+  Tops: {
+    url: "/collection/23-celeste-line-linen-top/01.jpg",
+    alt: "Front view of the Celeste Line linen top",
+  },
+} as const;
+
 const processStages: ProcessStage[] = [
   {
     title: "Cutting",
@@ -95,9 +114,9 @@ function pickCategoryTiles(catalog: NormalizedProduct[]): PromoTile[] {
       (p) => p.inStock && p.category === category && p.images.length > 0,
     );
     if (!match) continue;
-    const image = match.images[0];
+    const curatedImage = homepageFeatureImages[category as keyof typeof homepageFeatureImages];
     tiles.push({
-      image: { url: image.url, alt: image.altText || match.title },
+      image: curatedImage ?? { url: match.images[0].url, alt: match.images[0].altText || match.title },
       label: category,
       href: `/products?category=${encodeURIComponent(category)}`,
     });
@@ -118,8 +137,13 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
         p.materials.some((m) => slugs.includes(m)),
     );
     if (!match) continue;
-    const image = match.images[0];
-    images.push({ url: image.url, alt: image.altText || match.title, caption: label });
+    const curatedImage = homepageFeatureImages[label as keyof typeof homepageFeatureImages];
+    images.push({
+      url: curatedImage?.url ?? match.images[0].url,
+      alt: curatedImage?.alt ?? (match.images[0].altText || match.title),
+      caption: label,
+      frame: "product",
+    });
   }
   return images;
 }
@@ -307,14 +331,16 @@ export default async function Home() {
           <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="why-heading">
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-center md:gap-16">
               {whyUsImage && (
-                <div className="relative aspect-labelashb-card w-full overflow-hidden md:w-[42%]">
-                  <Image
-                    src={whyUsImage.url}
-                    alt={whyUsImage.altText || whyUsProduct?.title || ""}
-                    fill
-                    sizes="(min-width: 768px) 42vw, 100vw"
-                    className="object-cover"
-                  />
+                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ivory p-4 md:w-[42%]">
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={whyUsImage.url}
+                      alt={whyUsImage.altText || whyUsProduct?.title || ""}
+                      fill
+                      sizes="(min-width: 768px) 42vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               )}
               <div className="md:flex-1">

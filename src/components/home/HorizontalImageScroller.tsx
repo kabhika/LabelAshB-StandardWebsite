@@ -4,6 +4,10 @@ export interface ScrollerImage {
   url: string;
   alt: string;
   caption?: string;
+  // Product photography is a 2:3 portrait series. Studio atmosphere panels
+  // are intentionally 4:5, so retain the card frame unless the caller marks
+  // a supplied product image as portrait.
+  frame?: "product";
 }
 
 // "scroll" (default) is the generic snap-scroll row - same rendering path
@@ -48,15 +52,17 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
     >
       {images.map((image, i) => (
         <figure key={image.url} className="w-72 flex-none snap-start sm:w-96">
-          <div className="relative aspect-labelashb-card overflow-hidden bg-labelashb-ivory">
-            <Image
-              src={image.url}
-              alt={image.alt}
-              fill
-              sizes="(min-width: 640px) 24rem, 18rem"
-              priority={i === 0}
-              className="object-cover"
-            />
+          <div className={`relative overflow-hidden bg-labelashb-ivory ${image.frame === "product" ? "aspect-labelashb-product p-3" : "aspect-labelashb-card"}`}>
+            <div className={image.frame === "product" ? "relative h-full w-full" : "absolute inset-0"}>
+              <Image
+                src={image.url}
+                alt={image.alt}
+                fill
+                sizes="(min-width: 640px) 24rem, 18rem"
+                priority={i === 0}
+                className="object-cover"
+              />
+            </div>
           </div>
           {image.caption && (
             <figcaption className="mt-labelashb-card-caption text-labelashb-small text-labelashb-ink-soft">

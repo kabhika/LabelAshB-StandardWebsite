@@ -100,8 +100,20 @@ const PRODUCT_SELECT = `
   product_variants ( id, title, sku, price, inventory_quantity, position )
 `;
 
+// The Supabase import preserved the source order for this kaftan, where the
+// back view was first. Use the front-facing local lookbook image as its lead
+// photograph while retaining the same garment and the remaining views.
+const PRODUCT_IMAGE_OVERRIDES: Record<string, string[]> = {
+  "alabaster-breeze-kaftan": [
+    "/collection/30-alabaster-breeze-kaftan/02.jpg",
+    "/collection/30-alabaster-breeze-kaftan/03.jpg",
+    "/collection/30-alabaster-breeze-kaftan/04.jpg",
+    "/collection/30-alabaster-breeze-kaftan/01.jpg",
+  ],
+};
+
 function normalizeRow(row: ProductRow): NormalizedProduct {
-  const images = [...row.product_images]
+  const sourceImages = [...row.product_images]
     .sort((a, b) => a.position - b.position)
     .map((img) => ({
       url: img.url,
@@ -109,6 +121,12 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
       width: 1024,
       height: 1536,
     }));
+  const images = PRODUCT_IMAGE_OVERRIDES[row.handle]?.map((url) => ({
+    url,
+    altText: row.title,
+    width: 1024,
+    height: 1536,
+  })) ?? sourceImages;
 
   const variants = [...row.product_variants]
     .sort((a, b) => a.position - b.position)

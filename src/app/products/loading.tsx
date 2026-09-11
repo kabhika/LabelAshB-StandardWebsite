@@ -31,7 +31,7 @@ export default function ProductsLoading() {
         <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i}>
-              <div className="aspect-[3/4] animate-pulse bg-labelashb-ground-alt" />
+              <div className="aspect-labelashb-product animate-pulse bg-labelashb-ground-alt" />
               <div className="mt-4 h-3 w-16 animate-pulse bg-labelashb-ground-alt" />
               <div className="mt-2 h-5 w-40 animate-pulse bg-labelashb-ground-alt" />
               <div className="mt-2 h-4 w-20 animate-pulse bg-labelashb-ground-alt" />

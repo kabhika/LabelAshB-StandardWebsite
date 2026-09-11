@@ -2,7 +2,7 @@ export default function ProductLoading() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <div className="aspect-[3/4] animate-pulse bg-labelashb-ground-alt" />
+        <div className="aspect-labelashb-product animate-pulse bg-labelashb-ground-alt" />
         <div>
           <div className="h-3 w-20 animate-pulse bg-labelashb-ground-alt" />
           <div className="mt-3 h-11 w-3/4 animate-pulse bg-labelashb-ground-alt" />

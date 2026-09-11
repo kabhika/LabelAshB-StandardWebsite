@@ -108,7 +108,7 @@ export function CartDrawer() {
               {lines.map((line) => (
                 <li key={line.id} className="flex gap-4">
                   {line.merchandise.image && (
-                    <div className="relative h-24 w-20 shrink-0 overflow-hidden bg-labelashb-ground-alt">
+                    <div className="relative h-24 w-16 shrink-0 overflow-hidden bg-labelashb-ivory p-1">
                       <Image
                         src={line.merchandise.image.url}
                         alt={

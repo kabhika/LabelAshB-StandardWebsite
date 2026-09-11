@@ -39,7 +39,7 @@ export function ProcessCarousel({ stage }: { stage: ProcessStage }) {
         if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
       }}
     >
-      <div className="relative aspect-labelashb-card overflow-hidden bg-labelashb-ivory">
+      <div className="relative aspect-labelashb-process overflow-hidden bg-labelashb-ivory">
         {stage.images.map((image, index) => (
           <Image
             key={image.src}

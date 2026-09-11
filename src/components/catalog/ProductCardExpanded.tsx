@@ -27,8 +27,10 @@ export function ProductCardExpanded({ product }: { product: NormalizedProduct })
         href={`/products/${product.handle}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
       >
-        <div className="relative aspect-labelashb-card overflow-hidden bg-labelashb-ivory">
-          <ProductCardGallery images={product.images} alt={product.title} />
+        <div className="relative aspect-labelashb-product overflow-hidden bg-labelashb-ivory p-3">
+          <div className="relative h-full w-full">
+            <ProductCardGallery images={product.images} alt={product.title} />
+          </div>
           {!product.inStock && (
             <span className="absolute top-3 left-3 bg-labelashb-wine px-2 py-1 text-labelashb-eyebrow uppercase text-labelashb-ivory">
               Sold out

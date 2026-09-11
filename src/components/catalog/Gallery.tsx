@@ -16,21 +16,23 @@ export function Gallery({
 
   if (!active) {
     return (
-      <div className="aspect-[3/4] w-full bg-labelashb-ground-alt" aria-hidden />
+      <div className="aspect-labelashb-product w-full bg-labelashb-ivory" aria-hidden />
     );
   }
 
   return (
     <div>
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-labelashb-ground-alt">
-        <Image
-          src={active.url}
-          alt={active.altText || productTitle}
-          fill
-          sizes="(min-width: 768px) 50vw, 100vw"
-          priority
-          className="object-cover"
-        />
+      <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ivory p-4">
+        <div className="relative h-full w-full">
+          <Image
+            src={active.url}
+            alt={active.altText || productTitle}
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            priority
+            className="object-cover"
+          />
+        </div>
       </div>
       {images.length > 1 && (
         <div className="mt-4 flex gap-2 overflow-x-auto">
@@ -41,7 +43,7 @@ export function Gallery({
               onClick={() => setActiveIndex(index)}
               aria-label={`Show image ${index + 1} of ${images.length}`}
               aria-current={index === activeIndex}
-              className={`relative h-20 w-16 shrink-0 overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
+              className={`relative h-24 w-16 shrink-0 overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
                 index === activeIndex
                   ? "border-labelashb-ink"
                   : "border-labelashb-border"

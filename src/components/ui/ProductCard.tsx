@@ -21,15 +21,17 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
       href={`/products/${product.handle}`}
       className="group block transition-transform duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-labelashb-ground-alt">
+      <div className="relative aspect-labelashb-product overflow-hidden bg-labelashb-ivory p-3">
         {image && (
-          <Image
-            src={image.url}
-            alt={image.altText || product.title}
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-          />
+          <div className="relative h-full w-full">
+            <Image
+              src={image.url}
+              alt={image.altText || product.title}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         )}
         {!product.inStock && (
           <span className="absolute top-3 left-3 bg-labelashb-ground px-2 py-1 text-labelashb-eyebrow uppercase text-labelashb-ink-soft">

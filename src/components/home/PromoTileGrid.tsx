@@ -24,15 +24,17 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
         <Link
           key={tile.href}
           href={tile.href}
-          className="group relative block aspect-labelashb-card overflow-hidden bg-labelashb-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
+          className="group relative block aspect-labelashb-product overflow-hidden bg-labelashb-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
         >
-          <Image
-            src={tile.image.url}
-            alt={tile.image.alt}
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-          />
+          <div className="absolute inset-3">
+            <Image
+              src={tile.image.url}
+              alt={tile.image.alt}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
           <div
             aria-hidden="true"
             className="absolute inset-0 bg-gradient-to-t from-labelashb-ink/70 via-labelashb-ink/0 to-transparent"
