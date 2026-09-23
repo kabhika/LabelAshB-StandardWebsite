@@ -24,6 +24,7 @@ import {
   type ScrollerImage,
 } from "@/components/home/HorizontalImageScroller";
 import { ProcessCarousel, type ProcessStage } from "@/components/home/ProcessCarousel";
+import { StudioPanels } from "@/components/home/StudioPanels";
 import { NewsletterSignup } from "@/components/home/NewsletterSignup";
 import { WhatsAppFloat } from "@/components/home/WhatsAppFloat";
 import { SITE_URL } from "@/lib/site";
@@ -298,10 +299,13 @@ export default async function Home() {
               before the brand-story half of the page begins. */}
           <ServiceAssuranceBand />
 
-          {/* Our Studio - atmospheric imagery, no studio photography exists
-              yet. Abstract jewel-tone panels (own visual language, not
-              stock photography of someone else's studio), full visual
-              treatment - mood, not a specific claim (PLACEHOLDER-POLICY.md). */}
+          {/* Our Studio - real photography supplied by the client (Sep
+              2026, cropped to the 4:5 card frame at import into
+              public/atmosphere/), one carousel per window (client ask,
+              Sep 23): Fabric x2, Workspace x4, By hand x2 - all eight
+              photos from the batch, each appearing once. Rotation,
+              hover/focus pause and reduced-motion handling mirror
+              ProcessCarousel (StudioPanels.tsx). */}
           <section
             className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
             aria-labelledby="studio-heading"
@@ -314,12 +318,31 @@ export default async function Home() {
                 Our studio
               </h2>
               <div className="mt-labelashb-section-compact">
-                <HorizontalImageScroller
-                  labelledBy="studio-heading"
-                  images={[
-                    { url: "/atmosphere/studio-fabric.jpg", alt: "", caption: "Fabric" },
-                    { url: "/atmosphere/studio-workspace.jpg", alt: "", caption: "Workspace" },
-                    { url: "/atmosphere/studio-handwork.jpg", alt: "", caption: "By hand" },
+                <StudioPanels
+                  panels={[
+                    {
+                      caption: "Fabric",
+                      views: [
+                        { src: "/atmosphere/studio-fabric.jpg", alt: "Rolls of fabric in the Label AshB studio" },
+                        { src: "/atmosphere/studio-fabric-2.jpg", alt: "A garment in progress hanging in the Label AshB studio" },
+                      ],
+                    },
+                    {
+                      caption: "Workspace",
+                      views: [
+                        { src: "/atmosphere/studio-workspace.jpg", alt: "The Label AshB worktable with tools and sewing machine" },
+                        { src: "/atmosphere/studio-workspace-2.jpg", alt: "Sewing machine at work in the Label AshB studio" },
+                        { src: "/atmosphere/studio-workspace-3.jpg", alt: "Marking fabric for cutting at the Label AshB studio" },
+                        { src: "/atmosphere/studio-workspace-4.jpg", alt: "A garment being shaped on the dress form" },
+                      ],
+                    },
+                    {
+                      caption: "By hand",
+                      views: [
+                        { src: "/atmosphere/studio-handwork.jpg", alt: "Hands at hand-stitching in the Label AshB studio" },
+                        { src: "/atmosphere/studio-handwork-2.jpg", alt: "Pressing a garment during finishing" },
+                      ],
+                    },
                   ]}
                 />
               </div>

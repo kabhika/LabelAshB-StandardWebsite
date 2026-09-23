@@ -60,5 +60,5 @@ than content presented as genuine.
 
 - [ ] Real press logos, or remove the section permanently if none materialize
 - [ ] Real customer testimonials, remove the "quotes coming soon" label once real quotes are in
-- [ ] Real studio photography swapped in
-- [ ] Real process/material photography swapped in
+- [x] Real studio photography swapped in (Sep 2026 client batch; one carousel per window - StudioPanels.tsx)
+- [x] Real process photography swapped in (restored atelier set - process carousel)
