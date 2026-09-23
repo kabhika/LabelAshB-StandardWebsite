@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate:catalog": "tsx scripts/migrate-shopify-to-supabase.ts"
+    "migrate:catalog": "tsx --env-file=.env.local scripts/migrate-shopify-to-supabase.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
