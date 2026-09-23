@@ -178,11 +178,13 @@ export default async function Home() {
         {/* Hero - Apple-style centered composition: the whole hero (copy
             + imagery) sits in a capped, centered column, so on very wide
             screens the surplus becomes white space on the OUTER flanks
-            of the page - never more image stretch. Cap is 1720px
-            (raised from 1560 when the client asked for ~10% more spread
-            per side, Sep 1 2026 - below that width the hero runs
-            full-bleed). The full-width hairline below stays full-bleed -
-            only the content is capped.
+            of the page - never more image stretch. Cap is 1580px
+            (Sep 23: trimmed from 1720 so the width-capped companion
+            panel and the primary fill the row edge to edge - at 1720 a
+            slack strip opened on the right. 1580 still keeps flanks
+            much tighter than the original 1440). The full-width
+            hairline below stays full-bleed - only the content is
+            capped.
             Inside the cap: copy column (max 520px, biased upward) and
             the image area. The carousel pairs a fixed-2:3 primary frame
             (the photos are tight full-body shots - measured 0-6%
@@ -197,7 +199,7 @@ export default async function Home() {
               max-780px image column). A former md:min-h-[85vh] left a
               large dead ivory band below the imagery on tall screens
               (client: "reduce this gap further", Sep 1 2026). */}
-          <div className="mx-auto flex max-w-[1720px] flex-col md:flex-row">
+          <div className="mx-auto flex max-w-[1580px] flex-col md:flex-row">
             {/* pb-[10vh] biases the copy block above dead-center (client
                 note: "a little bit upward"); pr-6 at lg keeps the copy
                 close to the first image panel. */}

@@ -218,6 +218,7 @@ interface HeroGarment {
   name: string;
   short: string;
   front: string;
+  back: string;
   detail: string;
 }
 
@@ -228,6 +229,7 @@ function heroGarment(slug: string): HeroGarment | null {
       name: lookbook.name,
       short: lookbook.shortDescription,
       front: lookbook.views.front,
+      back: lookbook.views.back,
       detail: lookbook.views.detail,
     };
   }
@@ -237,6 +239,8 @@ function heroGarment(slug: string): HeroGarment | null {
       name: RESHOOT_HERO_NAMES[slug] ?? slug,
       short: reshoot.description.split(/[.!?]/)[0] + ".",
       front: reshoot.views[0],
+      // Re-shoot view order: front, three-quarter, side, back, detail.
+      back: reshoot.views.length >= 4 ? reshoot.views[3] : reshoot.views[0],
       detail: reshoot.views[reshoot.views.length - 1],
     };
   }
@@ -255,11 +259,16 @@ export function collectionHeroSlides() {
 }
 
 export function collectionHeroDetails() {
+  // The companion panel shows the same garment's BACK view, not the
+  // close-up macro: a full-body pose crops gracefully at any panel
+  // width (front/back editorial diptych), while the macro's
+  // edge-to-edge subject read as "cropped" at every width the client
+  // tried (Sep 1-24, five rounds). Blur-fill variants made it worse.
   return HERO_SLUGS.map((slug) => {
     const g = heroGarment(slug)!;
     return {
-      url: g.detail,
-      alt: `${g.name} - close-up detail`,
+      url: g.back,
+      alt: `${g.name} - back view`,
     };
   });
 }

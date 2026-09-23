@@ -77,22 +77,35 @@ export function HeroCarousel({
         {/* Companion detail panel - sits between the copy column and the
             primary frame, hidden below lg (there is no surplus width to
             fill on the single-image md tier). The 200px floor keeps it a
-            real panel rather than a narrow keyhole that over-zooms the
-            close-up when space is tight. */}
+            real panel; the 560px CAP is the crop fix (client video, Sep
+            23): uncapped flex-1 stretched to ~0.87 aspect on wide
+            screens and object-cover ate up to 23% of the close-up's
+            height. Capped, the panel stays near a 4:5 read (~7% crop at
+            worst) at every wide size; surplus width goes to the row's
+            right edge rather than into more zoom. */}
         {details && detailCount === count && (
-          <div className="relative hidden min-w-[200px] flex-1 lg:block">
+          <div className="relative hidden min-w-[200px] max-w-[560px] flex-1 lg:block">
             {details.map((slide, i) => (
               <div
                 key={slide.url}
-                className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-700 ease-out"
+                className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-1000 ease-in-out"
                 style={{ opacity: i === index ? 1 : 0 }}
                 aria-hidden={i !== index}
               >
+                {/* Single cover image. The companion source is now a
+                    FULL-BODY view (back view - see collectionHeroDetails),
+                    not a macro: a person photo reads as an intentional
+                    editorial crop at any panel width, where a macro's
+                    edge-to-edge subject read as "cropped" at every one
+                    (five client complaints, Sep 1-24). A blur-fill
+                    contain variant was tried and rejected - its
+                    sharp-to-blur boundary read as a defect. */}
                 <Image
                   src={slide.url}
                   alt={slide.alt}
                   fill
-                  sizes="(min-width: 1024px) 30vw, 100vw"
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                  loading="eager"
                   priority={i === 0}
                   className="pointer-events-none object-cover"
                 />
@@ -106,7 +119,7 @@ export function HeroCarousel({
           {slides.map((slide, i) => (
             <div
               key={slide.url}
-              className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-700 ease-out"
+              className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-1000 ease-in-out"
               style={{ opacity: i === index ? 1 : 0 }}
               aria-hidden={i !== index}
             >
@@ -118,6 +131,9 @@ export function HeroCarousel({
                 // size (70vh from md up - page.tsx), so its width is
                 // always ~47vh; the companion takes whatever remains.
                 sizes="(min-width: 768px) 47vh, 100vw"
+                // Eager for the same mid-fade-pop reason as the
+                // companion panel above.
+                loading="eager"
                 priority={i === 0}
                 className="pointer-events-none object-cover"
               />
