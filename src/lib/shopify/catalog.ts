@@ -100,9 +100,29 @@ const PRODUCT_SELECT = `
   product_variants ( id, title, sku, price, inventory_quantity, position )
 `;
 
-// The Supabase import preserved the source order for this kaftan, where the
-// back view was first. Use the front-facing local lookbook image as its lead
-// photograph while retaining the same garment and the remaining views.
+// Photo folders live in public/collection/<folder>/. The Supabase import
+// preserved the source order for the Alabaster kaftan, where the back view was
+// first, so it leads with the front-facing local image instead.
+//
+// Oct 2026 photo audit: older listings had been dressed with look alike photos
+// of other garments, so one dress could appear under two names. This table
+// pins each listing to the folder that really shows its garment. Handles not
+// listed here keep the images stored in Supabase.
+const lookbook = (folder: string): string[] =>
+  [
+    "01-front-view.jpg",
+    "02-three-quarter-front-view.jpg",
+    "03-side-view.jpg",
+    "04-back-view.jpg",
+    "05-close-up-detail.jpg",
+  ].map((f) => `/collection/${folder}/${f}`);
+
+const numbered = (folder: string, count: number): string[] =>
+  Array.from(
+    { length: count },
+    (_, i) => `/collection/${folder}/${String(i + 1).padStart(2, "0")}.jpg`,
+  );
+
 const PRODUCT_IMAGE_OVERRIDES: Record<string, string[]> = {
   "alabaster-breeze-kaftan": [
     "/collection/30-alabaster-breeze-kaftan/02.jpg",
@@ -110,6 +130,26 @@ const PRODUCT_IMAGE_OVERRIDES: Record<string, string[]> = {
     "/collection/30-alabaster-breeze-kaftan/04.jpg",
     "/collection/30-alabaster-breeze-kaftan/01.jpg",
   ],
+  // Existing listings, real photos from the new shoot (folders 41 to 46)
+  "olive-grove-dress": numbered("44-olive-grove-dress", 5),
+  "the-crimson-tiles-linen-dress": numbered("45-crimson-tiles-hand-block-cotton-dress", 6),
+  "the-midnight-botanical-kaftan-set": numbered("41-midnight-botanical-pure-crepe-kaftan-co-ord-set", 5),
+  "the-regal-amethyst-co-ord-set": numbered("42-regal-amethyst-co-ord-set", 4),
+  // Existing listings whose garment was already photographed in folders 01 to 18
+  "orchid-sheesha-top": lookbook("03-purple-applique-v-neck-tunic"),
+  "the-mesa-block-linen-tunic": lookbook("09-camel-cream-charcoal-colourblock-dress"),
+  "the-ivory-garden-embroidered-dress": lookbook("10-ivory-floral-embroidered-v-neck-dress"),
+  "magenta-reverie": lookbook("07-fuchsia-double-button-maxi-dress"),
+  "rani-linen-shirt": lookbook("12-hot-pink-high-low-shirt-set"),
+  "the-folk-tale-linen-shirt": numbered("40-folk-tale-linen-co-ord-set", 5),
+};
+
+// Listings kept in the database but not shown until real photos exist.
+const HIDDEN_HANDLES = new Set<string>(["lime-green-linen-co-ord-set"]);
+
+// Display names changed after the audit (handles stay the same so links work).
+const TITLE_OVERRIDES: Record<string, string> = {
+  "the-saphire-flow-set": "Tile and Terra Set",
 };
 
 function normalizeRow(row: ProductRow): NormalizedProduct {
@@ -143,7 +183,7 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
 
   return {
     id: row.id,
-    title: row.title,
+    title: TITLE_OVERRIDES[row.handle] ?? row.title,
     handle: row.handle,
     description: row.description ?? "",
     descriptionHtml: row.description_html ?? "",
@@ -171,7 +211,9 @@ export async function getCatalog(): Promise<NormalizedProduct[]> {
     throw new Error(`Supabase catalog query failed: ${error.message}`);
   }
 
-  return (data as unknown as ProductRow[]).map(normalizeRow);
+  return (data as unknown as ProductRow[])
+    .filter((row) => !HIDDEN_HANDLES.has(row.handle))
+    .map(normalizeRow);
 }
 
 export async function getProductByHandle(
@@ -188,5 +230,6 @@ export async function getProductByHandle(
     throw new Error(`Supabase product query failed: ${error.message}`);
   }
 
-  return data ? normalizeRow(data as unknown as ProductRow) : null;
+  if (!data || HIDDEN_HANDLES.has(handle)) return null;
+  return normalizeRow(data as unknown as ProductRow);
 }
