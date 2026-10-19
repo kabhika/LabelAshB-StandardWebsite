@@ -73,11 +73,11 @@
      for small text. */
   --color-labelashb-gold: #c9a86a;
   /* Light sage for decorative rules - heading underlines and the hero
-     hairline. Client asked twice (Oct 19) to go lighter: #6b7250 ->
-     #9aa084 -> now #c3c8b6. DECORATIVE ONLY, never text (invisible-
-     against-ground territory for copy; the eyebrow keeps the darker
-     --color-labelashb-accent). */
-  --color-labelashb-olive-light: #c3c8b6;
+     hairline. Client lightening requests (Oct 19): #6b7250 -> #9aa084
+     -> #c3c8b6 -> now #e2e5da (two shades lighter each round). This is
+     the practical floor - one more round would be indistinguishable
+     from the ground. DECORATIVE ONLY, never text. */
+  --color-labelashb-olive-light: #e2e5da;
 
   /* Structural: section rhythm, card anatomy, carousel (homepage rebuild).
    * All under --spacing-labelashb-* so they extend Tailwind's spacing
