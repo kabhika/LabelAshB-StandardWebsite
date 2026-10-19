@@ -75,16 +75,17 @@ export function HeroCarousel({
         onDragEnd={handleDragEnd}
       >
         {/* Companion detail panel - sits between the copy column and the
-            primary frame, hidden below lg (there is no surplus width to
-            fill on the single-image md tier). The 200px floor keeps it a
-            real panel; the 560px CAP is the crop fix (client video, Sep
-            23): uncapped flex-1 stretched to ~0.87 aspect on wide
-            screens and object-cover ate up to 23% of the close-up's
-            height. Capped, the panel stays near a 4:5 read (~7% crop at
-            worst) at every wide size; surplus width goes to the row's
-            right edge rather than into more zoom. */}
+            primary frame. The 200px floor + 560px CAP handled wide screens,
+            but between lg and ~1300px the surplus width ran out and the
+            flex-1 panel collapsed to a ~200px sliver - object-cover then
+            cut up to half the photo's width and the model read as
+            "squished" (client video, Oct 19). Fix: the panel now only
+            renders from 1300px up AND carries a 340px floor, so it stays
+            close to a portrait read (<= ~10% side crop) whenever it is
+            visible; below that, the hero is copy + primary only, which
+            hold their perfect 2:3 at every width. */}
         {details && detailCount === count && (
-          <div className="relative hidden min-w-[200px] max-w-[560px] flex-1 lg:block">
+          <div className="relative hidden min-w-[340px] max-w-[560px] flex-1 min-[1300px]:block">
             {details.map((slide, i) => (
               <div
                 key={slide.url}

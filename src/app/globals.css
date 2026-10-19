@@ -72,13 +72,12 @@
      Verified ~8.5:1 against the fabric's darkest field, past WCAG AAA
      for small text. */
   --color-labelashb-gold: #c9a86a;
-  /* Two shades lighter than the moss accent (#6b7250 -> ~#9aa084), per
-     client review Oct 19 ("olive green borders two shades lighter").
-     DECORATIVE ONLY - heading underlines and the hero hairline. Never
-     text: at ~2.4:1 against ground it fails every text contrast tier
-     (the eyebrow keeps the darker --color-labelashb-accent for that
-     reason). */
-  --color-labelashb-olive-light: #9aa084;
+  /* Light sage for decorative rules - heading underlines and the hero
+     hairline. Client asked twice (Oct 19) to go lighter: #6b7250 ->
+     #9aa084 -> now #c3c8b6. DECORATIVE ONLY, never text (invisible-
+     against-ground territory for copy; the eyebrow keeps the darker
+     --color-labelashb-accent). */
+  --color-labelashb-olive-light: #c3c8b6;
 
   /* Structural: section rhythm, card anatomy, carousel (homepage rebuild).
    * All under --spacing-labelashb-* so they extend Tailwind's spacing
