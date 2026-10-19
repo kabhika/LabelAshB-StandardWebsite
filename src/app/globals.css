@@ -24,9 +24,9 @@
    */
   --color-labelashb-ink: #2e2c28;
   --color-labelashb-ink-soft: #75716a;
-  --color-labelashb-ground: #f7f4ee;
-  --color-labelashb-ground-alt: #ede8de;
-  --color-labelashb-border: #dfd9cc;
+  --color-labelashb-ground: #fbf9f5;
+  --color-labelashb-ground-alt: #f2eee6;
+  --color-labelashb-border: #e4ddd1;
   --color-labelashb-accent: #6b7250;
   --color-labelashb-accent-hover: #596042;
   --color-labelashb-accent-foreground: #f7f4ee;
@@ -58,7 +58,7 @@
    * whole page reads tonal, not saturated. Names kept for zero-diff
    * consumers; treat "wine"/"indigo"/"emerald" as legacy slot names.
    */
-  --color-labelashb-ivory: #f7f4ee;
+  --color-labelashb-ivory: #fbf9f5;
   --color-labelashb-indigo: #33362c;
   --color-labelashb-emerald: #6b7250;
   --color-labelashb-wine: #2e2c28;

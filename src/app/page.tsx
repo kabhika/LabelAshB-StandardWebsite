@@ -207,14 +207,16 @@ export default async function Home() {
                 {/* "Quietly confident." is Binita's own founding line ("the
                     woman wearing the garment feels quietly confident") -
                     approved via CAPTIONS-DRAFT.md option 1a, Oct 19 2026.
-                    The eyebrow above it replaces the old headline
-                    "Linen. Silk. Cotton." (now only in CraftBadgesBand),
-                    per the client's requested wording swap. text-labelashb-
-                    display is viewport-relative; the md:/xl: overrides are
-                    the same container-width correction the old headline
-                    needed, recalibrated for this shorter two-word line. */}
+                    Eyebrow wording: client asked for "Slow made in Gurgaon"
+                    -> "meticulously handcrafted in Gurgaon" in review, then
+                    simplified to "Handmade in Gurgaon, India" after seeing
+                    it rendered (Oct 19, second look). "Handmade" is also the
+                    one brand-feel word Binita chose in the questionnaire.
+                    text-labelashb-display is viewport-relative; the md:/xl:
+                    overrides are the same container-width correction the old
+                    headline needed, recalibrated for this shorter line. */}
                 <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
-                  Meticulously handcrafted in Gurgaon, India
+                  Handmade in Gurgaon, India
                 </p>
                 <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink md:text-[clamp(2.5rem,1rem+4vw,4rem)] xl:text-[clamp(3rem,1.2rem+4.5vw,4.75rem)]">
                   Quietly confident.
