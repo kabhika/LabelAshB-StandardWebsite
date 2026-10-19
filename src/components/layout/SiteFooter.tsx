@@ -107,7 +107,7 @@ export function SiteFooter() {
               {facts.brand.parentCompany}
             </p>
             <p className="text-labelashb-small text-labelashb-ivory/60">
-              Made in Gurgaon, India
+              Handmade in Gurgaon, India
             </p>
           </div>
           <FooterMotifStrip />

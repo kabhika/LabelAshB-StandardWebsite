@@ -221,7 +221,7 @@ export default async function Home() {
                 <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink md:text-[clamp(2.5rem,1rem+4vw,4rem)] xl:text-[clamp(3rem,1.2rem+4.5vw,4.75rem)]">
                   Quietly confident.
                 </h1>
-                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-accent" />
+                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-olive-light" />
                 <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft">
                   Hand-embroidered linen, cotton and silk - cut and finished
                   to order in our atelier, by eight people who care about
@@ -272,7 +272,7 @@ export default async function Home() {
               <div className="mx-auto max-w-6xl">
                 <h2
                   id="fabric-heading"
-                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-emerald pb-2 text-labelashb-h2 text-labelashb-ink"
+                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
                 >
                   Shop by fabric
                 </h2>
@@ -290,7 +290,7 @@ export default async function Home() {
               <div className="mx-auto max-w-6xl">
                 <h2
                   id="categories-heading"
-                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-wine pb-2 text-labelashb-h2 text-labelashb-ink"
+                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
                 >
                   Shop by category
                 </h2>
@@ -322,7 +322,7 @@ export default async function Home() {
             <div className="mx-auto max-w-6xl">
               <h2
                 id="studio-heading"
-                className="font-labelashb-serif inline-block border-b-2 border-labelashb-indigo pb-2 text-labelashb-h2 text-labelashb-ink"
+                className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
               >
                 Our studio
               </h2>
@@ -457,7 +457,7 @@ export default async function Home() {
             <div className="mx-auto max-w-6xl">
               <h2
                 id="process-heading"
-                className="font-labelashb-serif inline-block border-b-2 border-labelashb-wine pb-2 text-labelashb-h2 text-labelashb-ink"
+                className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
               >
                 From paper to piece
               </h2>
