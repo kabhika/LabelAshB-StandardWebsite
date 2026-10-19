@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 
 export interface StudioPanel {
   caption: string;
+  // Optional one-line story under the short caption (approved
+  // CAPTIONS-DRAFT.md studio lines, Oct 19 2026). Renders as a second
+  // small line so the caption row stays quiet.
+  note?: string;
   views: Array<{ src: string; alt: string }>;
 }
 
@@ -95,8 +99,13 @@ function Panel({ panel }: { panel: StudioPanel }) {
           </div>
         )}
       </div>
-      <figcaption className="mt-labelashb-card-caption text-labelashb-small text-labelashb-ink-soft">
-        {panel.caption}
+      <figcaption className="mt-labelashb-card-caption">
+        <span className="text-labelashb-small text-labelashb-ink">{panel.caption}</span>
+        {panel.note && (
+          <span className="mt-0.5 block text-labelashb-small text-labelashb-ink-soft">
+            {panel.note}
+          </span>
+        )}
       </figcaption>
     </figure>
   );

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { Fraunces } from "next/font/google";
 import {
   DISPLAY_CATEGORIES,
   MATERIAL_GROUPS,
@@ -29,16 +28,6 @@ import { NewsletterSignup } from "@/components/home/NewsletterSignup";
 import { WhatsAppFloat } from "@/components/home/WhatsAppFloat";
 import { SITE_URL } from "@/lib/site";
 import facts from "../../_knowledge/facts.json";
-
-// Editorial display serif, homepage headings only - loaded here (not the
-// root layout) so the rest of the site keeps its single-sans identity.
-// Its CSS variable is scoped by the `fraunces.variable` class on this
-// page's <main>; --font-labelashb-serif (globals.css) resolves it.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  axes: ["opsz"],
-});
 
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
@@ -127,7 +116,16 @@ function pickCategoryTiles(catalog: NormalizedProduct[]): PromoTile[] {
 
 // One real product image per material group, for the fabric-collection
 // carousel - verified distribution in PLACEHOLDER-POLICY.md (linen
-// dominant, cotton and combined-silk both present).
+// dominant, cotton and combined-silk both present). The note lines list
+// the actual weaves/kinds the atelier works in, confirmed by the client
+// (brand questions, Oct 19 2026) - the old captions named only
+// "handloom linen / mulberry silk".
+const fabricNotes: Record<string, string> = {
+  Linen: "Damask, jacquard, cambric, twill and herringbone - woven to breathe through Indian summers.",
+  Cotton: "Pure cotton, softer with every wash.",
+  Silk: "Mulberry, crepe and Tussar silk - each with its own fall.",
+};
+
 function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
   const images: ScrollerImage[] = [];
   for (const { label, slugs } of MATERIAL_GROUPS) {
@@ -143,6 +141,7 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
       url: curatedImage?.url ?? match.images[0].url,
       alt: curatedImage?.alt ?? (match.images[0].altText || match.title),
       caption: label,
+      note: fabricNotes[label],
       frame: "product",
     });
   }
@@ -171,7 +170,7 @@ export default async function Home() {
   return (
     <>
       <main
-        className={`${fraunces.variable} labelashb-grain flex flex-1 flex-col bg-labelashb-ivory`}
+        className="labelashb-grain flex flex-1 flex-col bg-labelashb-ivory"
       >
         <JsonLd data={websiteJsonLd} />
 
@@ -205,20 +204,26 @@ export default async function Home() {
                 close to the first image panel. */}
             <div className="order-2 flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pl-16 lg:pr-6">
               <Reveal>
-                {/* text-labelashb-display is viewport-relative (vw), which is
-                    correct for a full-width context like style-tile but wrong
-                    here: this column is a minority share of viewport from md:
-                    up, so the token's natural value overshoots and wraps to 3
-                    lines across roughly 768-1200px. The md:/xl: override is a
-                    real container-width correction, not a duplicate of the
-                    token's own mobile-safety clamp. */}
-                <h1 className="font-labelashb-serif text-labelashb-display text-labelashb-ink md:text-[clamp(2rem,0.5rem+4.5vw,3.5rem)] xl:text-labelashb-display">
-                  Linen. Silk. Cotton.
+                {/* "Quietly confident." is Binita's own founding line ("the
+                    woman wearing the garment feels quietly confident") -
+                    approved via CAPTIONS-DRAFT.md option 1a, Oct 19 2026.
+                    The eyebrow above it replaces the old headline
+                    "Linen. Silk. Cotton." (now only in CraftBadgesBand),
+                    per the client's requested wording swap. text-labelashb-
+                    display is viewport-relative; the md:/xl: overrides are
+                    the same container-width correction the old headline
+                    needed, recalibrated for this shorter two-word line. */}
+                <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
+                  Meticulously handcrafted in Gurgaon, India
+                </p>
+                <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink md:text-[clamp(2.5rem,1rem+4vw,4rem)] xl:text-[clamp(3rem,1.2rem+4.5vw,4.75rem)]">
+                  Quietly confident.
                 </h1>
-                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-indigo" />
-                <p className="mt-5 line-clamp-3 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft sm:line-clamp-none">
-                  Made with time, care, and a clear eye for detail.{" "}
-                  {facts.brand.shortDescription}
+                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-accent" />
+                <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft">
+                  Hand-embroidered linen, cotton and silk - cut and finished
+                  to order in our atelier, by eight people who care about
+                  every seam.
                 </p>
                 <div className="mt-8">
                   <Button href="/products" variant="primary">
@@ -324,6 +329,7 @@ export default async function Home() {
                   panels={[
                     {
                       caption: "Fabric",
+                      note: "It starts with the cloth. Handloom linen, mulberry silk, cotton that breathes.",
                       views: [
                         { src: "/atmosphere/studio-fabric.jpg", alt: "Rolls of fabric in the Label AshB studio" },
                         { src: "/atmosphere/studio-fabric-2.jpg", alt: "A garment in progress hanging in the Label AshB studio" },
@@ -331,6 +337,7 @@ export default async function Home() {
                     },
                     {
                       caption: "Workspace",
+                      note: "One room in Gurgaon. Eight people. Zero shortcuts.",
                       views: [
                         { src: "/atmosphere/studio-workspace.jpg", alt: "The Label AshB worktable with tools and sewing machine" },
                         { src: "/atmosphere/studio-workspace-2.jpg", alt: "Sewing machine at work in the Label AshB studio" },
@@ -340,6 +347,7 @@ export default async function Home() {
                     },
                     {
                       caption: "By hand",
+                      note: "Every motif rises stitch by stitch - embroidery the way Binita learned it as a girl.",
                       views: [
                         { src: "/atmosphere/studio-handwork.jpg", alt: "Hands at hand-stitching in the Label AshB studio" },
                         { src: "/atmosphere/studio-handwork-2.jpg", alt: "Pressing a garment during finishing" },
@@ -376,12 +384,15 @@ export default async function Home() {
                   Why Label AshB
                 </h2>
                 <dl className="mt-8 space-y-6">
+                  {/* Names and numbers confirmed by Abhishek (brand
+                      questions, Oct 19 2026) - team consent to being
+                      named was given with the same answers. */}
                   <div>
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Made to order</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      Most pieces begin only once you order them - cut and
-                      finished to size over 2-3 weeks, not pulled from a
-                      warehouse shelf.
+                      Your piece doesn&apos;t exist until you order it. Cut
+                      and finished to your size over 2-3 weeks - never
+                      pulled from a warehouse shelf.
                     </dd>
                   </div>
                   <div>
@@ -389,15 +400,18 @@ export default async function Home() {
                       A small atelier, not a factory
                     </dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      Every design starts on paper, is prototyped, and
-                      refined for fit by hand - never batch-processed.
+                      Eight of us in one Gurgaon workshop: Bimal, our master
+                      tailor of 25 years; Rampravesh; Raja Ali, who runs the
+                      floor; Manju and Jyoti; and Binita, who inspects every
+                      single piece.
                     </dd>
                   </div>
                   <div>
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Fabric first</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      Handloom linen, pure silk crepe, and Indian mulberry
-                      silk, chosen for feel and fall before anything else.
+                      Damask, jacquard, cambric, twill and herringbone
+                      linens; mulberry, crepe and Tussar silks; pure cottons
+                      - chosen for feel and fall before anything else.
                     </dd>
                   </div>
                   <div>
@@ -410,16 +424,15 @@ export default async function Home() {
                   <div>
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Solar-powered workshop</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      The workshop runs on solar energy, generated on site
-                      rather than drawn from the grid.
+                      More than half the workshop&apos;s power is generated
+                      on our own roof.
                     </dd>
                   </div>
                   <div>
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Fair opportunity</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      The people who cut, stitch, and finish each piece come
-                      from underprivileged backgrounds - skilled work with
-                      real opportunity behind it.
+                      Skilled, steady, respected work for the people who
+                      make your clothes.
                     </dd>
                   </div>
                 </dl>

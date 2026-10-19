@@ -39,14 +39,23 @@ export function SiteFooter() {
   return (
     <footer className="bg-labelashb-wine">
       <div className="mx-auto max-w-6xl px-6 py-labelashb-section-standard sm:px-10 lg:px-16">
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 sm:gap-8">
-          <div className="col-span-2 sm:col-span-1">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-5 sm:gap-8">
+          <div className="col-span-2 sm:col-span-2">
             <p className="font-labelashb-serif text-labelashb-h3 text-labelashb-ivory">
               {facts.brand.name}
             </p>
-            <p className="mt-3 text-labelashb-small text-labelashb-ivory/70">
-              {facts.brand.shortDescription}
+            {/* Binita's own line (brand questionnaire, Oct 19 2026) -
+                replaces the commerce-y shortDescription blurb here; that
+                copy still lives in meta descriptions where it belongs. */}
+            <p className="font-labelashb-serif mt-3 text-labelashb-body-lg italic text-labelashb-ivory/85">
+              {facts.brand.footerTagline}
             </p>
+            <a
+              href={`mailto:${facts.contact.email}`}
+              className="mt-3 text-labelashb-small text-labelashb-ivory/70 transition-colors hover:text-labelashb-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-labelashb-wine"
+            >
+              {facts.contact.email}
+            </a>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -54,16 +63,13 @@ export function SiteFooter() {
             <Link href="/products" className={LINK_CLASS}>
               All Products
             </Link>
-            <Link href="/about" className={LINK_CLASS}>
-              About
-            </Link>
             <Link href="/size-guide" className={LINK_CLASS}>
               Size Guide
             </Link>
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className={HEADING_CLASS}>Policies</p>
+            <p className={HEADING_CLASS}>Help</p>
             <Link href="/shipping" className={LINK_CLASS}>
               Shipping
             </Link>
@@ -73,24 +79,37 @@ export function SiteFooter() {
             <Link href="/privacy" className={LINK_CLASS}>
               Privacy
             </Link>
+            <Link href="/contact" className={LINK_CLASS}>
+              Contact
+            </Link>
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className={HEADING_CLASS}>Contact</p>
-            <a href={`mailto:${facts.contact.email}`} className={LINK_CLASS}>
-              {facts.contact.email}
-            </a>
-            <p className="text-labelashb-small text-labelashb-ivory/70">{facts.contact.phone}</p>
-            <Link href="/contact" className={LINK_CLASS}>
-              Contact page
+            <p className={HEADING_CLASS}>Atelier</p>
+            <Link href="/about" className={LINK_CLASS}>
+              Our story
             </Link>
+            <a
+              href={facts.social.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className={LINK_CLASS}
+            >
+              Instagram
+            </a>
           </div>
         </div>
 
         <div className="mt-labelashb-section-compact flex flex-col gap-6 border-t border-labelashb-ivory/20 pt-6">
-          <p className="text-labelashb-small text-labelashb-ivory/60">
-            © {new Date().getFullYear()} {facts.brand.name}
-          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-labelashb-small text-labelashb-ivory/60">
+              © {new Date().getFullYear()} {facts.brand.name} · A unit of{" "}
+              {facts.brand.parentCompany}
+            </p>
+            <p className="text-labelashb-small text-labelashb-ivory/60">
+              Made in Gurgaon, India
+            </p>
+          </div>
           <FooterMotifStrip />
         </div>
       </div>

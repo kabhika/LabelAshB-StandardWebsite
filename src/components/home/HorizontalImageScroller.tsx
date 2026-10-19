@@ -4,6 +4,10 @@ export interface ScrollerImage {
   url: string;
   alt: string;
   caption?: string;
+  // Optional second caption line (e.g. the fabric-kind notes on the
+  // homepage fabric showcase, Oct 2026) - same quiet two-line pattern
+  // as StudioPanels' caption/note pair.
+  note?: string;
   // Product photography is a 2:3 portrait series. Studio atmosphere panels
   // are intentionally 4:5, so retain the card frame unless the caller marks
   // a supplied product image as portrait.
@@ -65,8 +69,13 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
             </div>
           </div>
           {image.caption && (
-            <figcaption className="mt-labelashb-card-caption text-labelashb-small text-labelashb-ink-soft">
-              {image.caption}
+            <figcaption className="mt-labelashb-card-caption">
+              <span className="text-labelashb-small text-labelashb-ink">{image.caption}</span>
+              {image.note && (
+                <span className="mt-0.5 block max-w-md text-labelashb-small text-labelashb-ink-soft">
+                  {image.note}
+                </span>
+              )}
             </figcaption>
           )}
         </figure>

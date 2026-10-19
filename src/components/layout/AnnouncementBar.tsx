@@ -8,24 +8,28 @@ const ROTATE_MS = 5000;
 // one spring feel sitewide for "this label just swapped" motion.
 const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 
-// Three real, already-verified claims only - no invented threshold or
-// worldwide-shipping claim (checked against _knowledge/facts-policies.json:
-// free shipping there is domestic-only with no stated minimum: PRODUCT.md
-// separately confirms international ships via DHL with customer-borne
-// duties, i.e. not free). Offer terms mirror PdpOffers.tsx's OFFER_CODE/
-// copy verbatim, not reworded.
+// Real, verified claims only (checked against _knowledge/facts.json and
+// the Oct 19 2026 brand answers). Per the client's choice (b), LABLOVE
+// lives HERE and in a future exit popup - it was removed from the
+// product page in the same pass, so this strip is the offer's home.
+// Solar line added Oct 2026: facts.json craftPractices + "more than half
+// the workshop's power" confirmed by Abhishek.
 const MESSAGES = [
   {
-    mobile: "Ready-to-ship: 3-5 days · Made-to-order: 2-3 weeks",
-    desktop: "Ready-to-ship: 3-5 business days. Made-to-order/customized: 2-3 weeks.",
+    mobile: "Free shipping across India",
+    desktop: "Free shipping across India - always.",
+  },
+  {
+    mobile: "Made in our solar-powered atelier",
+    desktop: "Every piece cut & finished in our solar-powered atelier.",
   },
   {
     mobile: "Code LABLOVE: ₹200 off orders over ₹2,000",
-    desktop: "Use code LABLOVE, get ₹200 off your first order over ₹2,000.",
+    desktop: "New here? Use code LABLOVE, get ₹200 off your first order over ₹2,000.",
   },
   {
-    mobile: "Free shipping within India",
-    desktop: "Free standard shipping on all orders within India.",
+    mobile: "Ready-to-ship: 3-5 days · Made-to-order: 2-3 weeks",
+    desktop: "Ready-to-ship: 3-5 business days. Made-to-order/customized: 2-3 weeks.",
   },
 ];
 

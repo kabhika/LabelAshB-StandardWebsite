@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/lib/shopify/catalog";
 import { Gallery } from "@/components/catalog/Gallery";
 import { SizeSelector } from "@/components/catalog/SizeSelector";
-import { PdpOffers } from "@/components/catalog/PdpOffers";
 import { demoteH1 } from "@/lib/html";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { breadcrumbJsonLd, productJsonLd, truncateDescription } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
+import facts from "../../../../_knowledge/facts.json";
 
 export async function generateMetadata({
   params,
@@ -99,7 +100,38 @@ export default async function ProductPage({
 
           <div className="mt-8">
             <SizeSelector variants={product.variants} />
-            <PdpOffers />
+            {/* Quiet Luxury pass (Oct 2026): the LABLOVE coupon block that
+                lived here moved to the AnnouncementBar per the client's
+                choice (b) - a discount coupon beside "Add to cart" read
+                louder than the craft. In its place, the two trust lines
+                apparel shoppers actually look for at the buy box: honest
+                lead time (Baymard: 67% of sites hide total time/cost here)
+                and a size-help path right beside the size selector
+                (Baymard sizing best practice). */}
+            <div className="mt-5 space-y-2 rounded-labelashb-md border border-labelashb-border bg-labelashb-ground-alt px-4 py-3">
+              <p className="text-labelashb-small text-labelashb-ink-soft">
+                <span className="text-labelashb-ink">Made for you in 2-3 weeks</span>{" "}
+                - cut to your size after you order. Ready-to-ship styles go
+                out in 3-5 days.
+              </p>
+              <p className="text-labelashb-small text-labelashb-ink-soft">
+                Not sure of your size?{" "}
+                <Link
+                  href="/size-guide"
+                  className="text-labelashb-ink underline decoration-labelashb-border underline-offset-2 hover:text-labelashb-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+                >
+                  See the size guide
+                </Link>{" "}
+                - or{" "}
+                <a
+                  href={`https://wa.me/${facts.contact.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hi! I'd like help choosing a size for a Label AshB piece.")}`}
+                  className="text-labelashb-ink underline decoration-labelashb-border underline-offset-2 hover:text-labelashb-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+                >
+                  WhatsApp us
+                </a>
+                , we&apos;ll help you choose.
+              </p>
+            </div>
           </div>
 
           {product.descriptionHtml && (
