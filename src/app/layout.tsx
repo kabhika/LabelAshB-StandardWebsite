@@ -5,7 +5,9 @@ import { CartProvider } from "@/components/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { ExitIntentPopup } from "@/components/layout/ExitIntentPopup";
 import { SITE_URL } from "@/lib/site";
+import facts from "../../_knowledge/facts.json";
 
 // Quiet Luxury pairing (direction B, Oct 2026): Jost for UI/body sitewide,
 // Cormorant Garamond as the display serif. Both variables are set on <html>
@@ -61,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <SiteFooter />
           <CartDrawer />
+          <ExitIntentPopup whatsapp={facts.contact.whatsapp} />
         </CartProvider>
       </body>
     </html>

@@ -8,18 +8,44 @@ import { Button } from "@/components/ui/Button";
 // one motion feel for "this label just confirmed" sitewide.
 const CONFIRM_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 
-// No email service is wired up behind this yet (no Klaviyo/Mailchimp
-// integration exists in this repo) - submitting only confirms the address
-// was captured in this session, it does not send it anywhere. Swap in a
-// real provider before relying on this to actually grow a list.
-export function NewsletterSignup() {
+// Wired to the insert-only leads table via /api/leads (Phase 3, Oct
+// 2026) - before this the form confirmed optimistically and the address
+// went nowhere. If storage is unavailable (leads table not created yet,
+// network), the confirmation says so and offers WhatsApp instead of
+// claiming a capture that didn't happen.
+function toWhatsAppHref(displayNumber: string, message: string) {
+  const digits = displayNumber.replace(/[^\d]/g, "");
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
+
+export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
   const inputId = useId();
-  const [submitted, setSubmitted] = useState(false);
+  const [result, setResult] = useState<"idle" | "sending" | "saved" | "fallback">(
+    "idle",
+  );
   const reduceMotion = useReducedMotion();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "");
+    setResult("sending");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "newsletter",
+          company: data.get("company"),
+        }),
+      });
+      const json = (await res.json()) as { ok?: boolean };
+      setResult(json.ok ? "saved" : "fallback");
+    } catch {
+      setResult("fallback");
+    }
   }
 
   return (
@@ -33,7 +59,7 @@ export function NewsletterSignup() {
       </p>
 
       <AnimatePresence mode="wait" initial={false}>
-        {submitted ? (
+        {result === "saved" ? (
           <motion.p
             key="confirmed"
             initial={{ opacity: 0 }}
@@ -42,6 +68,28 @@ export function NewsletterSignup() {
             className="mt-6 text-labelashb-body text-labelashb-emerald"
           >
             You&apos;re on the list - thank you.
+          </motion.p>
+        ) : result === "fallback" ? (
+          <motion.p
+            key="fallback"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={reduceMotion ? { duration: 0.1 } : CONFIRM_SPRING}
+            className="mt-6 text-labelashb-body text-labelashb-ink-soft"
+          >
+            We couldn&apos;t save your email just now -{" "}
+            <a
+              href={toWhatsAppHref(
+                whatsapp,
+                "Hi! Please add me to the Label AshB atelier list.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-labelashb-ink underline decoration-labelashb-border underline-offset-2 hover:text-labelashb-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
+            >
+              WhatsApp us
+            </a>{" "}
+            and we&apos;ll add you personally.
           </motion.p>
         ) : (
           <motion.form
@@ -57,13 +105,23 @@ export function NewsletterSignup() {
             </label>
             <input
               id={inputId}
+              name="email"
               type="email"
               required
               placeholder="you@example.com"
               className="w-full border border-labelashb-border bg-labelashb-ivory px-4 py-3 text-labelashb-body text-labelashb-ink outline-none placeholder:text-labelashb-ink-soft focus:ring-2 focus:ring-labelashb-accent"
             />
-            <Button type="submit" variant="primary">
-              Notify me
+            {/* Honeypot - see /api/leads */}
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
+            <Button type="submit" variant="primary" disabled={result === "sending"}>
+              {result === "sending" ? "Saving..." : "Notify me"}
             </Button>
           </motion.form>
         )}
