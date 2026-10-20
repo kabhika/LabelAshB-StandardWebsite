@@ -212,33 +212,29 @@ export const collectionGarments: CollectionGarment[] = [
   ),
   // Hero refresh (Oct 17 2026): real atelier photography from the client's
   // Drive (folders 42/43/45), replacing the last two AI-model slides.
-  // These three garments appear nowhere else on the site. Only the views
-  // that exist as files are referenced - the hero override names them
-  // explicitly so no path points at a file that was never copied in.
-  garmentWithHero(
+  // These garments appear nowhere else on the site. All hero sources are
+  // pre-trimmed to exactly 2:3 (empty backdrop only) so the carousel's
+  // fixed frames never crop them.
+  garment(
     "19-linen-blossom-cutwork-coord",
     "Linen Blossom Cutwork Co-ord",
     "Co-ord Sets",
     "Violet traced with white cutwork florals",
     "A violet tunic with flared sleeves and a high-low hem over matching trousers, traced with white cutwork florals along the sleeves, hemline and trouser cuffs.",
-    {
-      front: img("19-linen-blossom-cutwork-coord", "01-front-view.jpg"),
-      back: img("19-linen-blossom-cutwork-coord", "04-back-view.jpg"),
-      backLabel: "back view",
-    },
   ),
-  garmentWithHero(
+  garment(
     "20-crimson-mosaic-midi-dress",
     "Crimson Mosaic Dress",
     "Dresses",
     "Deep maroon scattered with peach and slate diamonds",
     "A sleeveless A-line midi in deep maroon, printed all over with scattered diamonds of peach, slate blue and darker maroon. The high band collar keeps it crisp; the flare gives it swing.",
-    {
-      front: img("20-crimson-mosaic-midi-dress", "01-front-view.jpg"),
-      back: img("20-crimson-mosaic-midi-dress", "04-back-view.jpg"),
-      backLabel: "back view",
-    },
   ),
+  // Held out of the hero rotation (Oct 17 2026): the client's rules need a
+  // full-length FRONT for the left panel, and this garment's only front on
+  // file is cropped at the waist. Returns to HERO_SLUGS once the complete
+  // folder 43 is downloaded - then drop this hero override, because the
+  // real front (01-front-view.jpg) takes the left panel and the back view
+  // takes the right.
   garmentWithHero(
     "21-noor-ajrakh-dress",
     "Noor Ajrakh Dress",
@@ -246,8 +242,6 @@ export const collectionGarments: CollectionGarment[] = [
     "An Anarkali in warm brown, printed with mustard and blue",
     "A floor-sweeping Anarkali in warm brown, printed with mustard-gold, tan and blue motifs. The V-neckline runs into a buttoned placket; three-quarter sleeves and a full skirt that moves when you do.",
     {
-      // Its only front photo is cropped at the waist, so the main slide is
-      // the full-length back view and the companion panel shows the side.
       front: img("21-noor-ajrakh-dress", "04-back-view.jpg"),
       back: img("21-noor-ajrakh-dress", "03-side-view.jpg"),
       backLabel: "side view",
@@ -265,18 +259,22 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation (Oct 17 2026): rotated onto real atelier photography
-// (garments 19-21, Drive folders 42/43/45) at the client's request,
-// retiring the last two AI-model slides (coral mandarin, purple tunic -
-// both remain in the registry, unplaced). The standing rule from the
-// Sep 1 2026 note still applies: a hero garment must not also appear on
-// any product page - one garment, one home. Folders 41 (side view only),
+// Hero curation (Oct 17 2026, evening): client rules - the hero is
+// exactly two photos per garment, FRONT on the left and BACK on the
+// right, and neither may be cropped (a third close-up slot may come
+// later). All hero sources are pre-trimmed to exactly 2:3 so the fixed
+// frames show them whole. Real atelier photography (garments 19-20,
+// Drive folders 42/45) replaced the last two AI-model slides, which
+// remain in the registry, unplaced. The standing rule still applies: a
+// hero garment must not also appear on any product page. Noor Ajrakh
+// (21) is held out of the rotation until its full-length front exists -
+// its only front on file is cropped at the waist (Drive folder 43 has
+// five shots; only three were downloaded). Folders 41 (side view only),
 // 44 (cropped at the knees) and 46 (single back view) were passed over
 // for lack of a usable pair.
 const HERO_SLUGS = [
   "19-linen-blossom-cutwork-coord",
   "20-crimson-mosaic-midi-dress",
-  "21-noor-ajrakh-dress",
 ];
 
 // Kept for future re-shoot hero picks: display names for reshoot slugs
