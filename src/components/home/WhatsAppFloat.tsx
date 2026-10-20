@@ -26,7 +26,7 @@ export function WhatsAppFloat({ phone }: { phone: string }) {
         bottom: "max(1.25rem, env(safe-area-inset-bottom))",
         right: "max(1.25rem, env(safe-area-inset-right))",
       }}
-      className="fixed z-40 flex h-14 w-14 items-center justify-center rounded-full bg-labelashb-emerald text-labelashb-ivory shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-emerald focus-visible:ring-offset-2"
+      className="fixed z-40 flex h-14 w-14 items-center justify-center rounded-full bg-labelashb-whatsapp text-labelashb-whatsapp-ink shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-whatsapp-ink focus-visible:ring-offset-2"
     >
       <svg
         viewBox="0 0 24 24"
