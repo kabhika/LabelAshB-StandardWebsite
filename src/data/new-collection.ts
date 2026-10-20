@@ -212,6 +212,32 @@ export const collectionGarments: CollectionGarment[] = [
     "Red embroidered with ivory geometry",
     "A red tunic embroidered across the front with ivory geometric bands, shown over a flared skirt. Quietly festive - the kind of piece that carries an evening on its own.",
   ),
+  // Rotation expansion (Oct 17 2026, later the same night): the client
+  // asked for six different hero images on ONE consistent studio
+  // background. The only white-studio garments in the pool are Noor
+  // Ajrakh (43 - above), Midnight Botanical (41) and Regal Amethyst
+  // (42), and 41/42 are already the photography of live product pages
+  // (catalog.ts PRODUCT_IMAGE_OVERRIDES). The client's instruction
+  // wins: these two join the rotation WITH that overlap - a hero that
+  // features a shoppable product is standard practice, and every photo
+  // here is trimmed to exact 2:3 (empty backdrop only, model intact)
+  // so the front-left / back-right / no-cropping rules hold. Sources
+  // are copies, not references, so the product galleries keep their
+  // full-frame originals.
+  garment(
+    "23-midnight-botanical-set",
+    "Midnight Botanical Set",
+    "Co-ord Sets",
+    "A dark botanical kaftan over printed trousers",
+    "A dark kaftan scattered with botanical print over matching flowing trousers. Easy enough for a slow morning, dressy enough for dinner.",
+  ),
+  garment(
+    "24-regal-amethyst-coord",
+    "Regal Amethyst Co-ord",
+    "Co-ord Sets",
+    "Violet traced with white cutwork florals",
+    "A violet tunic with flared sleeves and a high-low hem over matching trousers, traced with white cutwork florals along the sleeves, hemline and trouser cuffs.",
+  ),
 ];
 
 export const collectionCategories: CollectionCategory[] = [
@@ -224,17 +250,22 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation (Oct 17 2026, corrected same night): client rules - the
-// hero is exactly two photos per garment, FRONT on the left and BACK on
-// the right, and neither may be cropped (a third close-up slot may come
-// later). Real atelier photography (garments 21-22), replacing the last
-// two AI-model slides, which remain in the registry, unplaced. The
-// standing rule still applies: a hero garment must not also appear on
-// any product page (products win over hero - see PRODUCT_IMAGE_OVERRIDES
-// in catalog.ts for which folders the product pages own).
+// Hero curation (Oct 17 2026, second revision): client rules - the hero
+// is exactly two photos per garment, FRONT on the left and BACK on the
+// right, and neither may be cropped; later the same evening the client
+// asked for SIX different images on one consistent studio background.
+// Rotation = three white-studio garments x front/back. Ruby Heritage
+// (22) is held out: its photos (and Crimson Tiles' and Olive Grove's)
+// are shot on a dark brown backdrop - a different world from the light
+// studio above, and the client explicitly asked for one consistent
+// background. Midnight Botanical (23) and Regal Amethyst (24) overlap
+// their product pages by the client's own instruction - see their
+// registry entries. The two retired AI slides stay in the registry,
+// unplaced.
 const HERO_SLUGS = [
   "21-noor-ajrakh-dress",
-  "22-ruby-heritage-tunic",
+  "24-regal-amethyst-coord",
+  "23-midnight-botanical-set",
 ];
 
 // Kept for future re-shoot hero picks: display names for reshoot slugs
