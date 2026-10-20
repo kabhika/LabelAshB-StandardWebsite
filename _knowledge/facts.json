@@ -9,6 +9,28 @@
   "brand": {
     "name": "Label AshB",
     "shortDescription": "Shop handcrafted linen dresses, co-ord sets, shirts, tops and silk clothing by Label AshB. Ready-to-ship and made-to-order styles designed for comfort, craft and individuality.",
+    "footerTagline": "From flax to fashion. From heritage to modern elegance.",
+    "parentCompany": "AB Enterprises",
+    "founderLetter": {
+      "note": "Founder letter approved by Binita via Abhishek, Oct 19 2026 (CAPTIONS-DRAFT.md section 5). Built from Binita's own words in the brand questionnaire - edit via her only.",
+      "salutation": "Dear you,",
+      "paragraphs": [
+        "I started Label AshB to bring together three things I have loved all my life: embroidery, which I learned as a schoolgirl and practised with pride; India's textile heritage; and the beauty of pure natural fabrics.",
+        "After years in a different career, I wanted to build something of my own - elegant garments that honour traditional craftsmanship without looking old-fashioned. Clothes a woman can wear to work, to a gathering, or into the evening. Made to be worn and treasured, not discarded with the next trend.",
+        "Every piece is cut and finished in our small Gurgaon atelier by people I trust and respect. I inspect each one myself before it is wrapped.",
+        "From flax to fashion, from heritage to modern elegance - welcome."
+      ],
+      "signature": "Binita Rai, Founder"
+    },
+    "counters": {
+      "note": "Animated-counter values for the About page. All confirmed by Abhishek Oct 19 2026; 500 pieces and 1000 metres are honest approximations he vouched for.",
+      "items": [
+        { "value": "500+", "label": "pieces made" },
+        { "value": "1,000+", "label": "metres of fabric" },
+        { "value": "25 yrs", "label": "master tailoring" },
+        { "value": "8", "label": "pairs of hands" }
+      ]
+    },
     "aboutHtml": "<p>Label AshB is a small boutique clothing label built around thoughtful design, careful fabric selection, and honest craftsmanship.</p>\n<p>At our atelier, every design begins on paper. It is then developed as a prototype, refined for fit and comfort, and created with close attention to finish and quality. We do not treat our clothes as batch-processed products. Each piece is made with time, care, and a clear eye for detail.</p>\n<p>Our materials are sourced individually and chosen for their feel, fall, texture, and lasting beauty. We use the best fabrics available to us, without rushing the process or compromising on quality.</p>\n<p>As a young label, we believe in keeping things simple. We spend our energy on the garment itself: the fabric, the fit, the finishing, and the way it feels when worn. Some details are best appreciated in person, where the texture, movement, and quiet elegance of each piece can truly be seen.</p>\n<p>Label AshB is for women who value clothing that feels personal, graceful, and carefully made.</p>",
     "sourcePage": "Admin > Online Store > Pages > About Us (handle: about-us)"
   },
@@ -21,6 +43,10 @@
     "contactPageHtml": "<p>For order queries, custom sizing, or made-to-order support, contact Label AshB by email at sales@labelashb.in or WhatsApp on +91 98107 25683.</p>",
     "sourcePage": "Admin > Online Store > Pages > Contact (handle: contact)",
     "note": "sales@labelashb.in / +91 98107 25683 is the public-facing contact. binita.rai@gmail.com is the Shopify account owner email, not for public display."
+  },
+  "social": {
+    "instagram": "https://www.instagram.com/label_ashb",
+    "note": "Keeper handle chosen by Abhishek Oct 19 2026 (the one with more followers). The second account, instagram.com/labelashb, should be consolidated away - only this one is linked on the site."
   },
   "sizeGuide": {
     "bodyHtml": "<p>Find your perfect fit with our Label AshB size guide.</p>\n<p>All measurements are in inches. If you are between sizes, we recommend sizing up for comfort.</p>\n<p>Sizes XXXL and above are made-to-order/customized. Made-to-order/customized pieces may take 2-3 weeks depending on the design.</p>",

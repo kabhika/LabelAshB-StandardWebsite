@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -7,9 +7,21 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SITE_URL } from "@/lib/site";
 
-const geist = Geist({
-  variable: "--font-geist",
+// Quiet Luxury pairing (direction B, Oct 2026): Jost for UI/body sitewide,
+// Cormorant Garamond as the display serif. Both variables are set on <html>
+// here so the serif resolves outside the homepage too (footer brand line,
+// About headings) - the old Fraunces hookup was scoped to the homepage
+// <main> and silently fell back to Georgia everywhere else.
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -42,7 +54,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
+    <html lang="en" className={`${jost.variable} ${cormorant.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-labelashb-ground text-labelashb-ink font-labelashb-sans">
         <CartProvider>
           <SiteHeader />

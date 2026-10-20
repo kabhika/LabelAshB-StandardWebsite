@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Truck, CalendarClock, Smartphone } from "lucide-react";
+import { Truck, CalendarClock, RefreshCw } from "lucide-react";
 
 const ROTATE_MS = 4000;
 // Same critically-damped swap spring as AnnouncementBar.tsx / AddToCartButton.tsx -
@@ -15,15 +15,16 @@ const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 //   reused verbatim, not reworded.
 // - "Ready to Ship in 2 Days" matches the confirmed ready-to-ship dispatch
 //   window (facts.json faqs: "dispatched within 2 working days").
-// - "COD via UPI (Local Orders)" matches the confirmed payment terms
-//   (facts.json faqs: "Cash on Delivery is through UPI payments for local
-//   orders. Outstation orders require prepayment") - deliberately not the
-//   candidate "COD Available", which would overstate this as cash-in-hand
-//   COD available everywhere.
+// - COD line REMOVED Oct 19 2026: the client confirmed there is no cash-on-
+//   delivery as a selling mode at all (the old "COD via UPI (Local Orders)"
+//   no longer reflects how they sell). Replaced with the exchange promise,
+//   which is real (facts.json faqs: "We accommodate exchanges for genuine
+//   fit issues") - deliberately not the candidate "Easy returns", which
+//   would overstate a made-to-order returns policy.
 const MESSAGES = [
   { text: "Free shipping within India", Icon: Truck },
   { text: "Ready to Ship in 2 Days", Icon: CalendarClock },
-  { text: "COD via UPI (Local Orders)", Icon: Smartphone },
+  { text: "Easy exchanges for genuine fit issues", Icon: RefreshCw },
 ];
 
 // Not aria-live: same reasoning as AnnouncementBar.tsx - a strip that
