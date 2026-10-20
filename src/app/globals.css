@@ -72,12 +72,22 @@
      Verified ~8.5:1 against the fabric's darkest field, past WCAG AAA
      for small text. */
   --color-labelashb-gold: #c9a86a;
-  /* Light sage for decorative rules - heading underlines and the hero
-     hairline. Client lightening requests (Oct 19): #6b7250 -> #9aa084
-     -> #c3c8b6 -> now #e2e5da (two shades lighter each round). This is
-     the practical floor - one more round would be indistinguishable
-     from the ground. DECORATIVE ONLY, never text. */
-  --color-labelashb-olive-light: #e2e5da;
+  /* Light olive for decorative rules - heading underlines and the hero
+     hairline. History (Oct 19): four lightening rounds took it
+     #6b7250 -> #9aa084 -> #c3c8b6 -> #e2e5da, at which point the client
+     called it dull and asked for a livelier TRUE light olive (Oct 17
+     night, sixth round). #b8c89c is a lighter shade of olive with real
+     chroma - visible against the ground without going dark. DECORATIVE
+     ONLY, never text. */
+  --color-labelashb-olive-light: #b8c89c;
+
+  /* WhatsApp float button (Oct 17 2026): the client asked for a light
+     green icon. A lifted tint of WhatsApp's own brand green, with a
+     deep forest glyph - white-on-light-green would fail contrast, and
+     the dark glyph keeps the mark recognizable at a glance. */
+  --color-labelashb-whatsapp: #7ce495;
+  --color-labelashb-whatsapp-hover: #6fdc8b;
+  --color-labelashb-whatsapp-ink: #14532d;
 
   /* Structural: section rhythm, card anatomy, carousel (homepage rebuild).
    * All under --spacing-labelashb-* so they extend Tailwind's spacing
