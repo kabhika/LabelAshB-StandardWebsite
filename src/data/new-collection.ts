@@ -1,12 +1,14 @@
-// The New Collection - 18 garments supplied as generative re-shoots
-// (new-images/README.md) with a consistent model and studio backdrop.
+// The New Collection - registry of garments: 18 supplied as generative
+// re-shoots (new-images/README.md) with a consistent model and studio
+// backdrop, plus three real-photography pieces added Oct 17 2026.
 //
 // STATUS (Aug 31 2026, evening): this is now a registry, not a browsable
-// lookbook - every garment has a single home on the site: 8 rotate on
-// the homepage hero (HERO_SLUGS below) and 10 serve as presentation
-// imagery on the last mannequin-shot products (PRESENTATION_SWAPS in
-// product-reshoots.ts). The /collection routes and homepage section were
-// removed in the same change so no garment appears in two places.
+// lookbook - each garment has at most one home on the site: the current
+// hero set rotates on the homepage (HERO_SLUGS below), 10 serve as
+// presentation imagery on the last mannequin-shot products
+// (PRESENTATION_SWAPS in product-reshoots.ts), and the rest wait in the
+// registry for a placement. The /collection routes and homepage section
+// were removed in that change so no garment appears in two places.
 //
 // Content rules for this file:
 // - Names follow the brand's poetic-noun voice ("Petal Cascade",
@@ -35,6 +37,15 @@ export interface CollectionGarment {
     back: string;
     detail: string;
   };
+  // Hero rotation override (Oct 17 2026): for garments whose hero slide is
+  // not the standard front view, names the exact files shown in the hero
+  // main frame and companion panel. backLabel keeps the companion alt
+  // text honest (e.g. "side view" for the Noor Ajrakh slide).
+  hero?: {
+    front: string;
+    back: string;
+    backLabel: string;
+  };
 }
 
 const img = (slug: string, file: string) => `/collection/${slug}/${file}`;
@@ -58,6 +69,18 @@ const garment = (
     back: img(slug, "04-back-view.jpg"),
     detail: img(slug, "05-close-up-detail.jpg"),
   },
+});
+
+const garmentWithHero = (
+  slug: string,
+  name: string,
+  category: CollectionCategory,
+  shortDescription: string,
+  description: string,
+  hero: NonNullable<CollectionGarment["hero"]>,
+): CollectionGarment => ({
+  ...garment(slug, name, category, shortDescription, description),
+  hero,
 });
 
 export const collectionGarments: CollectionGarment[] = [
@@ -187,6 +210,49 @@ export const collectionGarments: CollectionGarment[] = [
     "Cream, teal and mustard florals on a halter",
     "Cream, teal and mustard florals on a halter dress that ties at the neck. Made for warm evenings.",
   ),
+  // Hero refresh (Oct 17 2026): real atelier photography from the client's
+  // Drive (folders 42/43/45), replacing the last two AI-model slides.
+  // These three garments appear nowhere else on the site. Only the views
+  // that exist as files are referenced - the hero override names them
+  // explicitly so no path points at a file that was never copied in.
+  garmentWithHero(
+    "19-linen-blossom-cutwork-coord",
+    "Linen Blossom Cutwork Co-ord",
+    "Co-ord Sets",
+    "Violet traced with white cutwork florals",
+    "A violet tunic with flared sleeves and a high-low hem over matching trousers, traced with white cutwork florals along the sleeves, hemline and trouser cuffs.",
+    {
+      front: img("19-linen-blossom-cutwork-coord", "01-front-view.jpg"),
+      back: img("19-linen-blossom-cutwork-coord", "04-back-view.jpg"),
+      backLabel: "back view",
+    },
+  ),
+  garmentWithHero(
+    "20-crimson-mosaic-midi-dress",
+    "Crimson Mosaic Dress",
+    "Dresses",
+    "Deep maroon scattered with peach and slate diamonds",
+    "A sleeveless A-line midi in deep maroon, printed all over with scattered diamonds of peach, slate blue and darker maroon. The high band collar keeps it crisp; the flare gives it swing.",
+    {
+      front: img("20-crimson-mosaic-midi-dress", "01-front-view.jpg"),
+      back: img("20-crimson-mosaic-midi-dress", "04-back-view.jpg"),
+      backLabel: "back view",
+    },
+  ),
+  garmentWithHero(
+    "21-noor-ajrakh-dress",
+    "Noor Ajrakh Dress",
+    "Dresses",
+    "An Anarkali in warm brown, printed with mustard and blue",
+    "A floor-sweeping Anarkali in warm brown, printed with mustard-gold, tan and blue motifs. The V-neckline runs into a buttoned placket; three-quarter sleeves and a full skirt that moves when you do.",
+    {
+      // Its only front photo is cropped at the waist, so the main slide is
+      // the full-length back view and the companion panel shows the side.
+      front: img("21-noor-ajrakh-dress", "04-back-view.jpg"),
+      back: img("21-noor-ajrakh-dress", "03-side-view.jpg"),
+      backLabel: "side view",
+    },
+  ),
 ];
 
 export const collectionCategories: CollectionCategory[] = [
@@ -199,15 +265,18 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation (Sep 1 2026): the rotation has been progressively
-// emptied by the mannequin sweeps - batches 2 and 3 donated six of the
-// eight evening picks to product pages (products win over hero, per the
-// client's precedent). Two slides remain: coral mandarin and purple
-// tunic. Restore variety when the next image batch arrives - candidate
-// garments must not be placed on any product page.
+// Hero curation (Oct 17 2026): rotated onto real atelier photography
+// (garments 19-21, Drive folders 42/43/45) at the client's request,
+// retiring the last two AI-model slides (coral mandarin, purple tunic -
+// both remain in the registry, unplaced). The standing rule from the
+// Sep 1 2026 note still applies: a hero garment must not also appear on
+// any product page - one garment, one home. Folders 41 (side view only),
+// 44 (cropped at the knees) and 46 (single back view) were passed over
+// for lack of a usable pair.
 const HERO_SLUGS = [
-  "04-coral-blue-leaf-mandarin-shirt",
-  "03-purple-applique-v-neck-tunic",
+  "19-linen-blossom-cutwork-coord",
+  "20-crimson-mosaic-midi-dress",
+  "21-noor-ajrakh-dress",
 ];
 
 // Kept for future re-shoot hero picks: display names for reshoot slugs
@@ -219,6 +288,7 @@ interface HeroGarment {
   short: string;
   front: string;
   back: string;
+  backLabel: string;
   detail: string;
 }
 
@@ -228,8 +298,9 @@ function heroGarment(slug: string): HeroGarment | null {
     return {
       name: lookbook.name,
       short: lookbook.shortDescription,
-      front: lookbook.views.front,
-      back: lookbook.views.back,
+      front: lookbook.hero?.front ?? lookbook.views.front,
+      back: lookbook.hero?.back ?? lookbook.views.back,
+      backLabel: lookbook.hero?.backLabel ?? "back view",
       detail: lookbook.views.detail,
     };
   }
@@ -241,6 +312,7 @@ function heroGarment(slug: string): HeroGarment | null {
       front: reshoot.views[0],
       // Re-shoot view order: front, three-quarter, side, back, detail.
       back: reshoot.views.length >= 4 ? reshoot.views[3] : reshoot.views[0],
+      backLabel: "back view",
       detail: reshoot.views[reshoot.views.length - 1],
     };
   }
@@ -268,7 +340,7 @@ export function collectionHeroDetails() {
     const g = heroGarment(slug)!;
     return {
       url: g.back,
-      alt: `${g.name} - back view`,
+      alt: `${g.name} - ${g.backLabel}`,
     };
   });
 }
