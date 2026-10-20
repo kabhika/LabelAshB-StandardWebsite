@@ -16,6 +16,7 @@ import { JsonLd } from "@/components/shared/JsonLd";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ServiceAssuranceBand } from "@/components/home/ServiceAssuranceBand";
 import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
+import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
 import { CraftBadgesBand } from "@/components/home/CraftBadgesBand";
 import { PromoTileGrid, type PromoTile } from "@/components/home/PromoTileGrid";
 import {
@@ -153,6 +154,22 @@ export default async function Home() {
   const inStock = catalog.filter((p) => p.inStock);
   const categoryTiles = pickCategoryTiles(catalog);
   const materialShowcase = pickMaterialShowcase(catalog);
+
+  // "New in the atelier" lane (Phase 3, Oct 2026): the four most
+  // recently created in-stock products. created_at comes from Supabase -
+  // the Shopify-era rows all share the migration timestamp, so until new
+  // products are added the tie-break (title) makes the order stable
+  // rather than meaningful; the lane itself still shows real, in-stock
+  // pieces. excludeIds hands this set to the category tabs below so the
+  // two sections don't open on the same garments.
+  const newArrivals = [...inStock]
+    .sort(
+      (a, b) =>
+        b.createdAt.localeCompare(a.createdAt) || a.title.localeCompare(b.title),
+    )
+    .slice(0, 4);
+  const newArrivalIds = new Set(newArrivals.map((p) => p.id));
+
   const whyUsProduct = inStock.find((p) => p.category === "Co-ord Sets" && p.images.length > 1) ?? inStock[0];
   const whyUsImage = whyUsProduct?.images[1] ?? whyUsProduct?.images[0];
 
@@ -251,16 +268,46 @@ export default async function Home() {
 
         <div className="flex flex-col gap-labelashb-section-generous py-labelashb-section-generous">
           {/* The New Collection lookbook section and /collection routes
-              were retired when every lookbook garment found a home: 8 on
-              the hero (HERO_SLUGS), 10 as presentation imagery on the
-              remaining mannequin-shot products (PRESENTATION_SWAPS,
+              were retired when every lookbook garment found a home: the
+              hero (HERO_SLUGS), or presentation imagery on the remaining
+              mannequin-shot products (PRESENTATION_SWAPS,
               product-reshoots.ts). One garment, one place on the site -
               the shop below now carries all of them. */}
 
-          {/* Shop by category - tabs derived from the live catalog. */}
+          {/* New in the atelier - Phase 3 merchandising lane. Same card
+              row treatment as the category tabs below it (snap-scroll
+              track, 4-up at xl) so the two read as one system. */}
+          {newArrivals.length > 0 && (
+            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-in-heading">
+              <div className="mx-auto max-w-6xl">
+                <Reveal>
+                  <h2
+                    id="new-in-heading"
+                    className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                  >
+                    New in the atelier
+                  </h2>
+                  <div className="mt-labelashb-section-compact flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {newArrivals.map((product) => (
+                      <div
+                        key={product.id}
+                        className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)]"
+                      >
+                        <ProductCardExpanded product={product} />
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+            </section>
+          )}
+
+          {/* Shop by category - tabs derived from the live catalog.
+              excludeIds keeps the opening row off the pieces the New-in
+              lane above already shows. */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
             <div className="mx-auto max-w-6xl">
-              <TabbedProductCarousel products={catalog} />
+              <TabbedProductCarousel products={catalog} excludeIds={newArrivalIds} />
             </div>
           </section>
 
@@ -485,7 +532,7 @@ export default async function Home() {
 
           {/* Newsletter */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Newsletter signup">
-            <NewsletterSignup />
+            <NewsletterSignup whatsapp={facts.contact.whatsapp} />
           </section>
         </div>
       </main>

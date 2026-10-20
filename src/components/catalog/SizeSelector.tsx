@@ -3,11 +3,29 @@
 import { useState } from "react";
 import type { NormalizedVariant } from "@/lib/shopify/catalog";
 import { AddToCartButton } from "@/components/catalog/AddToCartButton";
+import { NotifyMePanel } from "@/components/catalog/NotifyMePanel";
 import { useCart } from "@/components/cart/CartContext";
 
-export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
+// Sold-out sizes stay selectable (Phase 3, Oct 2026): picking one swaps
+// the dead grey button for NotifyMePanel instead of a line-through dead
+// chip, per the client's "sold-out sizes become Notify-me buttons" ask.
+// When EVERY size is sold out the first sold-out chip starts selected so
+// the panel is visible immediately - no dead button anywhere.
+export function SizeSelector({
+  variants,
+  productTitle,
+  productHandle,
+  whatsapp,
+}: {
+  variants: NormalizedVariant[];
+  productTitle: string;
+  productHandle: string;
+  whatsapp: string;
+}) {
   const firstAvailable = variants.find((v) => v.available);
-  const [selectedId, setSelectedId] = useState(firstAvailable?.id ?? null);
+  const [selectedId, setSelectedId] = useState(
+    firstAvailable?.id ?? variants[0]?.id ?? null,
+  );
   const selected = variants.find((v) => v.id === selectedId);
   const { addToCart, isLoading, error } = useCart();
 
@@ -19,16 +37,19 @@ export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
       <div className="flex flex-wrap gap-2">
         {variants.map((variant) => {
           const isSelected = variant.id === selectedId;
+          const soldOut = !variant.available;
           return (
             <button
               key={variant.id}
               type="button"
-              disabled={!variant.available}
               aria-pressed={isSelected}
               onClick={() => setSelectedId(variant.id)}
+              title={soldOut ? "Sold out - get notified" : undefined}
               className={`min-w-12 rounded-labelashb-sm border px-3 py-2 text-labelashb-small transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
-                !variant.available
-                  ? "border-labelashb-border text-labelashb-ink-soft/50 line-through cursor-not-allowed"
+                soldOut
+                  ? isSelected
+                    ? "border-labelashb-ink text-labelashb-ink-soft line-through"
+                    : "border-labelashb-border text-labelashb-ink-soft/60 line-through hover:border-labelashb-ink-soft/60"
                   : isSelected
                     ? "border-labelashb-wine text-labelashb-wine"
                     : "border-labelashb-border text-labelashb-ink hover:border-labelashb-ink"
@@ -41,12 +62,19 @@ export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
       </div>
 
       <div className="mt-6">
-        {selected ? (
+        {selected?.available ? (
           <AddToCartButton
             disabled={isLoading}
             isLoading={isLoading}
             className="w-full sm:w-auto"
             onAdd={() => addToCart(selected.id, 1)}
+          />
+        ) : selected ? (
+          <NotifyMePanel
+            whatsapp={whatsapp}
+            productTitle={productTitle}
+            productHandle={productHandle}
+            variantTitle={selected.title}
           />
         ) : (
           <button
@@ -56,11 +84,6 @@ export function SizeSelector({ variants }: { variants: NormalizedVariant[] }) {
           >
             Out of stock
           </button>
-        )}
-        {!firstAvailable && (
-          <p className="mt-2 text-labelashb-small text-labelashb-error">
-            All sizes are currently out of stock.
-          </p>
         )}
         {error && (
           <p className="mt-2 text-labelashb-small text-labelashb-error">{error}</p>

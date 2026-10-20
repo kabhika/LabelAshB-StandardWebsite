@@ -48,6 +48,11 @@ export interface NormalizedProduct {
   maxPrice: number;
   currencyCode: string;
   inStock: boolean;
+  // Supabase products.created_at (ISO string) - powers the homepage
+  // "New in the atelier" lane. Caveat: products carried over from the
+  // Shopify migration share the import timestamp, so the lane's order
+  // only becomes truly meaningful for products added after Sep 2026.
+  createdAt: string;
 }
 
 // Same normalized taxonomy the migration wrote into products.category --
@@ -78,6 +83,7 @@ interface ProductRow {
   material: string | null;
   price_min: string | null;
   price_max: string | null;
+  created_at: string;
   product_images: {
     url: string;
     alt_text: string | null;
@@ -95,7 +101,7 @@ interface ProductRow {
 
 const PRODUCT_SELECT = `
   id, handle, title, description, description_html, category, material,
-  price_min, price_max,
+  price_min, price_max, created_at,
   product_images ( url, alt_text, position ),
   product_variants ( id, title, sku, price, inventory_quantity, position )
 `;
@@ -197,6 +203,7 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
     maxPrice: row.price_max !== null ? Number(row.price_max) : 0,
     currencyCode: "INR",
     inStock: variants.some((v) => v.available),
+    createdAt: row.created_at,
   };
 }
 

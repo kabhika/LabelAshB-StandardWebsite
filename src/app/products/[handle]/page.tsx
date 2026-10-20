@@ -99,7 +99,12 @@ export default async function ProductPage({
           )}
 
           <div className="mt-8">
-            <SizeSelector variants={product.variants} />
+            <SizeSelector
+              variants={product.variants}
+              productTitle={product.title}
+              productHandle={product.handle}
+              whatsapp={facts.contact.whatsapp}
+            />
             {/* Quiet Luxury pass (Oct 2026): the LABLOVE coupon block that
                 lived here moved to the AnnouncementBar per the client's
                 choice (b) - a discount coupon beside "Add to cart" read
