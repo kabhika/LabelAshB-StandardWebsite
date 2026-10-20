@@ -250,22 +250,53 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation (Oct 17 2026, second revision): client rules - the hero
-// is exactly two photos per garment, FRONT on the left and BACK on the
-// right, and neither may be cropped; later the same evening the client
-// asked for SIX different images on one consistent studio background.
-// Rotation = three white-studio garments x front/back. Ruby Heritage
-// (22) is held out: its photos (and Crimson Tiles' and Olive Grove's)
-// are shot on a dark brown backdrop - a different world from the light
-// studio above, and the client explicitly asked for one consistent
-// background. Midnight Botanical (23) and Regal Amethyst (24) overlap
-// their product pages by the client's own instruction - see their
-// registry entries. The two retired AI slides stay in the registry,
-// unplaced.
-const HERO_SLUGS = [
-  "21-noor-ajrakh-dress",
-  "24-regal-amethyst-coord",
-  "23-midnight-botanical-set",
+// Hero curation (Oct 17 2026, third revision): client rules - front
+// left, back right, no cropping, ONE consistent studio background - and
+// twelve different images. The pool's only light-studio garments are
+// Noor Ajrakh (43), Regal Amethyst (42) and Midnight Botanical (41),
+// so each garment carries TWO slides: first its front/back pair, then
+// a second pair of additional views (three-quarter + close-up, or
+// three-quarter + side), shown after all three front/back pairs have
+// rotated. That is the "third close-up slot" the client pre-approved
+// in the original two-image rule. Every source is exactly 2:3 (native
+// 1024x1536 or trimmed 965x1448, empty backdrop only) so the fixed
+// frames never crop. Ruby Heritage (22) stays out - dark studio. 23/24
+// overlap their product pages by the client's own instruction - see
+// their registry entries. The two retired AI slides stay unplaced.
+interface HeroSlideConfig {
+  slug: string;
+  // Defaults are the front/back pair and the standard alt fragments.
+  frontFile?: string;
+  frontLabel?: string;
+  backFile?: string;
+  backLabel?: string;
+}
+
+const HERO_SLIDES: HeroSlideConfig[] = [
+  { slug: "21-noor-ajrakh-dress" },
+  { slug: "24-regal-amethyst-coord" },
+  { slug: "23-midnight-botanical-set" },
+  {
+    slug: "21-noor-ajrakh-dress",
+    frontFile: "02-three-quarter-front-view.jpg",
+    frontLabel: "three-quarter view",
+    backFile: "05-close-up-detail.jpg",
+    backLabel: "close-up detail",
+  },
+  {
+    slug: "24-regal-amethyst-coord",
+    frontFile: "02-three-quarter-front-view.jpg",
+    frontLabel: "three-quarter view",
+    backFile: "03-side-view.jpg",
+    backLabel: "side view",
+  },
+  {
+    slug: "23-midnight-botanical-set",
+    frontFile: "02-three-quarter-front-view.jpg",
+    frontLabel: "three-quarter view",
+    backFile: "05-close-up-detail.jpg",
+    backLabel: "close-up detail",
+  },
 ];
 
 // Kept for future re-shoot hero picks: display names for reshoot slugs
@@ -306,11 +337,11 @@ function heroGarment(slug: string): HeroGarment | null {
 }
 
 export function collectionHeroSlides() {
-  return HERO_SLUGS.map((slug) => {
-    const g = heroGarment(slug)!;
+  return HERO_SLIDES.map((slide) => {
+    const g = heroGarment(slide.slug)!;
     return {
-      url: g.front,
-      alt: `${g.name} - ${g.short}`,
+      url: img(slide.slug, slide.frontFile ?? "01-front-view.jpg"),
+      alt: `${g.name} - ${slide.frontLabel ?? g.short}`,
       name: g.name,
     };
   });
@@ -322,11 +353,14 @@ export function collectionHeroDetails() {
   // width (front/back editorial diptych), while the macro's
   // edge-to-edge subject read as "cropped" at every width the client
   // tried (Sep 1-24, five rounds). Blur-fill variants made it worse.
-  return HERO_SLUGS.map((slug) => {
-    const g = heroGarment(slug)!;
+  // (Oct 17: close-ups DO appear, but as the right panel of each
+  // garment's second slide, paired with a three-quarter pose on the
+  // left - never alone beside the front.)
+  return HERO_SLIDES.map((slide) => {
+    const g = heroGarment(slide.slug)!;
     return {
-      url: g.back,
-      alt: `${g.name} - back view`,
+      url: img(slide.slug, slide.backFile ?? "04-back-view.jpg"),
+      alt: `${g.name} - ${slide.backLabel ?? "back view"}`,
     };
   });
 }
