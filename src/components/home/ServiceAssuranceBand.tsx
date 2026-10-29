@@ -13,8 +13,11 @@ const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 // and PRODUCT.md before writing (same process as AnnouncementBar.tsx):
 // - "Free shipping within India" is AnnouncementBar's own confirmed wording,
 //   reused verbatim, not reworded.
-// - "Ready to Ship in 2 Days" matches the confirmed ready-to-ship dispatch
-//   window (facts.json faqs: "dispatched within 2 working days").
+// - "Dispatched in 2 working days" quotes the shipping policy exactly
+//   (facts-policies.json: ready-to-ship items "dispatched within 2 working
+//   days and delivered within 3-5 business days"). Oct 30 2026: replaced
+//   "Ready to ship in 3 to 5 days", which blurred dispatch vs delivery -
+//   the announcement bar carries the full dispatch/delivery pair.
 // - COD line REMOVED Oct 19 2026: the client confirmed there is no cash-on-
 //   delivery as a selling mode at all (the old "COD via UPI (Local Orders)"
 //   no longer reflects how they sell). Replaced with the exchange promise,
@@ -23,7 +26,7 @@ const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 //   would overstate a made-to-order returns policy.
 const MESSAGES = [
   { text: "Free shipping within India", Icon: Truck },
-  { text: "Ready to ship in 3 to 5 days", Icon: CalendarClock },
+  { text: "Ready-to-ship: dispatched in 2 working days", Icon: CalendarClock },
   { text: "Easy exchanges for genuine fit issues", Icon: RefreshCw },
 ];
 

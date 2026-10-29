@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 // wa.me needs digits only (no +, spaces, or punctuation) - facts.contact.whatsapp
 // is formatted for human display ("+91 98107 25683"), so it's stripped here
 // rather than duplicating a second raw-digit copy of the same number in
@@ -9,6 +13,21 @@ function toWhatsAppHref(displayNumber: string, message: string): string {
 
 export function WhatsAppFloat({ phone }: { phone: string }) {
   const href = toWhatsAppHref(phone, "Hi! I have a question about a Label AshB piece.");
+  // Hidden once the footer is on screen (client ask, Oct 29 2026): the
+  // footer already carries the WhatsApp contact, so the float would just
+  // bob over it. Falls back to always-visible if no <footer> exists.
+  const [footerVisible, setFooterVisible] = useState(false);
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0.15 },
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <a
@@ -26,12 +45,19 @@ export function WhatsAppFloat({ phone }: { phone: string }) {
         bottom: "max(1.25rem, env(safe-area-inset-bottom))",
         right: "max(1.25rem, env(safe-area-inset-right))",
       }}
-      className="fixed z-40 flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 bg-labelashb-whatsapp text-labelashb-whatsapp-ink shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-whatsapp-ink focus-visible:ring-offset-2"
+      // z-20, below SiteHeader's z-30: the open mobile nav covers the
+      // float instead of the float covering the nav (client: "button
+      // covers the header menu", Oct 29). 44/48px keeps the WCAG 2.5.5
+      // minimum touch target at both sizes while reading smaller than
+      // the old 48/56.
+      className={`fixed z-20 flex h-11 w-11 items-center justify-center rounded-full sm:h-12 sm:w-12 bg-labelashb-whatsapp text-labelashb-whatsapp-ink shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-whatsapp-ink focus-visible:ring-offset-2 ${
+        footerVisible ? "pointer-events-none translate-y-3 scale-75 opacity-0" : "opacity-100"
+      }`}
     >
       <svg
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="h-6 w-6"
+        className="h-5 w-5"
         aria-hidden="true"
       >
         <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.48 1.34 5L2 22l5.15-1.35a10 10 0 0 0 4.89 1.25h.01c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm5.87 14.3c-.25.7-1.24 1.28-2.03 1.45-.54.11-1.25.2-3.63-.78-2.84-1.17-4.67-4.06-4.81-4.25-.14-.19-1.15-1.53-1.15-2.92s.72-2.07.98-2.35c.25-.28.54-.35.72-.35.18 0 .36 0 .52.01.17.01.39-.06.61.47.23.55.78 1.9.85 2.04.07.14.11.3.02.49-.09.19-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.71 1.18 1.53 1.92 1.05.94 1.94 1.24 2.22 1.38.28.14.44.12.6-.07.16-.19.68-.8.87-1.07.19-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.27.14.45.21.52.32.07.12.07.68-.18 1.34Z" />
