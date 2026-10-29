@@ -442,7 +442,7 @@ export default async function Home() {
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Made to order</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
                       Your piece doesn&apos;t exist until you order it. Cut
-                      and finished to your size over about 10 days - never
+                      and finished to your size over 10 to 12 days - never
                       pulled from a warehouse shelf.
                     </dd>
                   </div>
