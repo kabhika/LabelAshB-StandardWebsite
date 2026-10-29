@@ -28,8 +28,8 @@ const MESSAGES = [
     desktop: "New here? Use code LABLOVE, get ₹200 off your first order over ₹2,000.",
   },
   {
-    mobile: "Ready-to-ship: 3-5 days · Made-to-order: 2-3 weeks",
-    desktop: "Ready-to-ship: 3-5 business days. Made-to-order/customized: 2-3 weeks.",
+    mobile: "Ready-to-ship: 3-5 days · Customised: about 10 days",
+    desktop: "Ready-to-ship: 3-5 business days. Made-to-order/customised: about 10 days.",
   },
 ];
 

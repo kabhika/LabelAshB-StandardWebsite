@@ -149,6 +149,8 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
   return images;
 }
 
+const SHOW_CUSTOMER_STORIES = false;
+
 export default async function Home() {
   const catalog = await getCatalog();
   const inStock = catalog.filter((p) => p.inStock);
@@ -258,7 +260,7 @@ export default async function Home() {
                 absolutely-positioned HeroCarousel and collapses its h-full
                 chain to 0 height. */}
             <div
-              className="labelashb-reveal relative order-1 aspect-[2/3] w-full md:order-2 md:aspect-auto md:min-h-[70vh] md:max-h-[780px] md:w-auto lg:flex-[1_0_auto]"
+              className="labelashb-reveal relative order-1 mx-auto aspect-[2/3] h-[min(68svh,150vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
               style={{ animationDelay: "0.15s" }}
             >
               <HeroCarousel slides={heroSlides} details={heroDetails} />
@@ -440,7 +442,7 @@ export default async function Home() {
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Made to order</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
                       Your piece doesn&apos;t exist until you order it. Cut
-                      and finished to your size over 2-3 weeks - never
+                      and finished to your size over about 10 days - never
                       pulled from a warehouse shelf.
                     </dd>
                   </div>
@@ -521,14 +523,19 @@ export default async function Home() {
               and unverified, which this brand's quiet voice doesn't do
               (PLACEHOLDER-POLICY.md / PRODUCT.md). Quiet text mode instead,
               swap to the real carousel once Binita sends quotes. */}
-          <section className="px-6 sm:px-10 lg:px-16" aria-label="Customer stories">
-            <div className="mx-auto max-w-6xl">
-              <HorizontalImageScroller
-                mode="label"
-                text="Customer stories are being gathered - real voices from the women wearing Label AshB, coming soon."
-              />
-            </div>
-          </section>
+          {/* Hidden Oct 29 2026 for launch polish: a "coming soon" strip
+              reads as unfinished. Flip SHOW_CUSTOMER_STORIES once real
+              quotes exist. */}
+          {SHOW_CUSTOMER_STORIES && (
+            <section className="px-6 sm:px-10 lg:px-16" aria-label="Customer stories">
+              <div className="mx-auto max-w-6xl">
+                <HorizontalImageScroller
+                  mode="label"
+                  text="Customer stories are being gathered - real voices from the women wearing Label AshB, coming soon."
+                />
+              </div>
+            </section>
+          )}
 
           {/* Newsletter */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Newsletter signup">

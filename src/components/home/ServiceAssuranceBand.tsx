@@ -23,7 +23,7 @@ const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
 //   would overstate a made-to-order returns policy.
 const MESSAGES = [
   { text: "Free shipping within India", Icon: Truck },
-  { text: "Ready to Ship in 2 Days", Icon: CalendarClock },
+  { text: "Ready to ship in 3 to 5 days", Icon: CalendarClock },
   { text: "Easy exchanges for genuine fit issues", Icon: RefreshCw },
 ];
 
