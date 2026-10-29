@@ -16,13 +16,13 @@ export function Gallery({
 
   if (!active) {
     return (
-      <div className="aspect-labelashb-product w-full bg-labelashb-ivory" aria-hidden />
+      <div className="aspect-labelashb-product w-full bg-labelashb-ground-alt" aria-hidden />
     );
   }
 
   return (
     <div>
-      <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ivory p-4">
+      <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt p-4">
         <div className="relative h-full w-full">
           <Image
             src={active.url}
@@ -30,7 +30,7 @@ export function Gallery({
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             priority
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       </div>

@@ -47,7 +47,7 @@ export function ProductCardGallery({
   };
 
   if (images.length === 0) {
-    return <div className="absolute inset-0 bg-labelashb-ivory" />;
+    return <div className="absolute inset-0 bg-labelashb-ground-alt" />;
   }
 
   return (
@@ -65,7 +65,9 @@ export function ProductCardGallery({
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           priority={i === 0}
           style={{ transitionDuration: "var(--labelashb-duration-card-hover)" }}
-          className={`object-cover transition-opacity ease-out motion-reduce:transition-none ${
+          // contain, not cover: 2:3 full-garment portraits in the 4:5
+          // card - the oat mat fills the width, nothing is cropped.
+          className={`object-contain transition-opacity ease-out motion-reduce:transition-none ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
         />

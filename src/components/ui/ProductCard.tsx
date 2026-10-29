@@ -21,7 +21,7 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
       href={`/products/${product.handle}`}
       className="group block transition-transform duration-300 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
     >
-      <div className="relative aspect-labelashb-product overflow-hidden bg-labelashb-ivory p-3">
+      <div className="relative aspect-labelashb-product overflow-hidden bg-labelashb-ground-alt p-3">
         {image && (
           <div className="relative h-full w-full">
             <Image
@@ -29,7 +29,7 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
               alt={image.altText || product.title}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
+              className="object-contain"
             />
           </div>
         )}

@@ -24,7 +24,7 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
         <Link
           key={tile.href}
           href={tile.href}
-          className="group relative block aspect-labelashb-product overflow-hidden bg-labelashb-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
+          className="group relative block aspect-labelashb-product overflow-hidden bg-labelashb-ground-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
         >
           <div className="absolute inset-3">
             <Image
@@ -32,7 +32,7 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
               alt={tile.image.alt}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <div

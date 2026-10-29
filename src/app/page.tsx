@@ -49,24 +49,44 @@ export const metadata: Metadata = {
 const heroSlides = collectionHeroSlides();
 const heroDetails = collectionHeroDetails();
 
-// These lead images are deliberately curated from the supplied Drive garment
-// folders, rather than selected by catalogue insertion order. Each one is a
-// front-facing, full-length view, so the homepage does not fall back to a back
-// view or a torso-only crop as the catalogue changes.
-const homepageFeatureImages = {
-  Silk: {
-    url: "/collection/26-ivory-drift-one-shoulder-modal-silk-dress/01.jpg",
-    alt: "Front view of the Ivory Drift modal silk dress",
-  },
+// Home merchandising imagery is curated per shoot family so no single
+// section mixes photo backdrops (client note, Oct 29 2026: "white hero,
+// grey card, orange, peach, beige - looks like many shoots mixed").
+// Classification of every folder's 01 image is in
+// .match/contact-sheet-{a,b}.jpg. All tiles and the fabric row draw from
+// the light-grey studio family; the New-in lane above them is the warm
+// atelier set by construction (newest products); the hero is its own
+// white-studio set. Until Binita reshoots the top pieces on one
+// backdrop, family-per-section is the grouping rule.
+const categoryTileImages: Record<string, { url: string; alt: string }> = {
   Dresses: {
-    url: "/collection/28-scarlet-ember-linen-halter-dress/01.jpg",
-    alt: "Front view of the Scarlet Ember linen halter dress",
+    url: "/collection/27-meadow-whisper-hand-embroidered-linen-dress/01.jpg",
+    alt: "Front view of the Meadow Whisper hand-embroidered linen dress",
   },
   Tops: {
     url: "/collection/23-celeste-line-linen-top/01.jpg",
     alt: "Front view of the Celeste Line linen top",
   },
-} as const;
+  "Co-ord Sets": {
+    url: "/collection/25-ivory-bloom-hand-embroidered-linen-co-ord-set/01.jpg",
+    alt: "Front view of the Ivory Bloom hand-embroidered linen co-ord set",
+  },
+};
+
+const fabricShowcaseImages: Record<string, { url: string; alt: string }> = {
+  Linen: {
+    url: "/collection/20-flutter-flow-linen-dress/01.jpg",
+    alt: "Front view of the Flutter Flow linen dress",
+  },
+  Cotton: {
+    url: "/collection/45-crimson-tiles-hand-block-cotton-dress/01.jpg",
+    alt: "Front view of the Crimson Tiles hand-block cotton dress",
+  },
+  Silk: {
+    url: "/collection/36-gilded-garden-chanderi-coord-set/01.jpg",
+    alt: "Front view of the Gilded Garden chanderi co-ord set",
+  },
+};
 
 const processStages: ProcessStage[] = [
   {
@@ -105,7 +125,7 @@ function pickCategoryTiles(catalog: NormalizedProduct[]): PromoTile[] {
       (p) => p.inStock && p.category === category && p.images.length > 0,
     );
     if (!match) continue;
-    const curatedImage = homepageFeatureImages[category as keyof typeof homepageFeatureImages];
+    const curatedImage = categoryTileImages[category];
     tiles.push({
       image: curatedImage ?? { url: match.images[0].url, alt: match.images[0].altText || match.title },
       label: category,
@@ -137,7 +157,7 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
         p.materials.some((m) => slugs.includes(m)),
     );
     if (!match) continue;
-    const curatedImage = homepageFeatureImages[label as keyof typeof homepageFeatureImages];
+    const curatedImage = fabricShowcaseImages[label];
     images.push({
       url: curatedImage?.url ?? match.images[0].url,
       alt: curatedImage?.alt ?? (match.images[0].altText || match.title),
@@ -221,7 +241,7 @@ export default async function Home() {
             {/* pb-[10vh] biases the copy block above dead-center (client
                 note: "a little bit upward"); pr-6 at lg keeps the copy
                 close to the first image panel. */}
-            <div className="order-2 flex flex-1 flex-col justify-center px-6 py-10 sm:px-10 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pl-16 lg:pr-6">
+            <div className="order-2 flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pl-16 lg:pr-6">
               <Reveal>
                 {/* "Quietly confident." is Binita's own founding line ("the
                     woman wearing the garment feels quietly confident") -
@@ -259,8 +279,15 @@ export default async function Home() {
                 transform, which becomes a containing block for this column's
                 absolutely-positioned HeroCarousel and collapses its h-full
                 chain to 0 height. */}
+            {/* Mobile image height (Oct 29 2026, client: "photo fills the
+                whole phone screen, headline sits below the fold"): 46svh
+                puts eyebrow + headline + Shop CTA above the fold on
+                390x840-class phones - whole hero ≈70% of the screen. The
+                2:3 aspect and no-crop rule are untouched; the photo just
+                gets narrower (centered). Desktop heights below are the
+                Sep-tuned values. */}
             <div
-              className="labelashb-reveal relative order-1 mx-auto aspect-[2/3] h-[min(68svh,150vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
+              className="labelashb-reveal relative order-1 mx-auto aspect-[2/3] h-[min(46svh,120vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
               style={{ animationDelay: "0.15s" }}
             >
               <HeroCarousel slides={heroSlides} details={heroDetails} />
@@ -415,14 +442,14 @@ export default async function Home() {
           <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="why-heading">
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-center md:gap-16">
               {whyUsImage && (
-                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ivory p-4 md:w-[42%]">
+                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt p-4 md:w-[42%]">
                   <div className="relative h-full w-full">
                     <Image
                       src={whyUsImage.url}
                       alt={whyUsImage.altText || whyUsProduct?.title || ""}
                       fill
                       sizes="(min-width: 768px) 42vw, 100vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                 </div>

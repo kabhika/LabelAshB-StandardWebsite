@@ -95,9 +95,10 @@ export function HeroCarousel({
                 src={slide.url}
                 alt={slide.alt}
                 fill
-                // Below md the primary is the only panel and sizes to the
-                // viewport; from md up it tracks the column height.
-                sizes="(min-width: 768px) 47vh, 100vw"
+                // Below md the primary is the only panel; it is centered
+                // at ~62vw wide (46svh tall at 2:3), so 62vw keeps the
+                // optimizer from fetching a full-viewport-width file.
+                sizes="(min-width: 768px) 47vh, 62vw"
                 // Eager for the same mid-fade-pop reason as the
                 // companion panel below.
                 loading="eager"
