@@ -232,16 +232,22 @@ export default async function Home() {
             image column stretches to the row height (70vh floor, 780px
             ceiling) with a 200px companion floor, so the panels fill
             the band with no dead space at any screen size. */}
-        <section className="border-b border-labelashb-border">
+        {/* Oct 29 2026 night: hero uncapped to match the lanes (client:
+            "make this exact content fill the full page") - the row spans
+            the viewport with the same small side gap as the product
+            lanes. Copy keeps its 520px measure; surplus width goes to
+            the photo pair, heights still floored at 70vh / capped at
+            780px. */}
+        <section className="border-b border-labelashb-border px-6 sm:px-8 lg:px-10">
           {/* No min-height: the row hugs its tallest child (the 70vh/
               max-780px image column). A former md:min-h-[85vh] left a
               large dead ivory band below the imagery on tall screens
               (client: "reduce this gap further", Sep 1 2026). */}
-          <div className="mx-auto flex max-w-[1580px] flex-col md:flex-row">
+          <div className="flex flex-col md:flex-row">
             {/* pb-[10vh] biases the copy block above dead-center (client
                 note: "a little bit upward"); pr-6 at lg keeps the copy
                 close to the first image panel. */}
-            <div className="order-2 flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pl-16 lg:pr-6">
+            <div className="order-2 flex flex-1 flex-col justify-center py-8 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pr-6">
               <Reveal>
                 {/* "Quietly confident." is Binita's own founding line ("the
                     woman wearing the garment feels quietly confident") -
