@@ -115,7 +115,7 @@ export default async function ProductPage({
                 (Baymard sizing best practice). */}
             <div className="mt-5 space-y-2 rounded-labelashb-md border border-labelashb-border bg-labelashb-ground-alt px-4 py-3">
               <p className="text-labelashb-small text-labelashb-ink-soft">
-                <span className="text-labelashb-ink">Made for you in 2-3 weeks</span>{" "}
+                <span className="text-labelashb-ink">Made for you in 10 to 12 days</span>{" "}
                 - cut to your size after you order. Ready-to-ship styles go
                 out in 3-5 days.
               </p>
