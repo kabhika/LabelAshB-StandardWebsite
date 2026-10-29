@@ -12,19 +12,19 @@ export interface HeroSlide {
 const ROTATE_MS = 5000;
 const SWIPE_THRESHOLD = 60;
 
-// Two-panel hero (client rules, Oct 17 2026): the FRONT photo sits left,
-// the BACK photo of the same garment sits right, and NEITHER may crop.
-// Every hero source is pre-trimmed to exactly 2:3 (empty studio backdrop
-// only - never the model), so the fixed aspect-[2/3] frames show each
-// photo whole and object-cover is a no-op safety, not a cropper. A third
-// close-up slot may be added later; until then, always front + back.
+// Two-panel hero: the PRIMARY photo sits left, its companion (same
+// garment's second pose, or the paired single - see HERO_SET in
+// new-collection.ts) sits right. Oct 30 2026: frames are 4:5 - the new
+// hero set (public/hero/) is pre-cropped to exactly 4:5 by
+// .match/prep-new-hero.mjs with subject-centered windows, so object-cover
+// is a no-op safety, not a cropper.
 //
-// Fit guarantee: at >=1300px both frames cap their height at 74cqw of
-// the hero images column (container-type: size on the wrapper), so the
-// pair's width can never exceed the column and overflow-hidden can never
-// clip a photo - regardless of window proportions. The companion only
+// Fit guarantee: at >=1300px both frames cap their height at 62cqw of
+// the hero images column (container-type: size on the wrapper) - a 4:5
+// pair is 1.6x its height wide, so 62cqw keeps the pair within the
+// column and overflow-hidden can never clip a photo. The companion only
 // renders from 1300px up; below that the hero is copy + primary, which
-// holds its perfect 2:3 at every width.
+// holds its perfect 4:5 at every width.
 //
 // Both panels live here (not two carousels) so one rotation clock keeps
 // them frame-synced forever - separate intervals would drift. All slides
@@ -79,11 +79,10 @@ export function HeroCarousel({
         dragElastic={0.15}
         onDragEnd={handleDragEnd}
       >
-        {/* Primary frame - the garment's FRONT view, left of the pair.
-            Fixed 2:3 so the photo (pre-trimmed to the same ratio) never
-            crops. Height is the column height, capped at 74cqw once the
+        {/* Primary frame. Fixed 4:5 so the pre-cropped photo never
+            crops. Height is the column height, capped at 62cqw once the
             companion joins at 1300px so the two frames always fit. */}
-        <div className="relative aspect-[2/3] h-full shrink-0 min-[1300px]:h-[min(100%,74cqw)]">
+        <div className="relative aspect-[4/5] h-full shrink-0 min-[1300px]:h-[min(100%,62cqw)]">
           {slides.map((slide, i) => (
             <div
               key={slide.url}
@@ -96,9 +95,9 @@ export function HeroCarousel({
                 alt={slide.alt}
                 fill
                 // Below md the primary is the only panel; it is centered
-                // at ~62vw wide (46svh tall at 2:3), so 62vw keeps the
+                // at ~80vw wide (46svh tall at 4:5), so 80vw keeps the
                 // optimizer from fetching a full-viewport-width file.
-                sizes="(min-width: 768px) 47vh, 62vw"
+                sizes="(min-width: 768px) 40vh, 80vw"
                 // Eager for the same mid-fade-pop reason as the
                 // companion panel below.
                 loading="eager"
@@ -128,13 +127,11 @@ export function HeroCarousel({
           )}
         </div>
 
-        {/* Companion panel - the SAME garment's BACK view, right of the
-            pair (client rule, Oct 17 2026). Also fixed 2:3 so the photo
-            shows whole; same 74cqw height cap so the pair never exceeds
-            the column. Hidden below 1300px - there the hero is copy +
-            primary only. */}
+        {/* Companion panel - the paired photo, right of the pair. Also
+            fixed 4:5 so the photo shows whole; same 62cqw height cap so
+            the pair never exceeds the column. Hidden below 1300px. */}
         {details && detailCount === count && (
-          <div className="relative hidden aspect-[2/3] h-full shrink-0 min-[1300px]:block min-[1300px]:h-[min(100%,74cqw)]">
+          <div className="relative hidden aspect-[4/5] h-full shrink-0 min-[1300px]:block min-[1300px]:h-[min(100%,62cqw)]">
             {details.map((slide, i) => (
               <div
                 key={slide.url}

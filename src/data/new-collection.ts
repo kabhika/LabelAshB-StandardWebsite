@@ -20,8 +20,6 @@
 // - Category assignment follows the garment type, matching the three
 //   catalog categories the rest of the site already filters on.
 
-import { getReshootBySlug } from "./product-reshoots";
-
 export type CollectionCategory = "Dresses" | "Tops" | "Co-ord Sets";
 
 export interface CollectionGarment {
@@ -250,117 +248,42 @@ export function getGarment(slug: string): CollectionGarment | undefined {
   return collectionGarments.find((g) => g.slug === slug);
 }
 
-// Hero curation (Oct 17 2026, third revision): client rules - front
-// left, back right, no cropping, ONE consistent studio background - and
-// twelve different images. The pool's only light-studio garments are
-// Noor Ajrakh (43), Regal Amethyst (42) and Midnight Botanical (41),
-// so each garment carries TWO slides: first its front/back pair, then
-// a second pair of additional views (three-quarter + close-up, or
-// three-quarter + side), shown after all three front/back pairs have
-// rotated. That is the "third close-up slot" the client pre-approved
-// in the original two-image rule. Every source is exactly 2:3 (native
-// 1024x1536 or trimmed 965x1448, empty backdrop only) so the fixed
-// frames never crop. Ruby Heritage (22) stays out - dark studio. 23/24
-// overlap their product pages by the client's own instruction - see
-// their registry entries. The two retired AI slides stay unplaced.
-interface HeroSlideConfig {
-  slug: string;
-  // Defaults are the front/back pair and the standard alt fragments.
-  frontFile?: string;
-  frontLabel?: string;
-  backFile?: string;
-  backLabel?: string;
-}
-
-const HERO_SLIDES: HeroSlideConfig[] = [
-  { slug: "21-noor-ajrakh-dress" },
-  { slug: "24-regal-amethyst-coord" },
-  { slug: "23-midnight-botanical-set" },
-  {
-    slug: "21-noor-ajrakh-dress",
-    frontFile: "02-three-quarter-front-view.jpg",
-    frontLabel: "three-quarter view",
-    backFile: "05-close-up-detail.jpg",
-    backLabel: "close-up detail",
-  },
-  {
-    slug: "24-regal-amethyst-coord",
-    frontFile: "02-three-quarter-front-view.jpg",
-    frontLabel: "three-quarter view",
-    backFile: "03-side-view.jpg",
-    backLabel: "side view",
-  },
-  {
-    slug: "23-midnight-botanical-set",
-    frontFile: "02-three-quarter-front-view.jpg",
-    frontLabel: "three-quarter view",
-    backFile: "05-close-up-detail.jpg",
-    backLabel: "close-up detail",
-  },
+// Hero set (Oct 30 2026): the client's new WhatsApp batch, processed by
+// .match/prep-new-hero.mjs into public/hero/ as 4:5 portraits (880x1100,
+// subject-centered windows - a 2:3 window clipped four of the six, see
+// the script). Supersedes the Oct 17 atelier-set rotation (folders 21/
+// 23-midnight/24 - those files stay for their product pages). Two of the
+// garments carry two poses (01+05 black co-ord, 04+06 ivory co-ord); the
+// terracotta set (02) and printed maxi (03) are single-shot and serve as
+// each other's companion panel - both warm-beige studio, so the pair
+// reads as one editorial spread. Rotation order: the four primary poses
+// first, then the two alternate poses.
+const HERO_SET: { file: string; name: string; view: string; companion: string; companionView: string }[] = [
+  { file: "01.jpg", name: "Black hand-embroidered co-ord set", view: "front view", companion: "05.jpg", companionView: "second pose" },
+  { file: "02.jpg", name: "Terracotta co-ord set", view: "front view", companion: "03.jpg", companionView: "printed maxi dress" },
+  { file: "03.jpg", name: "Printed maxi dress", view: "front view", companion: "02.jpg", companionView: "terracotta co-ord set" },
+  { file: "04.jpg", name: "Ivory co-ord set", view: "front view", companion: "06.jpg", companionView: "second pose" },
+  { file: "05.jpg", name: "Black hand-embroidered co-ord set", view: "second pose", companion: "01.jpg", companionView: "front view" },
+  { file: "06.jpg", name: "Ivory co-ord set", view: "second pose", companion: "04.jpg", companionView: "front view" },
 ];
 
-// Kept for future re-shoot hero picks: display names for reshoot slugs
-// (their Shopify titles aren't known at build time).
-const RESHOOT_HERO_NAMES: Record<string, string> = {};
-
-interface HeroGarment {
-  name: string;
-  short: string;
-  front: string;
-  back: string;
-  detail: string;
-}
-
-function heroGarment(slug: string): HeroGarment | null {
-  const lookbook = getGarment(slug);
-  if (lookbook) {
-    return {
-      name: lookbook.name,
-      short: lookbook.shortDescription,
-      front: lookbook.views.front,
-      back: lookbook.views.back,
-      detail: lookbook.views.detail,
-    };
-  }
-  const reshoot = getReshootBySlug(slug);
-  if (reshoot) {
-    return {
-      name: RESHOOT_HERO_NAMES[slug] ?? slug,
-      short: reshoot.description.split(/[.!?]/)[0] + ".",
-      front: reshoot.views[0],
-      // Re-shoot view order: front, three-quarter, side, back, detail.
-      back: reshoot.views.length >= 4 ? reshoot.views[3] : reshoot.views[0],
-      detail: reshoot.views[reshoot.views.length - 1],
-    };
-  }
-  return null;
-}
+const heroImg = (file: string) => `/hero/${file}`;
 
 export function collectionHeroSlides() {
-  return HERO_SLIDES.map((slide) => {
-    const g = heroGarment(slide.slug)!;
-    return {
-      url: img(slide.slug, slide.frontFile ?? "01-front-view.jpg"),
-      alt: `${g.name} - ${slide.frontLabel ?? g.short}`,
-      name: g.name,
-    };
-  });
+  return HERO_SET.map((slide) => ({
+    url: heroImg(slide.file),
+    alt: `${slide.name} - ${slide.view}`,
+    name: slide.name,
+  }));
 }
 
 export function collectionHeroDetails() {
-  // The companion panel shows the same garment's BACK view, not the
-  // close-up macro: a full-body pose crops gracefully at any panel
-  // width (front/back editorial diptych), while the macro's
-  // edge-to-edge subject read as "cropped" at every width the client
-  // tried (Sep 1-24, five rounds). Blur-fill variants made it worse.
-  // (Oct 17: close-ups DO appear, but as the right panel of each
-  // garment's second slide, paired with a three-quarter pose on the
-  // left - never alone beside the front.)
-  return HERO_SLIDES.map((slide) => {
-    const g = heroGarment(slide.slug)!;
-    return {
-      url: img(slide.slug, slide.backFile ?? "04-back-view.jpg"),
-      alt: `${g.name} - ${slide.backLabel ?? "back view"}`,
-    };
-  });
+  // Companion panel: the same garment's second pose when one exists
+  // (01+05, 04+06); the two single-shot garments show each other (see
+  // HERO_SET note). The old back-view rule followed the atelier set's
+  // five-view folders - this batch has no back views.
+  return HERO_SET.map((slide) => ({
+    url: heroImg(slide.companion),
+    alt: `${slide.name} - ${slide.companionView}`,
+  }));
 }

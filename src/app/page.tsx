@@ -285,15 +285,12 @@ export default async function Home() {
                 transform, which becomes a containing block for this column's
                 absolutely-positioned HeroCarousel and collapses its h-full
                 chain to 0 height. */}
-            {/* Mobile image height (Oct 29 2026, client: "photo fills the
-                whole phone screen, headline sits below the fold"): 46svh
-                puts eyebrow + headline + Shop CTA above the fold on
-                390x840-class phones - whole hero ≈70% of the screen. The
-                2:3 aspect and no-crop rule are untouched; the photo just
-                gets narrower (centered). Desktop heights below are the
-                Sep-tuned values. */}
+            {/* Oct 30 2026: 4:5 frames for the new hero set (public/hero/,
+                processed 880x1100). Mobile: 46svh cap unchanged, so the
+                fold behavior is identical; 4:5 just reads a little wider
+                than the old 2:3. */}
             <div
-              className="labelashb-reveal relative order-1 mx-auto aspect-[2/3] h-[min(46svh,120vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
+              className="labelashb-reveal relative order-1 mx-auto aspect-[4/5] h-[min(46svh,120vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
               style={{ animationDelay: "0.15s" }}
             >
               <HeroCarousel slides={heroSlides} details={heroDetails} />
