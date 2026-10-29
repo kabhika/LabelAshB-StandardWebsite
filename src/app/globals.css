@@ -17,20 +17,25 @@
  * pulled from a generic example palette. See PLAN.md §3.
  */
 @theme {
-  /* Color: "Quiet Luxury" retone (Oct 2026, chosen design direction B) -
-   * oat grounds, charcoal ink, one moss accent. Token NAMES deliberately
-   * unchanged: every sitewide consumer (bands, buttons, h2 underlines,
-   * focus rings) retunes through these values without structural edits.
+  /* Color: "Champagne & Espresso" palette (Oct 29 2026 evening, client
+   * table): champagne stone ground, soft ivory cards, deep espresso ink,
+   * dark chocolate buttons/footer, antique gold lines. Token NAMES
+   * deliberately unchanged: every sitewide consumer retunes through
+   * these values without structural edits.
    */
-  --color-labelashb-ink: #2e2c28;
-  --color-labelashb-ink-soft: #75716a;
-  --color-labelashb-ground: #fbf9f5;
-  --color-labelashb-ground-alt: #f2eee6;
-  --color-labelashb-border: #e4ddd1;
-  --color-labelashb-accent: #6b7250;
-  --color-labelashb-accent-hover: #596042;
-  --color-labelashb-accent-foreground: #f7f4ee;
-  --color-labelashb-accent-soft: #e9ebdf;
+  --color-labelashb-ink: #2d241f;
+  --color-labelashb-ink-soft: #6e6259;
+  --color-labelashb-ground: #e8dfd2;
+  --color-labelashb-ground-alt: #f8f4ed;
+  --color-labelashb-border: #9a7b4f;
+  /* Text-grade antique gold: the client's #9a7b4f is ~2.9:1 on the
+     champagne ground (fails WCAG AA for small text), so TEXT accents
+     use this deepened step of the same hue; decorative lines keep the
+     exact #9a7b4f (border token above). */
+  --color-labelashb-accent: #7a5f39;
+  --color-labelashb-accent-hover: #5f4a2c;
+  --color-labelashb-accent-foreground: #fff9f0;
+  --color-labelashb-accent-soft: #efe5d6;
   --color-labelashb-error: #b3261e;
   --color-labelashb-error-soft: #f8e9e8;
 
@@ -52,19 +57,18 @@
    * (including the wine button's own) - that's a systemic "one focus
    * color everywhere" convention independent of any element's own fill,
    * not something this change should fork. */
-  /* Oct 2026 Quiet Luxury retone of the same named slots: the homepage
-   * band accents (h2 underlines, craft band, assurance band, footer,
-   * Button primary fill) shift from jewel tones to moss/charcoal so the
-   * whole page reads tonal, not saturated. Names kept for zero-diff
-   * consumers; treat "wine"/"indigo"/"emerald" as legacy slot names.
+  /* Oct 29 2026 champagne/espresso retone of the same named slots:
+     wine/indigo are now dark chocolate (buttons, footer, assurance
+     band), emerald + olive-light are the antique-gold accent slots.
+     Treat "wine"/"indigo"/"emerald"/"olive" as legacy slot names.
    */
-  --color-labelashb-ivory: #fbf9f5;
-  --color-labelashb-indigo: #33362c;
-  --color-labelashb-emerald: #6b7250;
-  --color-labelashb-wine: #2e2c28;
+  --color-labelashb-ivory: #e8dfd2;
+  --color-labelashb-indigo: #352a23;
+  --color-labelashb-emerald: #9a7b4f;
+  --color-labelashb-wine: #352a23;
   /* Same value-step pairing logic as accent/accent-hover: hover reads as
-     "the same color, pressed in." Now the pressed-in charcoal, not wine. */
-  --color-labelashb-wine-hover: #1f1d1a;
+     "the same color, pressed in." Pressed-in chocolate. */
+  --color-labelashb-wine-hover: #241c16;
   /* Antique gold from the Label AshB logo's embroidered monogram
      (public/label-ashb-logo-transparent.png, gold pixels average
      #b1955d; this is the lifted highlight value for text/lines), where
@@ -72,14 +76,11 @@
      Verified ~8.5:1 against the fabric's darkest field, past WCAG AAA
      for small text. */
   --color-labelashb-gold: #c9a86a;
-  /* Light olive for decorative rules - heading underlines and the hero
-     hairline. History (Oct 19): four lightening rounds took it
-     #6b7250 -> #9aa084 -> #c3c8b6 -> #e2e5da, at which point the client
-     called it dull and asked for a livelier TRUE light olive (Oct 17
-     night, sixth round). #b8c89c is a lighter shade of olive with real
-     chroma - visible against the ground without going dark. DECORATIVE
-     ONLY, never text. */
-  --color-labelashb-olive-light: #b8c89c;
+  /* Antique gold decorative rules - heading underlines and the hero
+     hairline. The client's accent gold #9a7b4f (Oct 29 2026 palette
+     table); decorative only, never text (text-grade accent lives in
+     --color-labelashb-accent above). */
+  --color-labelashb-olive-light: #9a7b4f;
 
   /* WhatsApp float button (Oct 17 2026): the client asked for a light
      green icon. A lifted tint of WhatsApp's own brand green, with a

@@ -307,13 +307,13 @@ export default async function Home() {
               row treatment as the category tabs below it (snap-scroll
               track, 4-up at xl) so the two read as one system. */}
           {newArrivals.length > 0 && (
-            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-in-heading">
-              {/* Image-lane sections (this one, tabs, fabric, tiles) use the
-                  wide 1760px container - product photography goes
-                  side-to-side like the client's reference (byshree.com,
-                  Oct 29 2026). Text sections below keep max-w-6xl for
+            <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="new-in-heading">
+              {/* Image-lane sections (this one, tabs, fabric, tiles) are
+                  uncapped with a small side gap only (client: "leave only
+                  a little space between the side and the image", Oct 29
+                  2026 evening). Text sections below keep max-w-6xl for
                   readable line length. */}
-              <div className="mx-auto w-full max-w-[1760px]">
+              <div className="w-full">
                 <Reveal>
                   <h2
                     id="new-in-heading"
@@ -325,7 +325,10 @@ export default async function Home() {
                     {newArrivals.map((product) => (
                       <div
                         key={product.id}
-                        className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)]"
+                        // Uncapped lane: 4-up from xl, 5-up from 2xl,
+                        // 6-up from 1920px so tiles stay ~280-300px as
+                        // the lane fills the screen side-to-side.
+                        className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)] 2xl:w-[calc((100%-4*var(--spacing-labelashb-carousel-gap))/5)] min-[1920px]:w-[calc((100%-5*var(--spacing-labelashb-carousel-gap))/6)]"
                       >
                         <ProductCardExpanded product={product} />
                       </div>
@@ -339,8 +342,8 @@ export default async function Home() {
           {/* Shop by category - tabs derived from the live catalog.
               excludeIds keeps the opening row off the pieces the New-in
               lane above already shows. */}
-          <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
-            <div className="mx-auto w-full max-w-[1760px]">
+          <section className="px-6 sm:px-8 lg:px-10" aria-label="Shop by category">
+            <div className="w-full">
               <TabbedProductCarousel products={catalog} excludeIds={newArrivalIds} />
             </div>
           </section>
@@ -349,8 +352,8 @@ export default async function Home() {
               photography and distribution (PLACEHOLDER-POLICY.md), not a
               1:1 copy of a reference site's own fabric groupings. */}
           {materialShowcase.length > 0 && (
-            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="fabric-heading">
-              <div className="mx-auto w-full max-w-[1760px]">
+            <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="fabric-heading">
+              <div className="w-full">
                 <h2
                   id="fabric-heading"
                   className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
@@ -367,8 +370,8 @@ export default async function Home() {
           {/* Category promo grid - 3 real tiles (Dresses / Tops / Co-ord
               Sets), never padded to a 4th (PLACEHOLDER-POLICY.md). */}
           {categoryTiles.length > 0 && (
-            <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="categories-heading">
-              <div className="mx-auto w-full max-w-[1760px]">
+            <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="categories-heading">
+              <div className="w-full">
                 <h2
                   id="categories-heading"
                   className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"

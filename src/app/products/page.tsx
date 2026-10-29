@@ -54,11 +54,11 @@ export default async function ProductsPage({
     ? [...new Set(catalog.filter((p) => p.category === category).flatMap((p) => p.materials))]
     : [];
 
-  // Wide, near-full-bleed container (client reference byshree.com, Oct
-  // 29 2026): product photography spans side-to-side instead of floating
-  // in a 1152px column with ~180px dead flanks on a 1512px screen.
+  // Uncapped, near-full-bleed (client: "leave only a little space
+  // between the side and the image", Oct 29 2026 evening): product
+  // photography spans side-to-side with a small side gap only.
   return (
-    <main className="mx-auto max-w-[1760px] px-6 py-16 sm:px-10">
+    <main className="w-full px-6 py-16 sm:px-8 lg:px-10">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
@@ -120,8 +120,9 @@ export default async function ProductsPage({
             </div>
           ) : (
             // Shree-style tight gutters (12px x, 32px y for the caption
-            // lines); 5-up from 2xl so tiles stay ~300px, not poster-size.
-            <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
+            // lines); 5-up from 2xl, 6-up from 1920px so tiles stay
+            // ~260-300px, not poster-size.
+            <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 min-[1920px]:grid-cols-6">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

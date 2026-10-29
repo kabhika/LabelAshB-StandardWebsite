@@ -169,14 +169,12 @@ export function TabbedProductCarousel({
         {visible.map((product) => (
           <div
             key={product.id}
-            // xl+ (>=1280px): the section container is the wide 1760px
-            // image-lane cap (see page.tsx), so card width is solved
-            // against that real 100% rather than a guessed static value -
-            // (100% - 3 gaps) / 4 seats exactly 4 cards with zero clipping,
-            // no partial-next-card peek. Below xl the row is intentionally
-            // narrower than 4 cards - snap-scroll (see track below) is how
-            // you reach the rest, same as when a category has >4 products.
-            className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)]"
+            // Uncapped lane (Oct 29 evening): 4-up from xl, 5-up from
+            // 2xl, 6-up from 1920px, so tiles stay ~280-300px while the
+            // row fills the screen side-to-side. Below xl the row is
+            // intentionally narrower - snap-scroll is how you reach the
+            // rest, same as when a category has more products than seats.
+            className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)] 2xl:w-[calc((100%-4*var(--spacing-labelashb-carousel-gap))/5)] min-[1920px]:w-[calc((100%-5*var(--spacing-labelashb-carousel-gap))/6)]"
           >
             <ProductCardExpanded product={product} />
           </div>
