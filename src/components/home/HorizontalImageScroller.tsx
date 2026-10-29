@@ -56,7 +56,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
     >
       {images.map((image, i) => (
         <figure key={image.url} className="w-72 flex-none snap-start sm:w-96">
-          <div className={`relative overflow-hidden bg-labelashb-ground-alt ${image.frame === "product" ? "aspect-labelashb-product p-3" : "aspect-labelashb-card"}`}>
+          <div className={`relative overflow-hidden bg-labelashb-ground-alt ${image.frame === "product" ? "aspect-labelashb-product" : "aspect-labelashb-card"}`}>
             <div className={image.frame === "product" ? "relative h-full w-full" : "absolute inset-0"}>
               <Image
                 src={image.url}
@@ -64,10 +64,9 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
                 fill
                 sizes="(min-width: 640px) 24rem, 18rem"
                 priority={i === 0}
-                // Product frames contain (2:3 portraits, oat mat fills the
-                // 4:5 card); atmosphere frames are pre-cropped 4:5, cover
-                // is a no-op there.
-                className={image.frame === "product" ? "object-contain" : "object-cover"}
+                // Product frames bleed edge to edge (Shree reference, Oct
+                // 29); atmosphere frames are pre-cropped 4:5 covers.
+                className="object-cover"
               />
             </div>
           </div>

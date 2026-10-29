@@ -169,8 +169,8 @@ export function TabbedProductCarousel({
         {visible.map((product) => (
           <div
             key={product.id}
-            // xl+ (>=1280px): container settles at max-w-6xl (1152px, see
-            // page.tsx's px-16 section padding), so card width is solved
+            // xl+ (>=1280px): the section container is the wide 1760px
+            // image-lane cap (see page.tsx), so card width is solved
             // against that real 100% rather than a guessed static value -
             // (100% - 3 gaps) / 4 seats exactly 4 cards with zero clipping,
             // no partial-next-card peek. Below xl the row is intentionally

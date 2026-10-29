@@ -65,9 +65,9 @@ export function ProductCardGallery({
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           priority={i === 0}
           style={{ transitionDuration: "var(--labelashb-duration-card-hover)" }}
-          // contain, not cover: 2:3 full-garment portraits in the 4:5
-          // card - the oat mat fills the width, nothing is cropped.
-          className={`object-contain transition-opacity ease-out motion-reduce:transition-none ${
+          // cover, no mat: tiles bleed edge to edge (Shree reference,
+          // Oct 29); 2:3 sources fill exactly, others crop at the sides.
+          className={`object-cover transition-opacity ease-out motion-reduce:transition-none ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
         />

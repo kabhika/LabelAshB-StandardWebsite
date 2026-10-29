@@ -54,8 +54,11 @@ export default async function ProductsPage({
     ? [...new Set(catalog.filter((p) => p.category === category).flatMap((p) => p.materials))]
     : [];
 
+  // Wide, near-full-bleed container (client reference byshree.com, Oct
+  // 29 2026): product photography spans side-to-side instead of floating
+  // in a 1152px column with ~180px dead flanks on a 1512px screen.
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
+    <main className="mx-auto max-w-[1760px] px-6 py-16 sm:px-10">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
@@ -116,7 +119,9 @@ export default async function ProductsPage({
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+            // Shree-style tight gutters (12px x, 32px y for the caption
+            // lines); 5-up from 2xl so tiles stay ~300px, not poster-size.
+            <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

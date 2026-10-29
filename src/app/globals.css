@@ -103,14 +103,16 @@
   --spacing-labelashb-section-standard: clamp(3rem, 2rem + 4vw, 5rem);
   --spacing-labelashb-section-generous: clamp(4rem, 2rem + 8vw, 8rem);
 
-  /* Card anatomy. Oct 29 2026: product imagery unified on the 4:5 card
-     ratio with a shared oat mat (bg-labelashb-ground-alt) and
-     object-contain - photos are 2:3 full-length portraits from several
-     shoots with different backdrops, so the consistent mat + ratio is
-     what makes them read as one catalogue until reshoots land. Contain
-     means the garment is never cropped; the mat fills the card. */
+  /* Card anatomy. Oct 29 2026 (evening, client reference byshree.com):
+     product tiles back to 2:3 - the dominant native ratio in the catalog
+     (22 of 48 photos; 15 are 4:5, 5 are 3:4) - with object-cover and NO
+     mat, photos bleed edge to edge Shree-style. Non-2:3 sources crop at
+     the sides (backdrop) rather than the top/bottom (heads/hems). The
+     oat-mat + contain treatment from the same morning is superseded;
+     backdrop consistency now rides on shoot-family curation (home) and
+     Binita's pending reshoots. */
   --aspect-labelashb-card: 4 / 5;
-  --aspect-labelashb-product: 4 / 5;
+  --aspect-labelashb-product: 2 / 3;
   --aspect-labelashb-process: 3 / 4;
   --spacing-labelashb-card-caption: 1rem;
 

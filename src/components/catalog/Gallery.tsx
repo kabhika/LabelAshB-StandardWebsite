@@ -22,7 +22,9 @@ export function Gallery({
 
   return (
     <div>
-      <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt p-4">
+      {/* No mat + cover (Shree reference, Oct 29): photo fills the
+          frame; bg only covers the load flash. */}
+      <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt">
         <div className="relative h-full w-full">
           <Image
             src={active.url}
@@ -30,7 +32,7 @@ export function Gallery({
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             priority
-            className="object-contain"
+            className="object-cover"
           />
         </div>
       </div>

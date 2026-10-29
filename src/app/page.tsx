@@ -308,7 +308,12 @@ export default async function Home() {
               track, 4-up at xl) so the two read as one system. */}
           {newArrivals.length > 0 && (
             <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="new-in-heading">
-              <div className="mx-auto max-w-6xl">
+              {/* Image-lane sections (this one, tabs, fabric, tiles) use the
+                  wide 1760px container - product photography goes
+                  side-to-side like the client's reference (byshree.com,
+                  Oct 29 2026). Text sections below keep max-w-6xl for
+                  readable line length. */}
+              <div className="mx-auto w-full max-w-[1760px]">
                 <Reveal>
                   <h2
                     id="new-in-heading"
@@ -335,7 +340,7 @@ export default async function Home() {
               excludeIds keeps the opening row off the pieces the New-in
               lane above already shows. */}
           <section className="px-6 sm:px-10 lg:px-16" aria-label="Shop by category">
-            <div className="mx-auto max-w-6xl">
+            <div className="mx-auto w-full max-w-[1760px]">
               <TabbedProductCarousel products={catalog} excludeIds={newArrivalIds} />
             </div>
           </section>
@@ -345,7 +350,7 @@ export default async function Home() {
               1:1 copy of a reference site's own fabric groupings. */}
           {materialShowcase.length > 0 && (
             <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="fabric-heading">
-              <div className="mx-auto max-w-6xl">
+              <div className="mx-auto w-full max-w-[1760px]">
                 <h2
                   id="fabric-heading"
                   className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
@@ -363,7 +368,7 @@ export default async function Home() {
               Sets), never padded to a 4th (PLACEHOLDER-POLICY.md). */}
           {categoryTiles.length > 0 && (
             <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="categories-heading">
-              <div className="mx-auto max-w-6xl">
+              <div className="mx-auto w-full max-w-[1760px]">
                 <h2
                   id="categories-heading"
                   className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
@@ -442,14 +447,14 @@ export default async function Home() {
           <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="why-heading">
             <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-center md:gap-16">
               {whyUsImage && (
-                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt p-4 md:w-[42%]">
+                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt md:w-[42%]">
                   <div className="relative h-full w-full">
                     <Image
                       src={whyUsImage.url}
                       alt={whyUsImage.altText || whyUsProduct?.title || ""}
                       fill
                       sizes="(min-width: 768px) 42vw, 100vw"
-                      className="object-contain"
+                      className="object-cover"
                     />
                   </div>
                 </div>
