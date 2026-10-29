@@ -24,7 +24,9 @@
    * these values without structural edits.
    */
   --color-labelashb-ink: #2d241f;
-  --color-labelashb-ink-soft: #6e6259;
+  /* 4.92:1 on the champagne ground (AA for body text) - nudged down from
+     #6e6259 (4.48) when the Oct 30 contrast audit ran. */
+  --color-labelashb-ink-soft: #675c54;
   --color-labelashb-ground: #e8dfd2;
   --color-labelashb-ground-alt: #f8f4ed;
   --color-labelashb-border: #9a7b4f;

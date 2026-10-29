@@ -37,8 +37,11 @@ export function ProductCardExpanded({ product }: { product: NormalizedProduct })
             </span>
           )}
         </div>
-        <div className="mt-labelashb-card-caption text-center">
-          <h3 className="text-labelashb-small text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-indigo">
+        {/* Oct 30 2026 (client: "name and price grey and tiny"): body-size
+            (16px), name in full ink at medium weight, price ink-soft;
+            left-aligned like the reference site. */}
+        <div className="mt-labelashb-card-caption">
+          <h3 className="text-labelashb-body font-medium text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
             {product.title}
           </h3>
           <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">

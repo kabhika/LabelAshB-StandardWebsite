@@ -35,17 +35,21 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
               className="object-cover"
             />
           </div>
+          {/* Cream fade (Oct 30 2026, client: the old ink/70 grey read
+              muddy over the oat tile - now it sinks into the page
+              ground): opaque champagne at the bottom, transparent by
+              mid-tile, label in espresso on the solid part. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-labelashb-ink/70 via-labelashb-ink/0 to-transparent"
+            className="absolute inset-0 bg-gradient-to-t from-labelashb-ground via-labelashb-ground/55 to-transparent"
           />
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-5">
-            <span className="font-labelashb-serif text-labelashb-h3 text-labelashb-ivory">
+            <span className="font-labelashb-serif text-labelashb-h3 text-labelashb-ink">
               {tile.label}
             </span>
             <ArrowUpRight
               aria-hidden="true"
-              className="h-5 w-5 shrink-0 text-labelashb-ivory transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="h-5 w-5 shrink-0 text-labelashb-ink transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
           </div>
         </Link>

@@ -36,12 +36,12 @@ export function ProductCardSizePicker({ variants }: { variants: NormalizedVarian
               aria-pressed={isSelected}
               aria-label={`Size ${variant.title}`}
               onClick={() => setSelectedId(variant.id)}
-              className={`min-w-9 rounded-labelashb-sm border px-2.5 py-1.5 text-labelashb-small transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
+              className={`min-w-9 rounded-labelashb-sm border px-2.5 py-1.5 text-labelashb-small font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
                 !variant.available
                   ? "border-labelashb-border text-labelashb-ink-soft/50 line-through cursor-not-allowed"
                   : isSelected
                     ? "border-labelashb-wine text-labelashb-wine"
-                    : "border-labelashb-border text-labelashb-ink hover:border-labelashb-ink"
+                    : "border-labelashb-ink/45 text-labelashb-ink hover:border-labelashb-ink"
               }`}
             >
               {variant.title}

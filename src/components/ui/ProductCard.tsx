@@ -41,16 +41,13 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
           </span>
         )}
       </div>
-      <div className="pt-4 text-center">
-        <h3 className="text-labelashb-small text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
+      {/* Left-aligned, body-size, name medium+ink (client: "name and
+          price grey and tiny", Oct 30) - matches ProductCardExpanded. */}
+      <div className="pt-4">
+        <h3 className="text-labelashb-body font-medium text-labelashb-ink transition-colors duration-300 group-hover:text-labelashb-accent">
           {product.title}
         </h3>
-        {/* Price dropped from body(16) to small(14) alongside the name -
-            at the name's old body-lg(18) size, body(16) read as a quieter
-            secondary line; once the name itself is small(14), a body-size
-            price would outsize it and invert the hierarchy. Color
-            (ink-soft vs ink) still separates them at equal size. */}
-        <p className="mt-1 text-labelashb-small text-labelashb-ink-soft tabular-nums">
+        <p className="mt-1 text-labelashb-body text-labelashb-ink-soft tabular-nums">
           {priceLabel}
         </p>
       </div>
