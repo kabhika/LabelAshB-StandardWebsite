@@ -14,15 +14,13 @@ export interface ScrollerImage {
   frame?: "product";
 }
 
-// "scroll" (default) is the generic snap-scroll row - same rendering path
-// whether `images` holds stock/generic photography (studio, process) or
-// real assets later, per PLACEHOLDER-POLICY.md. "label" swaps the whole
-// row for a quiet text line: today only the testimonials section reaches
-// for it, since no real customer quotes exist yet to put in a scroller -
-// a placeholder quote would assert something specific and unverified,
-// which this brand's quiet/honest voice doesn't do (PRODUCT.md).
+// layout="grid" (Oct 31 2026 layout brief): equal-width columns across the
+// parent container instead of the fixed-width snap-scroll row - used by the
+// homepage fabric section (3 cards fill the section, no empty right half).
+// Below md the grid variant still scrolls as a row - comfortable on phones.
+// "scroll" (default) is the generic snap-scroll row.
 export type HorizontalImageScrollerProps =
-  | { mode?: "scroll"; images: ScrollerImage[]; labelledBy?: string }
+  | { mode?: "scroll"; images: ScrollerImage[]; labelledBy?: string; layout?: "grid" }
   | { mode: "label"; text: string };
 
 export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
@@ -36,7 +34,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
     );
   }
 
-  const { images, labelledBy } = props;
+  const { images, labelledBy, layout } = props;
   if (images.length === 0) return null;
 
   // Falls back to a generic label only when the caller has no adjacent
@@ -46,6 +44,44 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
   const regionProps = labelledBy
     ? { "aria-labelledby": labelledBy }
     : { "aria-label": "Image gallery" };
+
+  if (layout === "grid") {
+    return (
+      <div
+        role="region"
+        {...regionProps}
+        tabIndex={0}
+        className="flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block"
+      >
+        {images.map((image, i) => (
+          <figure key={image.url} className="w-72 flex-none snap-start sm:w-96 md:w-auto">
+            <div className={`relative overflow-hidden bg-labelashb-ground-alt ${image.frame === "product" ? "aspect-labelashb-product" : "aspect-labelashb-card"}`}>
+              <div className={image.frame === "product" ? "relative h-full w-full" : "absolute inset-0"}>
+                <Image
+                  src={image.url}
+                  alt={image.alt}
+                  fill
+                  sizes="(min-width: 768px) 30vw, 24rem"
+                  priority={i === 0}
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            {image.caption && (
+              <figcaption className="mt-labelashb-card-caption">
+                <span className="text-labelashb-small text-labelashb-ink">{image.caption}</span>
+                {image.note && (
+                  <span className="mt-0.5 block max-w-md text-labelashb-small text-labelashb-ink-soft">
+                    {image.note}
+                  </span>
+                )}
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div

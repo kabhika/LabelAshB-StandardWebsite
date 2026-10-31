@@ -274,6 +274,16 @@ body {
  ---break---
  */
 
+/* Shared content shell (Oct 31 2026 layout brief): the merchandising and
+   editorial home sections sit in ONE responsive container so their edges
+   align - ~92% of the content width, capped at 1800px. Applied via the
+   .labelashb-shell class; do not mix width utilities onto the same
+   element. */
+.labelashb-shell {
+  width: min(92%, 1800px);
+  margin-inline: auto;
+}
+
 /* Remapped to the existing Studio Minimal palette (globals.css @theme
    above) instead of shadcn's generic gray defaults, so any shadcn
    component (Tabs, NavigationMenu, ...) renders on-brand automatically

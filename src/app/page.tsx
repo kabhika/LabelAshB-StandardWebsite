@@ -307,7 +307,10 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex flex-col gap-labelashb-section-generous py-labelashb-section-generous">
+        {/* Oct 31 2026 layout brief: vertical rhythm trimmed generous ->
+            standard (was up to 8rem gap AND 8rem padding - oversized
+            empty bands between sections). */}
+        <div className="flex flex-col gap-labelashb-section-standard py-labelashb-section-standard">
           {/* The New Collection lookbook section and /collection routes
               were retired when every lookbook garment found a home: the
               hero (HERO_SLUGS), or presentation imagery on the remaining
@@ -315,17 +318,14 @@ export default async function Home() {
               product-reshoots.ts). One garment, one place on the site -
               the shop below now carries all of them. */}
 
-          {/* New in the atelier - Phase 3 merchandising lane. Same card
-              row treatment as the category tabs below it (snap-scroll
-              track, 4-up at xl) so the two read as one system. */}
+          {/* New in the atelier - Phase 3 merchandising lane. Oct 31 2026
+              layout brief: the shared .labelashb-shell container, and a
+              real GRID at md+ so the four products fill the width evenly
+              (2-up md, 4-up xl) - no fixed card widths, no reserved
+              empty fifth column. Below md it stays the snap-scroll row. */}
           {newArrivals.length > 0 && (
             <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="new-in-heading">
-              {/* Image-lane sections (this one, tabs, fabric, tiles) are
-                  uncapped with a small side gap only (client: "leave only
-                  a little space between the side and the image", Oct 29
-                  2026 evening). Text sections below keep max-w-6xl for
-                  readable line length. */}
-              <div className="w-full">
+              <div className="labelashb-shell">
                 <Reveal>
                   <h2
                     id="new-in-heading"
@@ -333,14 +333,11 @@ export default async function Home() {
                   >
                     New in the atelier
                   </h2>
-                  <div className="mt-labelashb-section-compact flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="mt-labelashb-section-compact flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pb-0 md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block xl:grid-cols-4">
                     {newArrivals.map((product) => (
                       <div
                         key={product.id}
-                        // Uncapped lane: 4-up from xl, 5-up from 2xl,
-                        // 6-up from 1920px so tiles stay ~280-300px as
-                        // the lane fills the screen side-to-side.
-                        className="w-64 flex-none snap-start sm:w-72 xl:w-[calc((100%-3*var(--spacing-labelashb-carousel-gap))/4)] 2xl:w-[calc((100%-4*var(--spacing-labelashb-carousel-gap))/5)] min-[1920px]:w-[calc((100%-5*var(--spacing-labelashb-carousel-gap))/6)]"
+                        className="w-64 flex-none snap-start sm:w-72 md:w-auto"
                       >
                         <ProductCardExpanded product={product} />
                       </div>
@@ -365,7 +362,10 @@ export default async function Home() {
               1:1 copy of a reference site's own fabric groupings. */}
           {materialShowcase.length > 0 && (
             <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="fabric-heading">
-              <div className="w-full">
+              {/* Oct 31 layout brief: Linen/Cotton/Silk as three equal
+                  columns across the shared shell (grid mode below md is
+                  the comfortable scroll row). */}
+              <div className="labelashb-shell">
                 <h2
                   id="fabric-heading"
                   className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
@@ -373,7 +373,7 @@ export default async function Home() {
                   Shop by fabric
                 </h2>
                 <div className="mt-labelashb-section-compact">
-                  <HorizontalImageScroller images={materialShowcase} labelledBy="fabric-heading" />
+                  <HorizontalImageScroller images={materialShowcase} labelledBy="fabric-heading" layout="grid" />
                 </div>
               </div>
             </section>
@@ -412,10 +412,13 @@ export default async function Home() {
               hover/focus pause and reduced-motion handling mirror
               ProcessCarousel (StudioPanels.tsx). */}
           <section
-            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
+            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-8 lg:px-10"
             aria-labelledby="studio-heading"
           >
-            <div className="mx-auto max-w-6xl">
+            {/* Oct 31 layout brief: shared shell so the studio row spans
+                the desktop width like the other sections; heading and
+                grid share the container so their left edges align. */}
+            <div className="labelashb-shell">
               <h2
                 id="studio-heading"
                 className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
@@ -459,22 +462,25 @@ export default async function Home() {
 
           {/* Why Label AshB - split section, real product photography and
               copy grounded in confirmed brand positioning (PRODUCT.md). */}
-          <section className="px-6 sm:px-10 lg:px-16" aria-labelledby="why-heading">
-            <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-center md:gap-16">
+          <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="why-heading">
+            {/* Oct 31 layout brief: shared shell, balanced two-column
+                composition - larger image (46%) and a text column capped
+                at max-w-xl so paragraph lines stay comfortable. */}
+            <div className="labelashb-shell flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
               {whyUsImage && (
-                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt md:w-[42%]">
+                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt md:w-[46%]">
                   <div className="relative h-full w-full">
                     <Image
                       src={whyUsImage.url}
                       alt={whyUsImage.altText || whyUsProduct?.title || ""}
                       fill
-                      sizes="(min-width: 768px) 42vw, 100vw"
+                      sizes="(min-width: 768px) 46vw, 100vw"
                       className="object-cover"
                     />
                   </div>
                 </div>
               )}
-              <div className="md:flex-1">
+              <div className="md:max-w-xl">
                 <h2
                   id="why-heading"
                   className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
@@ -547,10 +553,13 @@ export default async function Home() {
               draping and stitching. Each stage rotates through three views
               while retaining direct, accessible image controls. */}
           <section
-            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-10 lg:px-16"
+            className="bg-labelashb-ground-alt px-6 py-labelashb-section-standard sm:px-8 lg:px-10"
             aria-labelledby="process-heading"
           >
-            <div className="mx-auto max-w-6xl">
+            {/* Oct 31 layout brief: shared shell - the three process
+                cards distribute across the wider container. Card
+                internals (ratio, labels, controls) untouched. */}
+            <div className="labelashb-shell">
               <h2
                 id="process-heading"
                 className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
