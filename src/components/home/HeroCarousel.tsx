@@ -12,6 +12,15 @@ export interface HeroSlide {
 const ROTATE_MS = 5000;
 const SWIPE_THRESHOLD = 60;
 
+// The full-bleed layer's letterbox fill: all six landscape originals end
+// in the same warm studio sweep (edge-average #e0-#e3d5ca, measured Oct
+// 30), so one constant extends each photo's own backdrop into the areas
+// the section's wider/taller frame leaves - the photo reads complete
+// (object-contain, zero cropping) while the section still feels like
+// one full-bleed image. Do NOT switch this to the page champagne
+// (#e8dfd2): the photo's own edges would show as a visible rectangle.
+const FULL_BLEED_BACKDROP = "#e1d5c9";
+
 // Hero, two modes on one rotation clock (client: "let the hero image take
 // on this whole section - full screen", Oct 30 2026):
 // - Below md: the stacked mobile hero keeps its 4:5 primary panel
@@ -134,7 +143,7 @@ export function HeroCarousel({
             <div
               key={slide.url}
               className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-              style={{ opacity: i === index ? 1 : 0 }}
+              style={{ opacity: i === index ? 1 : 0, backgroundColor: FULL_BLEED_BACKDROP }}
               aria-hidden={i !== index}
             >
               <Image
@@ -143,7 +152,12 @@ export function HeroCarousel({
                 fill
                 sizes="100vw"
                 loading="eager"
-                className="pointer-events-none object-cover"
+                // contain, not cover (client brief, Oct 31): cover zoomed
+                // a 3:2 photo into a wider band and cropped heads/feet at
+                // 1920px+; contain shows the whole frame on the shared
+                // backdrop fill above.
+                className="pointer-events-none object-contain"
+                style={{ objectPosition: "center center" }}
               />
             </div>
           ))}
