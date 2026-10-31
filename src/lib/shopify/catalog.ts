@@ -130,6 +130,10 @@ const numbered = (folder: string, count: number): string[] =>
   );
 
 const PRODUCT_IMAGE_OVERRIDES: Record<string, string[]> = {
+  // Azure Whisper gallery was rebuilt from clean library originals (31 Oct
+  // 2026) and reduced to 4 views at the client's request; the Supabase
+  // product_images rows still list the old 5 (05.jpg no longer exists).
+  "azure-whisper-linen-top": numbered("21-azure-whisper-linen-top", 4),
   "alabaster-breeze-kaftan": [
     "/collection/30-alabaster-breeze-kaftan/02.jpg",
     "/collection/30-alabaster-breeze-kaftan/03.jpg",
