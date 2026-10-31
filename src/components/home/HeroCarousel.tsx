@@ -9,7 +9,7 @@ export interface HeroSlide {
   alt: string;
 }
 
-const ROTATE_MS = 5000;
+const ROTATE_MS = 7000;
 const SWIPE_THRESHOLD = 60;
 
 // The full-bleed layer's letterbox fill: all six landscape originals end

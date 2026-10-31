@@ -49,8 +49,11 @@ export function WhatsAppFloat({ phone }: { phone: string }) {
       // float instead of the float covering the nav (client: "button
       // covers the header menu", Oct 29). 44/48px keeps the WCAG 2.5.5
       // minimum touch target at both sizes while reading smaller than
-      // the old 48/56.
-      className={`fixed z-20 flex h-11 w-11 items-center justify-center rounded-full sm:h-12 sm:w-12 bg-labelashb-whatsapp text-labelashb-whatsapp-ink shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-whatsapp-ink focus-visible:ring-offset-2 ${
+      // the old 48/56. Oct 31 refinement: espresso fill with the
+      // WhatsApp-green glyph (client: "more visually harmonious while
+      // retaining a recognisable symbol") - the green mark on espresso
+      // is ~7:1 contrast, recognisable, and sits quietly on the page.
+      className={`fixed z-20 flex h-11 w-11 items-center justify-center rounded-full sm:h-12 sm:w-12 bg-labelashb-wine text-labelashb-whatsapp shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-whatsapp focus-visible:ring-offset-2 ${
         footerVisible ? "pointer-events-none translate-y-3 scale-75 opacity-0" : "opacity-100"
       }`}
     >

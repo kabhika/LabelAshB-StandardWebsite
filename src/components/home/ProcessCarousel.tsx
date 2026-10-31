@@ -1,44 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export interface ProcessStage {
   title: string;
   images: Array<{ src: string; alt: string }>;
 }
 
-export function ProcessCarousel({ stage }: { stage: ProcessStage }) {
+// One stage of the "From paper to piece" sequence. Oct 31 editorial
+// pass: NO autoplay (three independent auto-advancing carousels competed
+// for attention - client brief) - the first view shows and the dots
+// navigate manually. `step` (1-based) numbers the stages so Cutting ->
+// Draping -> Stitching reads as one sequence.
+export function ProcessCarousel({
+  stage,
+  step,
+}: {
+  stage: ProcessStage;
+  step: number;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (paused || reducedMotion) return;
-
-    const rotation = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % stage.images.length);
-    }, 5000);
-
-    return () => window.clearInterval(rotation);
-  }, [paused, stage.images.length]);
-
-  const showImage = (index: number) => {
-    setActiveIndex(index);
-    setPaused(true);
-  };
 
   return (
-    <article
-      className="group"
-      aria-label={`${stage.title} process images`}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
-      }}
-    >
+    <article className="group" aria-label={`${stage.title} process images`}>
       <div className="relative aspect-labelashb-process overflow-hidden bg-labelashb-ivory">
         {stage.images.map((image, index) => (
           <Image
@@ -46,7 +31,7 @@ export function ProcessCarousel({ stage }: { stage: ProcessStage }) {
             src={image.src}
             alt={image.alt}
             fill
-            sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 82vw"
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 82vw"
             priority={index === 0}
             className={`object-cover transition-opacity duration-700 motion-reduce:transition-none ${
               index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"
@@ -54,7 +39,12 @@ export function ProcessCarousel({ stage }: { stage: ProcessStage }) {
           />
         ))}
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent px-4 pb-4 pt-10">
-          <span className="font-labelashb-serif text-lg text-white">{stage.title}</span>
+          <span className="font-labelashb-serif text-lg text-white">
+            <span className="mr-2 text-xs tracking-[0.18em] text-white/85">
+              0{step}
+            </span>
+            {stage.title}
+          </span>
           <span className="text-xs tracking-[0.18em] text-white/85">0{activeIndex + 1} / 0{stage.images.length}</span>
         </div>
       </div>
@@ -65,7 +55,7 @@ export function ProcessCarousel({ stage }: { stage: ProcessStage }) {
             type="button"
             aria-label={`Show ${stage.title.toLowerCase()} image ${index + 1}`}
             aria-current={index === activeIndex ? "true" : undefined}
-            onClick={() => showImage(index)}
+            onClick={() => setActiveIndex(index)}
             className={`h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-2 ${
               index === activeIndex ? "w-7 bg-labelashb-wine" : "w-2.5 bg-labelashb-ink/25 hover:bg-labelashb-wine/60"
             }`}

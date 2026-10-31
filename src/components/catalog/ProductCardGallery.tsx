@@ -1,23 +1,16 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
 
 interface GalleryImage {
   url: string;
   altText: string | null;
 }
 
-const CYCLE_MS = 1100;
-
-// Hover-swap gallery: cursor over the card cycles through every product
-// photo on a timer, dots below show count/position. Crossfade duration
-// is set via inline style from --labelashb-duration-card-hover (Phase 1
-// card anatomy token, see globals.css), not a hardcoded number, so it
-// stays in sync with that token. Must be an inline style, not a Tailwind
-// arbitrary-value duration class - see the comment above that token's
-// declaration in globals.css for why.
+// Card gallery (Oct 31 refinement): the primary photo always shows; the
+// product's SECOND photo crossfades in on desktop hover or keyboard focus
+// (group / group-focus-within - the parent card's Link carries the group).
+// Pure CSS, so it needs no client JS, works without a mouse, and
+// motion-reduce drops the fade. This replaces the old hover TIMER that
+// cycled every photo every 1.1s - busy, and useless on touch.
 export function ProductCardGallery({
   images,
   alt,
@@ -25,69 +18,35 @@ export function ProductCardGallery({
   images: GalleryImage[];
   alt: string;
 }) {
-  const [index, setIndex] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const reduceMotion = useReducedMotion();
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const hasGallery = images.length > 1;
-
-  useEffect(() => {
-    if (!hovered || !hasGallery || reduceMotion) return;
-    intervalRef.current = setInterval(() => {
-      setIndex((i) => (i + 1) % images.length);
-    }, CYCLE_MS);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [hovered, hasGallery, reduceMotion, images.length]);
-
-  const handleLeave = () => {
-    setHovered(false);
-    setIndex(0);
-  };
-
   if (images.length === 0) {
     return <div className="absolute inset-0 bg-labelashb-ground-alt" />;
   }
 
-  return (
-    <div
-      className="absolute inset-0"
-      onMouseEnter={() => hasGallery && setHovered(true)}
-      onMouseLeave={handleLeave}
-    >
-      {images.map((image, i) => (
-        <Image
-          key={image.url}
-          src={image.url}
-          alt={image.altText || alt}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          priority={i === 0}
-          style={{ transitionDuration: "var(--labelashb-duration-card-hover)" }}
-          // cover, no mat: tiles bleed edge to edge (Shree reference,
-          // Oct 29); 2:3 sources fill exactly, others crop at the sides.
-          className={`object-cover transition-opacity ease-out motion-reduce:transition-none ${
-            i === index ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
+  const second = images[1];
 
-      {hasGallery && (
-        <div
+  return (
+    <>
+      <Image
+        src={images[0].url}
+        alt={images[0].altText || alt}
+        fill
+        sizes="(min-width: 1536px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+        priority
+        // cover, no mat: tiles bleed edge to edge (Shree reference,
+        // Oct 29); 2:3 sources fill exactly, others crop at the sides.
+        className="object-cover"
+      />
+      {second && (
+        <Image
+          src={second.url}
+          alt=""
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5"
-        >
-          {images.map((image, i) => (
-            <span
-              key={image.url}
-              className={`h-1 w-1 rounded-full drop-shadow-sm transition-colors duration-150 ${
-                i === index ? "bg-labelashb-indigo" : "bg-labelashb-ivory/80"
-              }`}
-            />
-          ))}
-        </div>
+          fill
+          sizes="(min-width: 1536px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+          loading="lazy"
+          className="object-cover opacity-0 transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-100 group-focus-within:opacity-100"
+        />
       )}
-    </div>
+    </>
   );
 }

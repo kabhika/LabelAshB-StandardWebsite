@@ -245,7 +245,7 @@ export default async function Home() {
                 </p>
                 <div className="mt-8">
                   <Button href="/products" variant="primary">
-                    Shop the collection
+                    Explore the collection
                   </Button>
                 </div>
               </Reveal>
@@ -301,7 +301,7 @@ export default async function Home() {
                 href="/products"
                 className="mt-8 inline-flex items-center justify-center rounded-labelashb-sm bg-labelashb-accent-foreground px-6 py-3 text-labelashb-body font-medium text-labelashb-wine transition-transform duration-150 hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2"
               >
-                Shop the collection
+                Explore the collection
               </Link>
             </div>
           </div>
@@ -329,7 +329,7 @@ export default async function Home() {
                 <Reveal>
                   <h2
                     id="new-in-heading"
-                    className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                    className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
                   >
                     New in the atelier
                   </h2>
@@ -368,7 +368,7 @@ export default async function Home() {
               <div className="labelashb-shell">
                 <h2
                   id="fabric-heading"
-                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                  className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
                 >
                   Shop by fabric
                 </h2>
@@ -386,7 +386,7 @@ export default async function Home() {
               <div className="w-full">
                 <h2
                   id="categories-heading"
-                  className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                  className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
                 >
                   Shop by category
                 </h2>
@@ -421,7 +421,7 @@ export default async function Home() {
             <div className="labelashb-shell">
               <h2
                 id="studio-heading"
-                className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
               >
                 Our studio
               </h2>
@@ -487,7 +487,9 @@ export default async function Home() {
                 >
                   Why Label AshB
                 </h2>
-                <dl className="mt-8 space-y-6">
+                {/* space-y-8 (Oct 31 editorial pass): clearer separation
+                    between the brand's key points per the layout brief. */}
+                <dl className="mt-8 space-y-8">
                   {/* Names and numbers confirmed by Abhishek (brand
                       questions, Oct 19 2026) - team consent to being
                       named was given with the same answers. */}
@@ -562,13 +564,13 @@ export default async function Home() {
             <div className="labelashb-shell">
               <h2
                 id="process-heading"
-                className="font-labelashb-serif inline-block border-b-2 border-labelashb-olive-light pb-2 text-labelashb-h2 text-labelashb-ink"
+                className="font-labelashb-serif text-labelashb-h2 text-labelashb-ink"
               >
                 From paper to piece
               </h2>
               <div className="mt-labelashb-section-compact grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {processStages.map((stage) => (
-                  <ProcessCarousel key={stage.title} stage={stage} />
+                {processStages.map((stage, i) => (
+                  <ProcessCarousel key={stage.title} stage={stage} step={i + 1} />
                 ))}
               </div>
             </div>

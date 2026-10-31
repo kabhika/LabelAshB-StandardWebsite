@@ -24,26 +24,21 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
         <Link
           key={tile.href}
           href={tile.href}
-          className="group relative block aspect-labelashb-product overflow-hidden bg-labelashb-ground-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
+          className="group relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1"
         >
-          <div className="absolute inset-0">
+          {/* Oct 31 editorial pass: the beige photo fade is gone - the
+              label sits UNDER the image like the product cards (client:
+              solid backgrounds, restrained detail, no gradient washes). */}
+          <div className="relative aspect-labelashb-product overflow-hidden bg-labelashb-ground-alt">
             <Image
               src={tile.image.url}
               alt={tile.image.alt}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-90"
             />
           </div>
-          {/* Cream fade (Oct 30 2026, client: the old ink/70 grey read
-              muddy over the oat tile - now it sinks into the page
-              ground): opaque champagne at the bottom, transparent by
-              mid-tile, label in espresso on the solid part. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-labelashb-ground via-labelashb-ground/55 to-transparent"
-          />
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-5">
+          <div className="mt-labelashb-card-caption flex items-center justify-between gap-3">
             <span className="font-labelashb-serif text-labelashb-h3 text-labelashb-ink">
               {tile.label}
             </span>
