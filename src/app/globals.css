@@ -79,6 +79,14 @@
      Verified ~8.5:1 against the fabric's darkest field, past WCAG AAA
      for small text. */
   --color-labelashb-gold: #c9a86a;
+  /* Header chrome (Oct 31 2026 redesign): solid espresso pair replacing
+     the .labelashb-fabric texture on the header bands - deep, warm
+     charcoal the antique-gold logo sits on directly, no weave, no
+     diagonal, no gradients. -deep is the announcement strip; the main
+     bar uses the one-step-lighter value so the bands read as a single
+     chrome unit with a seam. */
+  --color-labelashb-espresso: #26201b;
+  --color-labelashb-espresso-deep: #1d1814;
   /* Antique gold decorative rules - heading underlines and the hero
      hairline. The client's accent gold #b59a69 (Oct 31 2026 palette
      table); decorative only, never text (text-grade accent lives in

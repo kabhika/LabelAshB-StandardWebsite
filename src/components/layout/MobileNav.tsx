@@ -72,13 +72,16 @@ export function MobileNav({
   }, [open]);
 
   return (
-    <div ref={containerRef} className="sm:hidden">
+    // lg (1024px), not sm: the Oct 31 2026 single-bar header collapses to
+    // menu/logo/bag below lg - between 640 and 1024 the desktop nav
+    // (17px links, gap-9) is too wide for logo + bag beside it.
+    <div ref={containerRef} className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
-        className="flex h-11 w-11 items-center justify-center text-labelashb-ground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-ground focus-visible:ring-offset-1"
+        className="flex h-11 w-11 items-center justify-center text-labelashb-ground/90 transition-colors hover:text-labelashb-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-[3px] focus-visible:ring-offset-labelashb-espresso"
       >
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
           {open ? (
@@ -99,7 +102,7 @@ export function MobileNav({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full z-40 bg-labelashb-ground px-6">
+        <div className="absolute inset-x-0 top-full z-40 border-b border-labelashb-olive-light/40 bg-labelashb-ground px-6 shadow-sm">
           <NavGroup
             label="Categories"
             links={categories}

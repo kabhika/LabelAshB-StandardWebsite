@@ -187,7 +187,15 @@ export function CartDrawer() {
                 )}
               </span>
             </div>
-            <Button href="/checkout" variant="primary" className="mt-4 block w-full">
+            {/* onClick closes the drawer before the /checkout navigation -
+                without it the drawer (fixed overlay) stays open on top of
+                the checkout page. */}
+            <Button
+              href="/checkout"
+              variant="primary"
+              className="mt-4 block w-full"
+              onClick={closeCart}
+            >
               Checkout
             </Button>
           </div>
