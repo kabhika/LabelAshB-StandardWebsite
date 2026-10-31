@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import {
   DISPLAY_CATEGORIES,
@@ -7,8 +8,8 @@ import {
   type NormalizedProduct,
 } from "@/lib/shopify/catalog";
 import {
-  collectionHeroDetails,
   collectionHeroSlides,
+  collectionHeroFullSlides,
 } from "@/data/new-collection";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
 // badly in a wide object-cover frame and broke whenever a product's second
 // image was an oversized CDN upload that the optimizer timed out on.
 const heroSlides = collectionHeroSlides();
-const heroDetails = collectionHeroDetails();
+const heroFullSlides = collectionHeroFullSlides();
 
 // Home merchandising imagery is curated per shoot family so no single
 // section mixes photo backdrops (client note, Oct 29 2026: "white hero,
@@ -213,57 +214,27 @@ export default async function Home() {
       >
         <JsonLd data={websiteJsonLd} />
 
-        {/* Hero - Apple-style centered composition: the whole hero (copy
-            + imagery) sits in a capped, centered column, so on very wide
-            screens the surplus becomes white space on the OUTER flanks
-            of the page - never more image stretch. Cap is 1580px
-            (Sep 23: trimmed from 1720 so the width-capped companion
-            panel and the primary fill the row edge to edge - at 1720 a
-            slack strip opened on the right. 1580 still keeps flanks
-            much tighter than the original 1440). The full-width
-            hairline below stays full-bleed - only the content is
-            capped.
-            Inside the cap: copy column (max 520px, biased upward) and
-            the image area. The carousel pairs a fixed-2:3 primary frame
-            (the photos are tight full-body shots - measured 0-6%
-            headroom, 2-6% floor - so a wider box would make
-            object-cover eat head/hem) with a flex-1 companion panel of
-            the same garment's close-up detail (HeroCarousel.tsx). The
-            image column stretches to the row height (70vh floor, 780px
-            ceiling) with a 200px companion floor, so the panels fill
-            the band with no dead space at any screen size. */}
-        {/* Oct 29 2026 night: hero uncapped to match the lanes (client:
-            "make this exact content fill the full page") - the row spans
-            the viewport with the same small side gap as the product
-            lanes. Copy keeps its 520px measure; surplus width goes to
-            the photo pair, heights still floored at 70vh / capped at
-            780px. */}
-        <section className="border-b border-labelashb-border px-6 sm:px-8 lg:px-10">
-          {/* No min-height: the row hugs its tallest child (the 70vh/
-              max-780px image column). A former md:min-h-[85vh] left a
-              large dead ivory band below the imagery on tall screens
-              (client: "reduce this gap further", Sep 1 2026). */}
-          <div className="flex flex-col md:flex-row">
-            {/* pb-[10vh] biases the copy block above dead-center (client
-                note: "a little bit upward"); pr-6 at lg keeps the copy
-                close to the first image panel. */}
-            <div className="order-2 flex flex-1 flex-col justify-center py-8 sm:py-16 md:order-1 md:px-14 md:pb-[10vh] lg:max-w-[520px] lg:pr-6">
+        {/* Hero, split by breakpoint (Oct 30 2026 night, client: "let the
+            hero image take on this whole section - it should be of the
+            full screen; don't crop the photos from the side"):
+            - md+: ONE uncropped landscape photo fills the whole section
+              edge to edge (h = viewport minus the ~160px announcement +
+              header band), copy overlaid on a chocolate scrim. No dead
+              flanks, no side-cropped 4:5 pair.
+            - below md: the stacked copy + 4:5 photo hero is KEPT - a
+              landscape photo in a phone-width full-bleed frame would
+              crop 60%+ off the model's sides, so mobile keeps the
+              subject-centered 4:5 crops and the tuned fold budget
+              (46svh image, CTA above the fold). */}
+        {/* Mobile hero (below md) */}
+        <section className="border-b border-labelashb-border px-6 sm:px-8 md:hidden">
+          <div className="flex flex-col">
+            <div className="order-2 flex flex-1 flex-col justify-center py-8">
               <Reveal>
-                {/* "Quietly confident." is Binita's own founding line ("the
-                    woman wearing the garment feels quietly confident") -
-                    approved via CAPTIONS-DRAFT.md option 1a, Oct 19 2026.
-                    Eyebrow wording: client asked for "Slow made in Gurgaon"
-                    -> "meticulously handcrafted in Gurgaon" in review, then
-                    simplified to "Handmade in Gurgaon, India" after seeing
-                    it rendered (Oct 19, second look). "Handmade" is also the
-                    one brand-feel word Binita chose in the questionnaire.
-                    text-labelashb-display is viewport-relative; the md:/xl:
-                    overrides are the same container-width correction the old
-                    headline needed, recalibrated for this shorter line. */}
                 <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
                   Handmade in Gurgaon, India
                 </p>
-                <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink md:text-[clamp(2.5rem,1rem+4vw,4rem)] xl:text-[clamp(3rem,1.2rem+4.5vw,4.75rem)]">
+                <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink">
                   Quietly confident.
                 </h1>
                 <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-olive-light" />
@@ -283,17 +254,55 @@ export default async function Home() {
             {/* Plain-CSS fade+rise (globals.css .labelashb-reveal), not the
                 Reveal component: Reveal's motion.div applies an inline
                 transform, which becomes a containing block for this column's
-                absolutely-positioned HeroCarousel and collapses its h-full
+                absolutely-positioned carousel and collapses its h-full
                 chain to 0 height. */}
-            {/* Oct 30 2026: 4:5 frames for the new hero set (public/hero/,
-                processed 880x1100). Mobile: 46svh cap unchanged, so the
-                fold behavior is identical; 4:5 just reads a little wider
-                than the old 2:3. */}
             <div
-              className="labelashb-reveal relative order-1 mx-auto aspect-[4/5] h-[min(46svh,120vw)] w-auto md:order-2 md:mx-0 md:aspect-auto md:h-auto md:min-h-[70vh] md:max-h-[780px] lg:flex-[1_0_auto]"
+              className="labelashb-reveal relative order-1 mx-auto aspect-[4/5] h-[min(46svh,120vw)] w-auto"
               style={{ animationDelay: "0.15s" }}
             >
-              <HeroCarousel slides={heroSlides} details={heroDetails} />
+              <HeroCarousel slides={heroSlides} />
+            </div>
+          </div>
+        </section>
+
+        {/* Desktop hero (md+): full-bleed. 10rem ≈ the announcement bar +
+            header band above (py-4 + h-24 logo + bar) - keep in sync if
+            the header heights change. */}
+        <section className="relative hidden h-[calc(100svh-10rem)] overflow-hidden border-b border-labelashb-border md:block">
+          <HeroCarousel slides={heroSlides} fullSlides={heroFullSlides} />
+          {/* Chocolate scrim for the overlaid copy - strongest at the
+              bottom-left where the text sits, fading out by mid-frame. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-labelashb-wine/85 via-labelashb-wine/30 to-transparent"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-r from-labelashb-wine/40 to-transparent"
+          />
+          <div className="absolute inset-x-0 bottom-0 p-10 lg:p-16">
+            <div className="max-w-2xl">
+              <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-gold">
+                Handmade in Gurgaon, India
+              </p>
+              <h1 className="font-labelashb-serif mt-4 text-[clamp(2.5rem,1.2rem+3.5vw,4.5rem)] text-labelashb-accent-foreground">
+                Quietly confident.
+              </h1>
+              <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-gold" />
+              <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-accent-foreground/85">
+                Hand-embroidered linen, cotton and silk - cut and finished
+                to order in our atelier, by eight people who care about
+                every seam.
+              </p>
+              {/* Inverted primary CTA (Button.tsx's fills assume the
+                  champagne ground; on the photo scrim the warm ivory
+                  fills instead, chocolate label). */}
+              <Link
+                href="/products"
+                className="mt-8 inline-flex items-center justify-center rounded-labelashb-sm bg-labelashb-accent-foreground px-6 py-3 text-labelashb-body font-medium text-labelashb-wine transition-transform duration-150 hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2"
+              >
+                Shop the collection
+              </Link>
             </div>
           </div>
         </section>

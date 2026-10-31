@@ -249,25 +249,24 @@ export function getGarment(slug: string): CollectionGarment | undefined {
 }
 
 // Hero set (Oct 30 2026): the client's new WhatsApp batch, processed by
-// .match/prep-new-hero.mjs into public/hero/ as 4:5 portraits (880x1100,
-// subject-centered windows - a 2:3 window clipped four of the six, see
-// the script). Supersedes the Oct 17 atelier-set rotation (folders 21/
-// 23-midnight/24 - those files stay for their product pages). Two of the
-// garments carry two poses (01+05 black co-ord, 04+06 ivory co-ord); the
-// terracotta set (02) and printed maxi (03) are single-shot and serve as
-// each other's companion panel - both warm-beige studio, so the pair
-// reads as one editorial spread. Rotation order: the four primary poses
-// first, then the two alternate poses.
-const HERO_SET: { file: string; name: string; view: string; companion: string; companionView: string }[] = [
-  { file: "01.jpg", name: "Black hand-embroidered co-ord set", view: "front view", companion: "05.jpg", companionView: "second pose" },
-  { file: "02.jpg", name: "Terracotta co-ord set", view: "front view", companion: "03.jpg", companionView: "printed maxi dress" },
-  { file: "03.jpg", name: "Printed maxi dress", view: "front view", companion: "02.jpg", companionView: "terracotta co-ord set" },
-  { file: "04.jpg", name: "Ivory co-ord set", view: "front view", companion: "06.jpg", companionView: "second pose" },
-  { file: "05.jpg", name: "Black hand-embroidered co-ord set", view: "second pose", companion: "01.jpg", companionView: "front view" },
-  { file: "06.jpg", name: "Ivory co-ord set", view: "second pose", companion: "04.jpg", companionView: "front view" },
+// .match/prep-new-hero.mjs into public/hero/ - 4:5 portraits (880x1100,
+// subject-centered) for the mobile hero and the UNCROPPED landscape
+// originals (full-0N.jpg, 1536x1024) for the desktop full-bleed hero
+// (client: "let the hero image take on this whole section - full
+// screen"; the 4:5 crops read as side-cropped on wide screens).
+// Supersedes the Oct 17 atelier-set rotation (folders 21/23-midnight/24
+// - those files stay for their product pages).
+const HERO_SET: { file: string; name: string; view: string }[] = [
+  { file: "01.jpg", name: "Black hand-embroidered co-ord set", view: "front view" },
+  { file: "02.jpg", name: "Terracotta co-ord set", view: "front view" },
+  { file: "03.jpg", name: "Printed maxi dress", view: "front view" },
+  { file: "04.jpg", name: "Ivory co-ord set", view: "front view" },
+  { file: "05.jpg", name: "Black hand-embroidered co-ord set", view: "second pose" },
+  { file: "06.jpg", name: "Ivory co-ord set", view: "second pose" },
 ];
 
 const heroImg = (file: string) => `/hero/${file}`;
+const heroFullImg = (file: string) => `/hero/full-${file}`;
 
 export function collectionHeroSlides() {
   return HERO_SET.map((slide) => ({
@@ -277,13 +276,12 @@ export function collectionHeroSlides() {
   }));
 }
 
-export function collectionHeroDetails() {
-  // Companion panel: the same garment's second pose when one exists
-  // (01+05, 04+06); the two single-shot garments show each other (see
-  // HERO_SET note). The old back-view rule followed the atelier set's
-  // five-view folders - this batch has no back views.
+// Desktop full-bleed variant: same garments, same order, uncropped
+// landscape frames - HeroCarousel keeps both sets on one rotation clock.
+export function collectionHeroFullSlides() {
   return HERO_SET.map((slide) => ({
-    url: heroImg(slide.companion),
-    alt: `${slide.name} - ${slide.companionView}`,
+    url: heroFullImg(slide.file),
+    alt: `${slide.name} - ${slide.view}`,
+    name: slide.name,
   }));
 }
