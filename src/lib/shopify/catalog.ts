@@ -13,6 +13,10 @@
 // the change reviewable.
 
 import { supabaseCatalog } from "@/lib/supabase/client";
+import {
+  PRODUCT_IMAGE_OVERRIDES,
+  authoritativeProductImages,
+} from "@/lib/shopify/product-images";
 
 export interface NormalizedImage {
   url: string;
@@ -106,53 +110,10 @@ const PRODUCT_SELECT = `
   product_variants ( id, title, sku, price, inventory_quantity, position )
 `;
 
-// Photo folders live in public/collection/<folder>/. The Supabase import
-// preserved the source order for the Alabaster kaftan, where the back view was
-// first, so it leads with the front-facing local image instead.
-//
-// Oct 2026 photo audit: older listings had been dressed with look alike photos
-// of other garments, so one dress could appear under two names. This table
-// pins each listing to the folder that really shows its garment. Handles not
-// listed here keep the images stored in Supabase.
-const lookbook = (folder: string): string[] =>
-  [
-    "01-front-view.jpg",
-    "02-three-quarter-front-view.jpg",
-    "03-side-view.jpg",
-    "04-back-view.jpg",
-    "05-close-up-detail.jpg",
-  ].map((f) => `/collection/${folder}/${f}`);
-
-const numbered = (folder: string, count: number): string[] =>
-  Array.from(
-    { length: count },
-    (_, i) => `/collection/${folder}/${String(i + 1).padStart(2, "0")}.jpg`,
-  );
-
-const PRODUCT_IMAGE_OVERRIDES: Record<string, string[]> = {
-  // Azure Whisper gallery was rebuilt from clean library originals (31 Oct
-  // 2026) and reduced to 4 views at the client's request; the Supabase
-  // product_images rows still list the old 5 (05.jpg no longer exists).
-  "azure-whisper-linen-top": numbered("21-azure-whisper-linen-top", 4),
-  "alabaster-breeze-kaftan": [
-    "/collection/30-alabaster-breeze-kaftan/02.jpg",
-    "/collection/30-alabaster-breeze-kaftan/03.jpg",
-    "/collection/30-alabaster-breeze-kaftan/04.jpg",
-    "/collection/30-alabaster-breeze-kaftan/01.jpg",
-  ],
-  // Existing listings, real photos from the new shoot (folders 41 to 46)
-  "olive-grove-dress": numbered("44-olive-grove-dress", 5),
-  "the-crimson-tiles-linen-dress": numbered("45-crimson-tiles-hand-block-cotton-dress", 6),
-  "the-midnight-botanical-kaftan-set": numbered("41-midnight-botanical-pure-crepe-kaftan-co-ord-set", 5),
-  "the-regal-amethyst-co-ord-set": numbered("42-regal-amethyst-co-ord-set", 4),
-  // Existing listings whose garment was already photographed in folders 01 to 18
-  "orchid-sheesha-top": lookbook("03-purple-applique-v-neck-tunic"),
-  "the-mesa-block-linen-tunic": lookbook("09-camel-cream-charcoal-colourblock-dress"),
-  "the-ivory-garden-embroidered-dress": lookbook("10-ivory-floral-embroidered-v-neck-dress"),
-  "magenta-reverie": lookbook("07-fuchsia-double-button-maxi-dress"),
-  "rani-linen-shirt": lookbook("12-hot-pink-high-low-shirt-set"),
-  "the-folk-tale-linen-shirt": numbered("40-folk-tale-linen-co-ord-set", 5),
-};
+// Product gallery images resolve through the shared, unit-tested module
+// src/lib/shopify/product-images.ts (the Oct 2026 photo audit note and the
+// full override table live there) so the PDP, cart and order snapshot all
+// derive from ONE authority - see that file for the Crimson Tiles story.
 
 // Listings kept in the database but not shown until real photos exist.
 const HIDDEN_HANDLES = new Set<string>(["lime-green-linen-co-ord-set"]);
@@ -163,20 +124,21 @@ const TITLE_OVERRIDES: Record<string, string> = {
 };
 
 function normalizeRow(row: ProductRow): NormalizedProduct {
-  const sourceImages = [...row.product_images]
-    .sort((a, b) => a.position - b.position)
-    .map((img) => ({
-      url: img.url,
-      altText: img.alt_text,
+  // One image authority for PDP, cart and order snapshot alike:
+  // overrides (whose URLs are repo-local) or the DB rows in position
+  // order. DB alt text is preserved by URL match on the DB path.
+  const dbAltByUrl = new Map(
+    row.product_images.map((img) => [img.url, img.alt_text]),
+  );
+  const isOverride = Boolean(PRODUCT_IMAGE_OVERRIDES[row.handle]);
+  const images = authoritativeProductImages(row.handle, row.product_images).map(
+    (url) => ({
+      url,
+      altText: isOverride ? row.title : (dbAltByUrl.get(url) ?? row.title),
       width: 1024,
       height: 1536,
-    }));
-  const images = PRODUCT_IMAGE_OVERRIDES[row.handle]?.map((url) => ({
-    url,
-    altText: row.title,
-    width: 1024,
-    height: 1536,
-  })) ?? sourceImages;
+    }),
+  );
 
   const variants = [...row.product_variants]
     .sort((a, b) => a.position - b.position)

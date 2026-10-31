@@ -5,6 +5,7 @@
 // needed no structural changes -- see MIGRATION.md.
 
 import { supabaseCatalog } from "@/lib/supabase/client";
+import { authoritativeProductImage } from "@/lib/shopify/product-images";
 import type { CartItem } from "./storage";
 
 export interface LocalCartLine {
@@ -97,10 +98,14 @@ export async function buildCart(
 
     validItems.push(item);
 
-    const images = [...row.products.product_images].sort(
-      (a, b) => a.position - b.position,
+    // Thumbnail resolves through the same authority as the product page
+    // (product-images.ts): the handle's override images, else the DB rows
+    // in position order. Never another product's photo, and null (neutral
+    // placeholder in the drawer) when nothing authoritative exists.
+    const imageUrl = authoritativeProductImage(
+      row.products.handle,
+      row.products.product_images,
     );
-    const image = images[0] ?? null;
 
     nodes.push({
       id: row.id,
@@ -111,7 +116,7 @@ export async function buildCart(
         availableForSale: row.inventory_quantity > 0,
         quantityAvailable: row.inventory_quantity,
         price: { amount: row.price, currencyCode: "INR" },
-        image: image ? { url: image.url, altText: image.alt_text } : null,
+        image: imageUrl ? { url: imageUrl, altText: row.products.title } : null,
         product: { title: row.products.title, handle: row.products.handle },
       },
     });

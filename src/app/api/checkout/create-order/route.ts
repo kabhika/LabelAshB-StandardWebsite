@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { readCartItems } from "@/lib/cart/storage";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { razorpay } from "@/lib/razorpay/client";
+import { authoritativeProductImage } from "@/lib/shopify/product-images";
 
 interface ShippingAddress {
   line1: string;
@@ -26,6 +27,8 @@ interface CreateOrderBody {
 }
 
 interface ProductRef {
+  id: string;
+  handle: string;
   title: string;
   status: string;
   product_images: { url: string; position: number }[];
@@ -82,7 +85,7 @@ export async function POST(request: Request) {
   const { data: variantRows, error: variantError } = await supabaseAdmin
     .from("product_variants")
     .select(
-      "id, title, sku, price, inventory_quantity, products ( title, status, product_images ( url, position ) )",
+      "id, title, sku, price, inventory_quantity, products ( id, handle, title, status, product_images ( url, position ) )",
     )
     .in(
       "id",
@@ -101,6 +104,7 @@ export async function POST(request: Request) {
   );
 
   const orderItems: {
+    product_id: string;
     variant_id: string;
     product_title: string;
     variant_title: string;
@@ -131,16 +135,23 @@ export async function POST(request: Request) {
       );
     }
 
-    const images = [...row.products.product_images].sort(
-      (a, b) => a.position - b.position,
+    // Snapshot the same authoritative image the product page and cart
+    // show (product-images.ts) -- the raw product_images rows are stale
+    // for override products and once leaked a wrong product's photo into
+    // fulfilment data. Snapshot stays null if nothing resolves; a neutral
+    // placeholder, never another garment's photograph.
+    const imageUrl = authoritativeProductImage(
+      row.products.handle,
+      row.products.product_images,
     );
 
     orderItems.push({
       variant_id: row.id,
+      product_id: row.products.id,
       product_title: row.products.title,
       variant_title: row.title,
       sku: row.sku,
-      image_url: images[0]?.url ?? null,
+      image_url: imageUrl,
       unit_price: Number(row.price),
       quantity: item.quantity,
       line_total: Number(row.price) * item.quantity,

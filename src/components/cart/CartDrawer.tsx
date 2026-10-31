@@ -107,7 +107,7 @@ export function CartDrawer() {
             <ul className="space-y-6">
               {lines.map((line) => (
                 <li key={line.id} className="flex gap-4">
-                  {line.merchandise.image && (
+                  {line.merchandise.image ? (
                     <div className="relative h-24 w-16 shrink-0 overflow-hidden bg-labelashb-ivory p-1">
                       <Image
                         src={line.merchandise.image.url}
@@ -119,6 +119,17 @@ export function CartDrawer() {
                         sizes="80px"
                         className="object-cover"
                       />
+                    </div>
+                  ) : (
+                    // Neutral placeholder when no authoritative image
+                    // resolves - never another product's photograph.
+                    <div
+                      aria-hidden="true"
+                      className="flex h-24 w-16 shrink-0 items-center justify-center bg-labelashb-ground-alt"
+                    >
+                      <span className="text-labelashb-small text-labelashb-ink-soft">
+                        {line.merchandise.product.title.slice(0, 1)}
+                      </span>
                     </div>
                   )}
                   <div className="flex-1">
