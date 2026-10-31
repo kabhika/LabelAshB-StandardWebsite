@@ -45,7 +45,10 @@ const g = (
   sheetPrice,
   description,
   views: Array.from(
-    { length: { "18-ivory-pure-chanderi-silk-top": 5, "19-terra-linen-co-ord-set": 5, "20-flutter-flow-linen-dress": 5, "21-azure-whisper-linen-top": 5, "22-lavender-cascade-linen-dress": 5, "23-celeste-line-linen-top": 5, "24-golden-lattice-linen-wrap-dress": 5, "25-ivory-bloom-hand-embroidered-linen-co-ord-set": 5, "26-ivory-drift-one-shoulder-modal-silk-dress": 5, "27-meadow-whisper-hand-embroidered-linen-dress": 5, "28-scarlet-ember-linen-halter-dress": 5, "29-blush-verse-hand-embroidered-linen-set": 5, "30-alabaster-breeze-kaftan": 4, "31-petal-cascade-dress": 4, "32-miraya-pocket-midi": 4, "33-crimson-grid-sleeveless-top": 4, "34-flutter-and-bloom-button-down": 4, "35-the-riviera-tunic": 3, "36-gilded-garden-chanderi-coord-set": 5, "37-slate-bloom-shirt-dress": 5, "38-cloud-leaf-pure-linen-top": 5, "39-meadow-script-linen-co-ord-set": 5, "40-folk-tale-linen-co-ord-set": 5 }[slug] ?? 0 },
+    // Azure Whisper: 4 views - the recovered front view (solid-fill
+    // framing, no clean original) was removed at the client's request on
+    // 31 Oct 2026; 01-04 are now the clean library originals.
+    { length: { "18-ivory-pure-chanderi-silk-top": 5, "19-terra-linen-co-ord-set": 5, "20-flutter-flow-linen-dress": 5, "21-azure-whisper-linen-top": 4, "22-lavender-cascade-linen-dress": 5, "23-celeste-line-linen-top": 5, "24-golden-lattice-linen-wrap-dress": 5, "25-ivory-bloom-hand-embroidered-linen-co-ord-set": 5, "26-ivory-drift-one-shoulder-modal-silk-dress": 5, "27-meadow-whisper-hand-embroidered-linen-dress": 5, "28-scarlet-ember-linen-halter-dress": 5, "29-blush-verse-hand-embroidered-linen-set": 5, "30-alabaster-breeze-kaftan": 4, "31-petal-cascade-dress": 4, "32-miraya-pocket-midi": 4, "33-crimson-grid-sleeveless-top": 4, "34-flutter-and-bloom-button-down": 4, "35-the-riviera-tunic": 3, "36-gilded-garden-chanderi-coord-set": 5, "37-slate-bloom-shirt-dress": 5, "38-cloud-leaf-pure-linen-top": 5, "39-meadow-script-linen-co-ord-set": 5, "40-folk-tale-linen-co-ord-set": 5 }[slug] ?? 0 },
     (_, i) => `/collection/${slug}/${String(i + 1).padStart(2, "0")}.jpg`,
   ),
 });
