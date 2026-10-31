@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-const ROTATE_MS = 5000;
-// Same critically-damped swap spring as AddToCartButton.tsx / PdpOffers.tsx -
-// one spring feel sitewide for "this label just swapped" motion.
-const SWAP_SPRING = { type: "spring", bounce: 0, duration: 0.3 } as const;
+const ROTATE_MS = 9000;
 
 // Real, verified claims only (checked against _knowledge/facts.json and
 // the Oct 19 2026 brand answers). Per the client's choice (b), LABLOVE
@@ -35,11 +31,12 @@ const MESSAGES = [
 ];
 
 // Not aria-live: an auto-rotating promo strip that re-announces itself to
-// screen readers every 5s is noise, not information - the first message is
-// still read once on page load like any static text.
+// screen readers is noise, not information - the first message is
+// still read once on page load like any static text. Oct 31 refinement
+// pass: 5s -> 9s and instant swaps (no fade-through-zero blank moment,
+// no layout shift between messages - only the text swaps).
 export function AnnouncementBar() {
   const [index, setIndex] = useState(0);
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -56,21 +53,15 @@ export function AnnouncementBar() {
     // the same cloth as the monogram, not a separate ivory promo strip.
     // Gold hairline at the seam to the nav band echoes the logo's frame.
     <div className="labelashb-fabric overflow-hidden border-b border-labelashb-gold/20 px-4 py-1 text-center text-[0.6875rem] text-labelashb-gold sm:py-1.5 sm:text-labelashb-small">
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={reduceMotion ? { duration: 0.1 } : SWAP_SPRING}
-        >
-          {/* Abbreviated on mobile - the full sentences wrap to 2 lines at
-              375px and eat into the hero's tight below-the-fold budget
-              (verified: pushed the CTA past the iPhone SE 667px floor). */}
-          <span className="sm:hidden">{message.mobile}</span>
-          <span className="hidden sm:inline">{message.desktop}</span>
-        </motion.div>
-      </AnimatePresence>
+      {/* key-swap only: no exit animation, so the old message is replaced
+          in the same frame - the strip never blanks. */}
+      <span key={index}>
+        {/* Abbreviated on mobile - the full sentences wrap to 2 lines at
+            375px and eat into the hero's tight below-the-fold budget
+            (verified: pushed the CTA past the iPhone SE 667px floor). */}
+        <span className="sm:hidden">{message.mobile}</span>
+        <span className="hidden sm:inline">{message.desktop}</span>
+      </span>
     </div>
   );
 }

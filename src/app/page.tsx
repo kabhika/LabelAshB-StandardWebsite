@@ -15,6 +15,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
+import { NewInLane } from "@/components/home/NewInLane";
 import { ServiceAssuranceBand } from "@/components/home/ServiceAssuranceBand";
 import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
 import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
@@ -267,8 +268,11 @@ export default async function Home() {
 
         {/* Desktop hero (md+): full-bleed. 10rem ≈ the announcement bar +
             header band above (py-4 + h-24 logo + bar) - keep in sync if
-            the header heights change. */}
-        <section className="relative hidden h-[calc(100svh-10rem)] overflow-hidden border-b border-labelashb-border md:block">
+            the header heights change. Oct 31 refinement pass: capped at
+            760px (client: "reduce the overall hero height... bring the
+            garments, headline and action into focus sooner") - on tall
+            viewports the band no longer towers past the photo. */}
+        <section className="relative hidden h-[calc(100svh-10rem)] overflow-hidden border-b border-labelashb-border md:block md:max-h-[760px]">
           <HeroCarousel slides={heroSlides} fullSlides={heroFullSlides} />
           {/* Chocolate scrim for the overlaid copy - strongest at the
               bottom-left where the text sits, fading out by mid-frame. */}
@@ -318,11 +322,11 @@ export default async function Home() {
               product-reshoots.ts). One garment, one place on the site -
               the shop below now carries all of them. */}
 
-          {/* New in the atelier - Phase 3 merchandising lane. Oct 31 2026
-              layout brief: the shared .labelashb-shell container, and a
-              real GRID at md+ so the four products fill the width evenly
-              (2-up md, 4-up xl) - no fixed card widths, no reserved
-              empty fifth column. Below md it stays the snap-scroll row. */}
+          {/* New in the atelier - Phase 3 merchandising lane. Shared
+              .labelashb-shell container; NewInLane renders the desktop
+              grid (2-up, 4-up from xl) and, below md, an intentional
+              one-complete-card carousel with arrows (Oct 31 refinement
+              pass - no more clipped next-card fragments). */}
           {newArrivals.length > 0 && (
             <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="new-in-heading">
               <div className="labelashb-shell">
@@ -333,15 +337,8 @@ export default async function Home() {
                   >
                     New in the atelier
                   </h2>
-                  <div className="mt-labelashb-section-compact flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pb-0 md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block xl:grid-cols-4">
-                    {newArrivals.map((product) => (
-                      <div
-                        key={product.id}
-                        className="w-64 flex-none snap-start sm:w-72 md:w-auto"
-                      >
-                        <ProductCardExpanded product={product} />
-                      </div>
-                    ))}
+                  <div className="mt-labelashb-section-compact">
+                    <NewInLane products={newArrivals} />
                   </div>
                 </Reveal>
               </div>
@@ -463,18 +460,19 @@ export default async function Home() {
           {/* Why Label AshB - split section, real product photography and
               copy grounded in confirmed brand positioning (PRODUCT.md). */}
           <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="why-heading">
-            {/* Oct 31 layout brief: shared shell, balanced two-column
-                composition - larger image (46%) and a text column capped
-                at max-w-xl so paragraph lines stay comfortable. */}
-            <div className="labelashb-shell flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
+            {/* Oct 31 refinement pass: image 40% / text 60%, columns
+                top-aligned so the heading rows line up; text column keeps
+                its comfortable max-w-xl measure. Stacks naturally below
+                md. */}
+            <div className="labelashb-shell flex flex-col gap-10 md:flex-row md:items-start md:gap-16">
               {whyUsImage && (
-                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt md:w-[46%]">
+                <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt md:w-[40%]">
                   <div className="relative h-full w-full">
                     <Image
                       src={whyUsImage.url}
                       alt={whyUsImage.altText || whyUsProduct?.title || ""}
                       fill
-                      sizes="(min-width: 768px) 46vw, 100vw"
+                      sizes="(min-width: 768px) 40vw, 100vw"
                       className="object-cover"
                     />
                   </div>

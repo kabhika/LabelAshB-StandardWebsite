@@ -57,6 +57,14 @@ export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
         New fabric drops, made-to-order openings, and the occasional note
         from the studio. No spam, unsubscribe any time.
       </p>
+      {/* LABLOVE moved here from the retired exit popup (Oct 31
+          refinement pass) - same terms, presented as a quiet line
+          instead of an auto-appearing overlay. */}
+      <p className="mt-3 text-labelashb-small text-labelashb-ink">
+        New here? Code{" "}
+        <span className="font-medium tracking-[0.08em]">LABLOVE</span>{" "}
+        takes ₹200 off your first order over ₹2,000.
+      </p>
 
       <AnimatePresence mode="wait" initial={false}>
         {result === "saved" ? (

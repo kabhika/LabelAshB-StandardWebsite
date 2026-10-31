@@ -5,7 +5,6 @@ import { CartProvider } from "@/components/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { ExitIntentPopup } from "@/components/layout/ExitIntentPopup";
 import { SITE_URL } from "@/lib/site";
 import facts from "../../_knowledge/facts.json";
 
@@ -63,7 +62,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <SiteFooter />
           <CartDrawer />
-          <ExitIntentPopup whatsapp={facts.contact.whatsapp} />
+          {/* ExitIntentPopup REMOVED Oct 31 refinement pass (client:
+              "replace the automatically appearing discount popup with a
+              discreet offer within the newsletter section") - the LABLOVE
+              offer now lives in NewsletterSignup. Component file deleted. */}
         </CartProvider>
       </body>
     </html>

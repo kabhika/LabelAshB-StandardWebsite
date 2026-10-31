@@ -266,7 +266,6 @@ const HERO_SET: { file: string; name: string; view: string }[] = [
 ];
 
 const heroImg = (file: string) => `/hero/${file}`;
-const heroFullImg = (file: string) => `/hero/full-${file}`;
 
 export function collectionHeroSlides() {
   return HERO_SET.map((slide) => ({
@@ -276,11 +275,13 @@ export function collectionHeroSlides() {
   }));
 }
 
-// Desktop full-bleed variant: same garments, same order, uncropped
-// landscape frames - HeroCarousel keeps both sets on one rotation clock.
+// Desktop full-bleed variant: same garments, same order, top-trimmed
+// frames (crop-0N.jpg from .match/prep-hero-crops.mjs - a few px of
+// studio ceiling above the head removed; the sources are otherwise
+// tightly framed) - HeroCarousel keeps both sets on one rotation clock.
 export function collectionHeroFullSlides() {
   return HERO_SET.map((slide) => ({
-    url: heroFullImg(slide.file),
+    url: `/hero/crop-${slide.file}`,
     alt: `${slide.name} - ${slide.view}`,
     name: slide.name,
   }));
