@@ -15,9 +15,11 @@
 // secret at that point -- put it in RAZORPAY_WEBHOOK_SECRET. This is a
 // different secret from RAZORPAY_KEY_SECRET, do not reuse it.
 
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import crypto from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { markOrderPaid } from "@/lib/orders/mark-paid";
+import { notifyOrderPaid } from "@/lib/notify";
 
 interface RazorpayWebhookPayment {
   id: string;
@@ -60,15 +62,13 @@ export async function POST(request: Request) {
   }
 
   if (event.event === "payment.captured") {
-    await supabaseAdmin
-      .from("orders")
-      .update({
-        status: "paid",
-        payment_status: "captured",
-        razorpay_payment_id: payment.id,
-      })
-      .eq("razorpay_order_id", payment.order_id)
-      .neq("payment_status", "captured"); // idempotent on duplicate webhook delivery
+    // Same single paid transition as /api/checkout/verify. If the browser
+    // already confirmed this payment, transitioned is false and no second
+    // alert goes out.
+    const result = await markOrderPaid(payment.order_id, payment.id);
+    if (result?.transitioned) {
+      after(() => notifyOrderPaid(result.orderId));
+    }
   } else if (event.event === "payment.failed") {
     await supabaseAdmin
       .from("orders")

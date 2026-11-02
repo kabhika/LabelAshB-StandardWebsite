@@ -190,9 +190,8 @@ export async function POST(request: Request) {
     .insert(orderItems.map((i) => ({ ...i, order_id: order.id })));
 
   if (itemsError) {
-    // The order row exists with no items attached -- left in place rather
-    // than auto-deleted, since Abhi manages orders directly in Supabase
-    // Studio and a stray row is easy to spot and clean up there.
+    // Remove the half created order so abandoned rows do not pile up.
+    await supabaseAdmin.from("orders").delete().eq("id", order.id);
     return NextResponse.json(
       { error: "Could not save your order. Please try again." },
       { status: 500 },

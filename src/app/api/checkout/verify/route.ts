@@ -3,10 +3,12 @@
 // see also /api/webhooks/razorpay, which reconciles the case where the
 // browser closes before this ever fires.
 
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import crypto from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { writeCartItems } from "@/lib/cart/storage";
+import { markOrderPaid } from "@/lib/orders/mark-paid";
+import { notifyOrderPaid } from "@/lib/notify";
 
 interface VerifyBody {
   supabaseOrderId: string;
@@ -57,24 +59,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
   }
 
-  const { data: order, error } = await supabaseAdmin
-    .from("orders")
-    .update({
-      status: "paid",
-      payment_status: "captured",
-      razorpay_payment_id: razorpayPaymentId,
-      razorpay_signature: razorpaySignature,
-    })
-    .eq("id", supabaseOrderId)
-    .eq("razorpay_order_id", razorpayOrderId)
-    .select("order_number")
-    .single();
-
-  if (error || !order) {
+  let result;
+  try {
+    result = await markOrderPaid(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+  } catch {
     return NextResponse.json({ error: "Could not finalize order." }, { status: 500 });
+  }
+
+  if (!result || result.orderId !== supabaseOrderId) {
+    return NextResponse.json({ error: "Could not finalize order." }, { status: 500 });
+  }
+
+  // Alerts go out only on the first paid transition, so the webhook
+  // reporting the same payment later never sends a second set.
+  if (result.transitioned) {
+    after(() => notifyOrderPaid(result.orderId));
   }
 
   await writeCartItems([]);
 
-  return NextResponse.json({ orderNumber: order.order_number });
+  return NextResponse.json({ orderNumber: result.orderNumber });
 }

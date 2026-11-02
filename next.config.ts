@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
       // bucket (see supabase/migrations/0002_storage.sql). Replaces
       // cdn.shopify.com now that catalog images are no longer hotlinked
       // from Shopify -- see MIGRATION.md, "full Shopify independence".
+      // Legacy project host. 47 product image rows still point at the old
+      // `labelashb` project's storage; remove once they are moved into the
+      // new project's product-images bucket.
+      {
+        protocol: "https" as const,
+        hostname: "rodwlokcqawajsugxatp.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
       ...(supabaseHostname
         ? [
             {
