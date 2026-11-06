@@ -143,6 +143,11 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
 
   const variants = [...row.product_variants]
     .sort((a, b) => a.position - b.position)
+    // Shopify-import placeholder variants ("Default Title") never render
+    // as size options; real sizes were backfilled for every product by
+    // migrations/0008 (Nov 6 2026), so the placeholder rows are dead data
+    // kept only for old order lines.
+    .filter((v) => v.title !== "Default Title")
     .map((v) => ({
       id: v.id,
       sku: v.sku,
