@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import type { NormalizedVariant } from "@/lib/shopify/catalog";
 import { AddToCartButton } from "@/components/catalog/AddToCartButton";
 import { useCart } from "@/components/cart/CartContext";
+import { selectedVariantPrice } from "@/lib/variant-price";
 
 // Card gets its own component rather than embedding SizeSelector directly -
 // that one is sized and labeled for a full PDP, not a grid card - but the
@@ -22,6 +23,7 @@ export function ProductCardSizePicker({ variants }: { variants: NormalizedVarian
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(firstAvailable?.id ?? null);
   const selected = variants.find((v) => v.id === selectedId);
+  const price = selectedVariantPrice(variants, selected);
   const { addToCart, isLoading, error } = useCart();
   const regionId = useId();
 
@@ -81,6 +83,11 @@ export function ProductCardSizePicker({ variants }: { variants: NormalizedVarian
           </div>
 
           <div className="mt-2">
+            {price && (
+              <p className="mb-2 text-labelashb-small text-labelashb-ink tabular-nums" aria-live="polite">
+                {price}
+              </p>
+            )}
             <AddToCartButton
               disabled={isLoading}
               isLoading={isLoading}

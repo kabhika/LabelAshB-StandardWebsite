@@ -5,6 +5,7 @@ import type { NormalizedVariant } from "@/lib/shopify/catalog";
 import { AddToCartButton } from "@/components/catalog/AddToCartButton";
 import { NotifyMePanel } from "@/components/catalog/NotifyMePanel";
 import { useCart } from "@/components/cart/CartContext";
+import { selectedVariantPrice } from "@/lib/variant-price";
 
 // Sold-out sizes stay selectable (Phase 3, Oct 2026): picking one swaps
 // the dead grey button for NotifyMePanel instead of a line-through dead
@@ -27,12 +28,14 @@ export function SizeSelector({
     firstAvailable?.id ?? variants[0]?.id ?? null,
   );
   const selected = variants.find((v) => v.id === selectedId);
+  const price = selectedVariantPrice(variants, selected);
   const { addToCart, isLoading, error } = useCart();
 
   return (
     <div>
-      <p className="text-labelashb-small text-labelashb-ink mb-2">
+      <p className="text-labelashb-small text-labelashb-ink mb-2" aria-live="polite">
         Size{selected ? ` — ${selected.title}` : ""}
+        {price && ` · ${price}`}
       </p>
       <div className="flex flex-wrap gap-2">
         {variants.map((variant) => {
