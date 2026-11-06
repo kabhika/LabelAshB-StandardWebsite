@@ -80,9 +80,16 @@ export function authoritativeProductImages(
   const override = handle ? PRODUCT_IMAGE_OVERRIDES[handle] : undefined;
   if (override) return override;
   if (!dbImages || dbImages.length === 0) return [];
+  // A clearly labelled front view takes priority over the imported DB
+  // position. Keep the remaining gallery in its original order; this does
+  // not guess at the orientation of generically numbered 01.jpg files.
+  const frontView = /(?:^|[\\/_-])(?:front|front-view)(?:[\\/_.-]|$)/i;
   return [...dbImages]
-    .slice()
-    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    .sort((a, b) => {
+      const aFront = frontView.test(a.url) ? 0 : 1;
+      const bFront = frontView.test(b.url) ? 0 : 1;
+      return aFront - bFront || (a.position ?? 0) - (b.position ?? 0);
+    })
     .map((img) => img.url);
 }
 
