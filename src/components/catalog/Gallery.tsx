@@ -32,7 +32,7 @@ export function Gallery({
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             priority
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       </div>
@@ -56,7 +56,7 @@ export function Gallery({
                 alt={image.altText || productTitle}
                 fill
                 sizes="64px"
-                className="object-cover"
+                className="object-contain"
               />
             </button>
           ))}
