@@ -23,6 +23,9 @@ export default async function CheckoutSuccessPage({
       <Button href="/products" variant="primary" className="mt-8">
         Continue shopping
       </Button>
+      <Button href="/my-orders" variant="secondary" className="mt-8 ml-3">
+        My orders
+      </Button>
     </div>
   );
 }

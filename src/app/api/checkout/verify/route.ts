@@ -9,6 +9,8 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { writeCartItems } from "@/lib/cart/storage";
 import { markOrderPaid } from "@/lib/orders/mark-paid";
 import { notifyOrderPaid } from "@/lib/notify";
+import { ORDER_HISTORY_COOKIE, ORDER_HISTORY_MAX_AGE, rememberOrder } from "@/lib/orders/browser-history";
+import { cookies } from "next/headers";
 
 interface VerifyBody {
   supabaseOrderId: string;
@@ -78,5 +80,17 @@ export async function POST(request: Request) {
 
   await writeCartItems([]);
 
-  return NextResponse.json({ orderNumber: result.orderNumber });
+  const response = NextResponse.json({ orderNumber: result.orderNumber });
+  response.cookies.set(
+    ORDER_HISTORY_COOKIE,
+    rememberOrder((await cookies()).get(ORDER_HISTORY_COOKIE)?.value, result.orderId, secret),
+    {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: ORDER_HISTORY_MAX_AGE,
+    },
+  );
+  return response;
 }

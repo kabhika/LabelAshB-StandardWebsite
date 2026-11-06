@@ -122,6 +122,9 @@ export function MobileNav({
           <Link href="/contact" className={LINK_CLASS} onClick={() => setOpen(false)}>
             Contact
           </Link>
+          <Link href="/my-orders" className={LINK_CLASS} onClick={() => setOpen(false)}>
+            My orders
+          </Link>
           <button
             type="button"
             onClick={() => {
