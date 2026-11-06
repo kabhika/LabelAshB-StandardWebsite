@@ -7,8 +7,9 @@ const ROTATE_MS = 9000;
 
 // Three real, verified claims only - checked against _knowledge/facts.json
 // and PRODUCT.md before writing (same process as AnnouncementBar.tsx):
-// - "Free shipping within India" is AnnouncementBar's own confirmed wording,
-//   reused verbatim, not reworded.
+// - "Free shipping across India" matches AnnouncementBar's current wording
+//   verbatim ("within" -> "across" Nov 6 2026 to match the header strip's
+//   confirmed phrasing; one promise, one wording site-wide).
 // - "Shipped in 3 to 4 days" is the client's confirmed ready-to-ship
 //   number (Oct 30 2026: normal ships 3-4 days, customized 10-12 days to
 //   ship - SHIP times, not delivery times; no delivery-window promises).
@@ -21,7 +22,7 @@ const ROTATE_MS = 9000;
 //   fit issues") - deliberately not the candidate "Easy returns", which
 //   would overstate a made-to-order returns policy.
 const MESSAGES = [
-  { text: "Free shipping within India", Icon: Truck },
+  { text: "Free shipping across India", Icon: Truck },
   { text: "Ready-to-ship: shipped in 3 to 4 days", Icon: CalendarClock },
   { text: "Easy exchanges for genuine fit issues", Icon: RefreshCw },
 ];

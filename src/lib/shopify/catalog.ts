@@ -17,6 +17,7 @@ import {
   PRODUCT_IMAGE_OVERRIDES,
   authoritativeProductImages,
 } from "@/lib/shopify/product-images";
+import { applyDescriptionPatches } from "@/lib/shopify/description-text";
 
 export interface NormalizedImage {
   url: string;
@@ -157,8 +158,10 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
     id: row.id,
     title: TITLE_OVERRIDES[row.handle] ?? row.title,
     handle: row.handle,
-    description: row.description ?? "",
-    descriptionHtml: row.description_html ?? "",
+    // render-time grammar/copy corrections until the DB rows themselves
+    // are fixed (see description-text.ts + migrations/0006)
+    description: applyDescriptionPatches(row.description),
+    descriptionHtml: applyDescriptionPatches(row.description_html),
     category: row.category,
     rawProductType: row.category,
     tags: row.material ? [row.material] : [],

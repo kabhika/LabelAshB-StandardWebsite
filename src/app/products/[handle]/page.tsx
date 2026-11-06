@@ -133,8 +133,7 @@ export default async function ProductPage({
                   className="text-labelashb-ink underline decoration-labelashb-border underline-offset-2 hover:text-labelashb-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1"
                 >
                   WhatsApp us
-                </a>
-                , we&apos;ll help you choose.
+                </a>, we&apos;ll help you choose.
               </p>
             </div>
           </div>

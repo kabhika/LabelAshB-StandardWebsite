@@ -160,8 +160,7 @@ export default function CheckoutPage() {
           Your cart is empty.{" "}
           <a href="/products" className="underline">
             Continue shopping
-          </a>
-          .
+          </a>.
         </p>
       ) : (
         <>

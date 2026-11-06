@@ -44,7 +44,9 @@ interface VariantRef {
 }
 
 // Free domestic shipping, matching the published shipping policy
-// (/shipping: "free standard shipping on dress orders within India").
+// (/shipping: "free standard shipping on all orders within India" --
+// wording corrected Nov 6 2026; checkout has always charged 0 for every
+// domestic order, not just dress orders).
 // International shipping isn't wired into checkout yet -- out of scope for
 // this pass, tracked in MIGRATION.md.
 const SHIPPING_AMOUNT = 0;
