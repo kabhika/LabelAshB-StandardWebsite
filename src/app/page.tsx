@@ -429,26 +429,26 @@ export default async function Home() {
                       caption: "Fabric",
                       note: "It starts with the cloth. Handloom linen, mulberry silk, cotton that breathes.",
                       views: [
-                        { src: "/atmosphere/studio-fabric.jpg", alt: "Rolls of fabric in the Label AshB studio" },
-                        { src: "/atmosphere/studio-fabric-2.jpg", alt: "A garment in progress hanging in the Label AshB studio" },
+                        { src: "/atmosphere/studio-fabric.jpg", alt: "Hands sorting patterned fabrics in the Label AshB studio" },
+                        { src: "/atmosphere/studio-fabric-2.jpg", alt: "An arrangement of colorful printed fabrics" },
                       ],
                     },
                     {
                       caption: "Workspace",
                       note: "One room in Gurgaon. Eight people. Zero shortcuts.",
                       views: [
-                        { src: "/atmosphere/studio-workspace.jpg", alt: "The Label AshB worktable with tools and sewing machine" },
-                        { src: "/atmosphere/studio-workspace-2.jpg", alt: "Sewing machine at work in the Label AshB studio" },
-                        { src: "/atmosphere/studio-workspace-3.jpg", alt: "Marking fabric for cutting at the Label AshB studio" },
-                        { src: "/atmosphere/studio-workspace-4.jpg", alt: "A garment being shaped on the dress form" },
+                        { src: "/atmosphere/studio-workspace.jpg", alt: "A maker working at a sewing machine in the Label AshB studio" },
+                        { src: "/atmosphere/studio-workspace-2.jpg", alt: "Two makers inspecting a patterned garment" },
+                        { src: "/atmosphere/studio-workspace-3.jpg", alt: "A maker sketching a garment design" },
+                        { src: "/atmosphere/studio-workspace-4.jpg", alt: "The Label AshB studio team" },
                       ],
                     },
                     {
                       caption: "By hand",
                       note: "Every motif rises stitch by stitch - embroidery the way Binita learned it as a girl.",
                       views: [
-                        { src: "/atmosphere/studio-handwork.jpg", alt: "Hands at hand-stitching in the Label AshB studio" },
-                        { src: "/atmosphere/studio-handwork-2.jpg", alt: "Pressing a garment during finishing" },
+                        { src: "/atmosphere/studio-handwork.jpg", alt: "Hands guiding patterned fabric through a sewing machine" },
+                        { src: "/atmosphere/studio-handwork-2.jpg", alt: "A maker holding a blue garment in the studio" },
                       ],
                     },
                   ]}
@@ -473,7 +473,7 @@ export default async function Home() {
                       alt={whyUsImage.altText || whyUsProduct?.title || ""}
                       fill
                       sizes="(min-width: 768px) 40vw, 100vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                 </div>

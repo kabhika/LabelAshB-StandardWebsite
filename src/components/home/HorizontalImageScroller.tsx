@@ -63,7 +63,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
                   fill
                   sizes="(min-width: 768px) 30vw, 24rem"
                   priority={i === 0}
-                  className="object-cover"
+                  className={image.frame === "product" ? "object-contain" : "object-cover"}
                 />
               </div>
             </div>
@@ -100,9 +100,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
                 fill
                 sizes="(min-width: 640px) 24rem, 18rem"
                 priority={i === 0}
-                // Product frames bleed edge to edge (Shree reference, Oct
-                // 29); atmosphere frames are pre-cropped 4:5 covers.
-                className="object-cover"
+                className={image.frame === "product" ? "object-contain" : "object-cover"}
               />
             </div>
           </div>

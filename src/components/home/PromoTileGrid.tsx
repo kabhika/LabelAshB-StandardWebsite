@@ -35,7 +35,7 @@ export function PromoTileGrid({ tiles }: { tiles: PromoTile[] }) {
               alt={tile.image.alt}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-90"
+              className="object-contain transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-90"
             />
           </div>
           <div className="mt-labelashb-card-caption flex items-center justify-between gap-3">

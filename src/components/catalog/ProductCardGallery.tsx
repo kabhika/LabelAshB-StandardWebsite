@@ -32,9 +32,7 @@ export function ProductCardGallery({
         fill
         sizes="(min-width: 1536px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         priority
-        // cover, no mat: tiles bleed edge to edge (Shree reference,
-        // Oct 29); 2:3 sources fill exactly, others crop at the sides.
-        className="object-cover"
+        className="object-contain"
       />
       {second && (
         <Image
@@ -44,7 +42,7 @@ export function ProductCardGallery({
           fill
           sizes="(min-width: 1536px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           loading="lazy"
-          className="object-cover opacity-0 transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-100 group-focus-within:opacity-100"
+          className="bg-labelashb-ground-alt object-contain opacity-0 transition-opacity duration-500 ease-out motion-reduce:transition-none group-hover:opacity-100 group-focus-within:opacity-100"
         />
       )}
     </>

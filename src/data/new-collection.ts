@@ -256,13 +256,13 @@ export function getGarment(slug: string): CollectionGarment | undefined {
 // screen"; the 4:5 crops read as side-cropped on wide screens).
 // Supersedes the Oct 17 atelier-set rotation (folders 21/23-midnight/24
 // - those files stay for their product pages).
-const HERO_SET: { file: string; name: string; view: string }[] = [
-  { file: "01.jpg", name: "Black hand-embroidered co-ord set", view: "front view" },
-  { file: "02.jpg", name: "Terracotta co-ord set", view: "front view" },
-  { file: "03.jpg", name: "Printed maxi dress", view: "front view" },
-  { file: "04.jpg", name: "Ivory co-ord set", view: "front view" },
-  { file: "05.jpg", name: "Black hand-embroidered co-ord set", view: "second pose" },
-  { file: "06.jpg", name: "Ivory co-ord set", view: "second pose" },
+const HERO_SET = [
+  { file: "01.jpg", name: "Red geometric-print co-ord set" },
+  { file: "02.jpg", name: "Bright pink long shirt with ivory trousers" },
+  { file: "03.jpg", name: "Ivory floral-embroidered dress" },
+  { file: "04.jpg", name: "Purple V-neck tunic with ivory trousers" },
+  { file: "05.jpg", name: "Dark floral square-neck dress" },
+  { file: "06.jpg", name: "Mauve embroidered shirt with black trousers" },
 ];
 
 const heroImg = (file: string) => `/hero/${file}`;
@@ -270,7 +270,7 @@ const heroImg = (file: string) => `/hero/${file}`;
 export function collectionHeroSlides() {
   return HERO_SET.map((slide) => ({
     url: heroImg(slide.file),
-    alt: `${slide.name} - ${slide.view}`,
+    alt: `${slide.name}, front and back views`,
     name: slide.name,
   }));
 }
@@ -282,7 +282,7 @@ export function collectionHeroSlides() {
 export function collectionHeroFullSlides() {
   return HERO_SET.map((slide) => ({
     url: `/hero/crop-${slide.file}`,
-    alt: `${slide.name} - ${slide.view}`,
+    alt: `${slide.name}, front and back views`,
     name: slide.name,
   }));
 }
