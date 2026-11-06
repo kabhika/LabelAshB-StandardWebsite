@@ -65,10 +65,10 @@ export default async function ProductPage({
     notFound();
   }
 
-  const priceLabel =
-    product.minPrice === product.maxPrice
-      ? formatPrice(product.minPrice, product.currencyCode)
-      : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
+  // Base price only (S/M/L) - never a range. XL and above cost +500 and
+  // the exact figure reveals next to the size once one is selected
+  // (SizeSelector), per the client's Nov 6 2026 instruction.
+  const priceLabel = formatPrice(product.minPrice, product.currencyCode);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">

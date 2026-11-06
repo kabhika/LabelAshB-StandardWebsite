@@ -11,10 +11,9 @@ function formatPrice(amount: number, currencyCode: string) {
 
 export function ProductCard({ product }: { product: NormalizedProduct }) {
   const image = product.images[0];
-  const priceLabel =
-    product.minPrice === product.maxPrice
-      ? formatPrice(product.minPrice, product.currencyCode)
-      : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
+  // Base price only (S/M/L), never a range - +500 XL+ prices reveal on
+  // size selection (client instruction Nov 6 2026)
+  const priceLabel = formatPrice(product.minPrice, product.currencyCode);
 
   return (
     <a

@@ -16,10 +16,9 @@ function formatPrice(amount: number, currencyCode: string) {
 // those are the only two "use client" pieces. Everything else - image
 // frame, sold-out badge, name, price - renders server-side.
 export function ProductCardExpanded({ product }: { product: NormalizedProduct }) {
-  const priceLabel =
-    product.minPrice === product.maxPrice
-      ? formatPrice(product.minPrice, product.currencyCode)
-      : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
+  // Base price only (S/M/L), never a range - the +500 XL+ figure shows on
+  // size selection in ProductCardSizePicker (client instruction Nov 6 2026)
+  const priceLabel = formatPrice(product.minPrice, product.currencyCode);
 
   return (
     <article className="group flex h-full flex-col">
