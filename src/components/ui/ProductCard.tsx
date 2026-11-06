@@ -31,7 +31,7 @@ export function ProductCard({ product }: { product: NormalizedProduct }) {
               alt={image.altText || product.title}
               fill
               sizes="(min-width: 1536px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
+              className="object-contain"
             />
           </div>
         )}
