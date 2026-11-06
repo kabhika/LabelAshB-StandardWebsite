@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ORDER_HISTORY_COOKIE, readOrderHistory } from "@/lib/orders/browser-history";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getCustomer } from "@/lib/supabase/customer-auth";
+import { PhoneSignIn } from "./PhoneSignIn";
+import { signOutCustomer } from "./actions";
 
 export const metadata: Metadata = {
   title: "My orders",
@@ -27,20 +30,28 @@ const statusLabels: Record<string, string> = {
 export default async function MyOrdersPage() {
   const cookie = (await cookies()).get(ORDER_HISTORY_COOKIE)?.value;
   const ids = readOrderHistory(cookie, process.env.RAZORPAY_KEY_SECRET);
-  const { data: orders, error } = ids.length
-    ? await supabaseAdmin
-        .from("orders")
-        .select("id, order_number, status, created_at, order_items(product_title, variant_title, quantity)")
-        .in("id", ids)
-        .order("created_at", { ascending: false })
-    : { data: [], error: null };
+  const customer = await getCustomer();
+  const query = supabaseAdmin
+    .from("orders")
+    .select("id, order_number, status, created_at, order_items(product_title, variant_title, quantity)")
+    .order("created_at", { ascending: false });
+  const { data: orders, error } = customer
+    ? await query.eq("customer_user_id", customer.id).neq("status", "pending")
+    : ids.length
+      ? await query.in("id", ids).is("customer_user_id", null)
+      : { data: [], error: null };
 
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <h1 className="text-labelashb-h1 text-labelashb-ink">My orders</h1>
       <p className="mt-3 text-labelashb-body text-labelashb-ink-soft">
-        View recent orders you placed using this browser.
+        {customer ? "View orders linked to your account." : "View recent orders from this browser or sign in to see your linked orders."}
       </p>
+      {customer ? (
+        <form action={signOutCustomer} className="mt-4">
+          <Button type="submit" variant="secondary">Sign out</Button>
+        </form>
+      ) : <PhoneSignIn />}
       {error ? (
         <p role="alert" className="mt-8">We couldn’t load your orders. Please try again.</p>
       ) : orders?.length ? (
@@ -63,10 +74,12 @@ export default async function MyOrdersPage() {
           ))}
         </ul>
       ) : (
-        <p className="mt-8 border border-labelashb-border p-5">There are no saved orders in this browser.</p>
+        <p className="mt-8 border border-labelashb-border p-5">
+          {customer ? "No orders are linked to your account yet." : "There are no saved orders in this browser."}
+        </p>
       )}
       <p className="mt-8 text-labelashb-body text-labelashb-ink-soft">
-        Looking for an older order, an order from another device, or courier tracking?{" "}
+        Need help with an older guest order or courier tracking?{" "}
         <Link href="/contact" className="font-medium text-labelashb-ink underline underline-offset-2">Contact us</Link>
         {" "}with your order number.
       </p>
