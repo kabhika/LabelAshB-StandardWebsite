@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartContext";
@@ -7,6 +8,13 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SITE_URL } from "@/lib/site";
 import facts from "../../_knowledge/facts.json";
+
+// Google Ads conversion tracking. All-or-nothing: with either variable
+// unset (the pre-campaign default) the gtag scripts stay out of the page
+// entirely - a half-configured deploy must never load the tag sitewide
+// while conversions silently fail to fire.
+const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
+const GOOGLE_ADS_PURCHASE_LABEL = process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL;
 
 // Quiet Luxury pairing (direction B, Oct 2026): Jost for UI/body sitewide,
 // Cormorant Garamond as the display serif. Both variables are set on <html>
@@ -67,6 +75,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               discreet offer within the newsletter section") - the LABLOVE
               offer now lives in NewsletterSignup. Component file deleted. */}
         </CartProvider>
+        {/* Google tag (Google Ads conversion tracking; a future GA4 G- id
+            can use the same var). Inlined at build time, so it must not be
+            set per-request. Unset = no script at all, which is why the
+            site stayed script-free until the campaign was ready. */}
+        {GOOGLE_TAG_ID && GOOGLE_ADS_PURCHASE_LABEL && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-tag-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GOOGLE_TAG_ID}');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
