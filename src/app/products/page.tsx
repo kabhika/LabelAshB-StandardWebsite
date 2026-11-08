@@ -41,9 +41,19 @@ export default async function ProductsPage({
   const materialSlugs = material?.split(",");
 
   const catalog = await getCatalog();
+  // Case-insensitive filter matching: the URL is public ad traffic input, and
+  // a hand-typed ?category=dresses (wrong case) previously rendered an empty
+  // listing instead of the dresses grid — paid clicks must never hit that.
   const products = catalog.filter((p) => {
-    if (category && p.category !== category) return false;
-    if (materialSlugs && !materialSlugs.some((m) => p.materials.includes(m))) return false;
+    if (category && p.category.toLowerCase() !== category.toLowerCase()) return false;
+    if (
+      materialSlugs &&
+      !materialSlugs.some((m) =>
+        p.materials.some((pm) => pm.toLowerCase() === m.toLowerCase()),
+      )
+    ) {
+      return false;
+    }
     return true;
   });
 
