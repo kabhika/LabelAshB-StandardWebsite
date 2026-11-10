@@ -20,6 +20,7 @@ const LINKS = [
   { href: "/products", label: "Shop" },
   { href: "/custom-dress", label: "Custom Dress" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
   { href: "/my-orders", label: "My orders" },
 ];
 
@@ -62,7 +63,7 @@ export function SiteNav({
 
   return (
     <NavigationMenu className="max-w-none">
-      <NavigationMenuList className="gap-5 xl:gap-9">
+      <NavigationMenuList className="gap-4 xl:gap-7">
         {categories.length > 0 && (
           <NavigationMenuItem>
             <NavigationMenuTrigger className={TRIGGER_CLASS}>
