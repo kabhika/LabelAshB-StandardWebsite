@@ -53,7 +53,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
         tabIndex={0}
         className="flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block"
       >
-        {images.map((image, i) => (
+        {images.map((image) => (
           <figure key={image.url} className="w-72 flex-none snap-start sm:w-96 md:w-auto">
             <div className={`relative overflow-hidden bg-labelashb-ground-alt ${image.frame === "product" ? "aspect-labelashb-product" : "aspect-labelashb-card"}`}>
               <div className={image.frame === "product" ? "relative h-full w-full" : "absolute inset-0"}>
@@ -62,7 +62,6 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
                   alt={image.alt}
                   fill
                   sizes="(min-width: 768px) 30vw, 24rem"
-                  priority={i === 0}
                   className={image.frame === "product" ? "object-contain" : "object-cover"}
                 />
               </div>
@@ -90,7 +89,7 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
       tabIndex={0}
       className="flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      {images.map((image, i) => (
+      {images.map((image) => (
         <figure key={image.url} className="w-72 flex-none snap-start sm:w-96">
           <div className={`relative overflow-hidden bg-labelashb-ground-alt ${image.frame === "product" ? "aspect-labelashb-product" : "aspect-labelashb-card"}`}>
             <div className={image.frame === "product" ? "relative h-full w-full" : "absolute inset-0"}>
@@ -99,7 +98,6 @@ export function HorizontalImageScroller(props: HorizontalImageScrollerProps) {
                 alt={image.alt}
                 fill
                 sizes="(min-width: 640px) 24rem, 18rem"
-                priority={i === 0}
                 className={image.frame === "product" ? "object-contain" : "object-cover"}
               />
             </div>

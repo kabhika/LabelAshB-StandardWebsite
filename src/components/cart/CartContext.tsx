@@ -33,6 +33,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<LocalCart | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const closeCart = useCallback(() => setIsOpen(false), []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,7 +77,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         isLoading,
         error,
         openCart: () => setIsOpen(true),
-        closeCart: () => setIsOpen(false),
+        closeCart,
         addToCart,
         updateLine,
         removeLine,

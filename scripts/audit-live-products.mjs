@@ -1,7 +1,7 @@
 // Audit every live product: which gallery source serves its images
 // (override table vs raw Supabase product_images rows), whether the lead
 // image resolves, and which are dresses. Output: audit-dresses.json.
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 
 const BASE = "https://www.labelashb.in";
 

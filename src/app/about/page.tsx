@@ -20,7 +20,7 @@ export default function AboutPage() {
   const counters = facts.brand.counters.items;
 
   return (
-    <main className="flex flex-1 flex-col">
+    <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col">
       <section className="mx-auto w-full max-w-6xl px-6 pt-14 pb-labelashb-section-standard sm:px-10 sm:pt-20 lg:px-16">
         <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
           Our story

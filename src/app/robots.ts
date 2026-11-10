@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       // Dev/debug-only routes, never meant for indexing.
-      disallow: ["/style-tile", "/api/", "/admin/"],
+      disallow: ["/api/", "/admin/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

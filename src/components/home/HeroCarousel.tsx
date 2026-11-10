@@ -1,169 +1,110 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { motion, type PanInfo } from "motion/react";
+import { getImageProps } from "next/image";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion, type PanInfo } from "motion/react";
 
 export interface HeroSlide {
   url: string;
   alt: string;
 }
 
-const ROTATE_MS = 7000;
-const SWIPE_THRESHOLD = 60;
-
-// The full-bleed layer's letterbox fill: all six landscape originals end
-// in the same warm studio sweep (edge-average #e0-#e3d5ca, measured Oct
-// 30), so one constant extends each photo's own backdrop into the areas
-// the section's wider/taller frame leaves - the photo reads complete
-// (object-contain, zero cropping) while the section still feels like
-// one full-bleed image. Do NOT switch this to the page champagne
-// (#e8dfd2): the photo's own edges would show as a visible rectangle.
-const FULL_BLEED_BACKDROP = "#e1d5c9";
-
-// Hero, two modes on one rotation clock (client: "let the hero image take
-// on this whole section - full screen", Oct 30 2026):
-// - Below md: the stacked mobile hero keeps its 4:5 primary panel
-//   (public/hero/0N.jpg, subject-centered crops). A landscape photo in a
-//   phone-width full-bleed frame would slice 60%+ off the model's sides,
-//   so mobile does NOT go full-bleed.
-// - md+: when `fullSlides` is provided, an absolute full-bleed layer
-//   renders the UNCROPPED landscape originals (public/hero/full-0N.jpg,
-//   1536x1024) edge to edge with object-cover - the whole hero section is
-//   the photo; copy overlays it in page.tsx. Both sets share one index,
-//   so resizing across md never desynchronises the garment you're seeing.
-//
-// All slides render simultaneously (absolute, crossfaded by opacity)
-// instead of mounting on index change, so upcoming slides prefetch. Only
-// slide 0 of the mobile set takes Next's `priority` (LCP hint for the
-// SSR-default layout); the desktop set loads eager but not priority to
-// avoid two preload hints.
 export function HeroCarousel({
   slides,
   fullSlides,
 }: {
   slides: HeroSlide[];
-  fullSlides?: HeroSlide[];
+  fullSlides: HeroSlide[];
 }) {
   const [index, setIndex] = useState(0);
-  const pausedRef = useRef(false);
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const reduceMotion = useReducedMotion();
   const count = slides.length;
-  const fullCount = fullSlides?.length ?? 0;
 
   useEffect(() => {
-    if (count <= 1) return;
-    const id = setInterval(() => {
-      if (!pausedRef.current) setIndex((i) => (i + 1) % count);
-    }, ROTATE_MS);
-    return () => clearInterval(id);
-    // Re-arming on `index` too means manual navigation (dot click, swipe)
-    // gets a full ROTATE_MS before the next auto-advance.
-  }, [count, index]);
+    if (paused || hovered || reduceMotion || count <= 1) return;
+    const timer = setTimeout(() => setIndex((current) => (current + 1) % count), 7000);
+    return () => clearTimeout(timer);
+  }, [count, hovered, index, paused, reduceMotion]);
 
-  if (count === 0) return null;
+  const slide = slides[index];
+  if (!slide) return null;
+  const wideSlide = fullSlides[index] ?? slide;
+  const sizes = "(min-width: 768px) 100vw, (min-width: 640px) 80vw, 92vw";
+  const { props: mobile } = getImageProps({
+    src: slide.url,
+    alt: slide.alt,
+    width: 880,
+    height: 1100,
+    sizes,
+    loading: "eager",
+    fetchPriority: index === 0 ? "high" : "auto",
+  });
+  const { props: desktop } = getImageProps({
+    src: wideSlide.url,
+    alt: wideSlide.alt,
+    width: 1536,
+    height: 960,
+    sizes,
+  });
 
-  const goTo = (next: number) => setIndex(((next % count) + count) % count);
-
-  function handleDragEnd(_: unknown, info: PanInfo) {
-    if (info.offset.x < -SWIPE_THRESHOLD) goTo(index + 1);
-    else if (info.offset.x > SWIPE_THRESHOLD) goTo(index - 1);
+  function goTo(next: number) {
+    setPaused(true);
+    setIndex((next + count) % count);
   }
 
-  const dots = (
-    <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-      {slides.map((slide, i) => (
-        <button
-          key={slide.url}
-          type="button"
-          aria-label={`Show slide ${i + 1} of ${count}`}
-          aria-current={i === index}
-          onClick={() => goTo(i)}
-          className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-1 ${
-            i === index
-              ? "w-6 bg-labelashb-gold"
-              : "w-1.5 bg-labelashb-gold/50 hover:bg-labelashb-gold/80"
-          }`}
-        />
-      ))}
-    </div>
-  );
+  function handleDragEnd(_: unknown, info: PanInfo) {
+    if (info.offset.x < -60) goTo(index + 1);
+    else if (info.offset.x > 60) goTo(index - 1);
+  }
 
   return (
-    <>
-      {/* Mobile primary (below md): 4:5 frame, height from the parent
-          wrapper (46svh cap - fold budget lives in page.tsx). */}
+    <div
+      className="relative order-first mx-auto aspect-[4/5] h-[min(46svh,110vw)] max-w-full md:absolute md:inset-0 md:aspect-auto md:h-full md:w-full"
+      role="region"
+      aria-label="Collection photos"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <motion.div
-        className="relative aspect-[4/5] h-full w-full md:hidden"
+        className="absolute inset-0 overflow-hidden bg-[#e1d5c9] [touch-action:pan-y]"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.15}
         onDragEnd={handleDragEnd}
-        onMouseEnter={() => (pausedRef.current = true)}
-        onMouseLeave={() => (pausedRef.current = false)}
-        onTouchStart={() => (pausedRef.current = true)}
-        onTouchEnd={() => (pausedRef.current = false)}
       >
-        {slides.map((slide, i) => (
-          <div
-            key={slide.url}
-            className="absolute inset-0 bg-labelashb-ground-alt transition-opacity duration-1000 ease-in-out"
-            style={{ opacity: i === index ? 1 : 0 }}
-            aria-hidden={i !== index}
-          >
-            <Image
-              src={slide.url}
-              alt={slide.alt}
-              fill
-              sizes="80vw"
-              loading="eager"
-              priority={i === 0}
-              className="pointer-events-none object-cover"
-            />
-          </div>
-        ))}
-        {dots}
+        <picture>
+          <source media="(min-width: 768px)" srcSet={desktop.srcSet} sizes={desktop.sizes} />
+          {/* getImageProps supplies Next.js optimization for each picture source. */}
+          <img {...mobile} alt={slide.alt} className="pointer-events-none absolute inset-0 h-full w-full object-contain" />
+        </picture>
       </motion.div>
-
-      {/* Desktop full-bleed (md+): uncropped landscape originals, cover
-          the whole hero section. The parent section is
-          h-[calc(100svh-<header>)] with the copy overlaid. */}
-      {fullSlides && fullCount === count && (
-        <motion.div
-          className="absolute inset-0 hidden md:block"
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.15}
-          onDragEnd={handleDragEnd}
-          onMouseEnter={() => (pausedRef.current = true)}
-          onMouseLeave={() => (pausedRef.current = false)}
-          onTouchStart={() => (pausedRef.current = true)}
-          onTouchEnd={() => (pausedRef.current = false)}
-        >
-          {fullSlides.map((slide, i) => (
-            <div
-              key={slide.url}
-              className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-              style={{ opacity: i === index ? 1 : 0, backgroundColor: FULL_BLEED_BACKDROP }}
-              aria-hidden={i !== index}
+      {count > 1 && (
+        <div className="absolute right-2 bottom-2 z-20 flex max-w-full items-center gap-0.5 rounded-full bg-labelashb-wine px-2 text-labelashb-ivory md:right-6 md:bottom-6">
+          {!reduceMotion && (
+            <button
+              type="button"
+              onClick={() => setPaused((value) => !value)}
+              className="min-h-9 px-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              <Image
-                src={slide.url}
-                alt={slide.alt}
-                fill
-                sizes="100vw"
-                loading="eager"
-                // contain, not cover (client brief, Oct 31): cover zoomed
-                // a 3:2 photo into a wider band and cropped heads/feet at
-                // 1920px+; contain shows the whole frame on the shared
-                // backdrop fill above.
-                className="pointer-events-none object-contain"
-                style={{ objectPosition: "center center" }}
-              />
-            </div>
+              {paused ? "Play" : "Pause"}
+            </button>
+          )}
+          {slides.map((item, i) => (
+            <button
+              key={item.url}
+              type="button"
+              aria-label={"Show collection photo " + (i + 1) + " of " + count}
+              aria-current={i === index ? "true" : undefined}
+              onClick={() => goTo(i)}
+              className="grid h-8 w-7 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <span aria-hidden="true" className={i === index ? "h-2 w-4 rounded-full bg-white" : "h-2 w-2 rounded-full bg-white/60"} />
+            </button>
           ))}
-          {dots}
-        </motion.div>
+        </div>
       )}
-    </>
+    </div>
   );
 }

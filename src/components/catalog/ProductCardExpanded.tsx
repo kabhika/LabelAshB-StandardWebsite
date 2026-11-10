@@ -15,7 +15,12 @@ function formatPrice(amount: number, currencyCode: string) {
 // size pills + add-to-cart (ProductCardSizePicker) need the client, so
 // those are the only two "use client" pieces. Everything else - image
 // frame, sold-out badge, name, price - renders server-side.
-export function ProductCardExpanded({ product }: { product: NormalizedProduct }) {
+export type ExpandedCardProduct = Pick<
+  NormalizedProduct,
+  "id" | "handle" | "title" | "category" | "minPrice" | "maxPrice" | "currencyCode" | "inStock" | "images" | "variants"
+>;
+
+export function ProductCardExpanded({ product }: { product: ExpandedCardProduct }) {
   const priceLabel =
     product.minPrice === product.maxPrice
       ? formatPrice(product.minPrice, product.currencyCode)

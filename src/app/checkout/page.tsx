@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Script from "next/script";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useCart } from "@/components/cart/CartContext";
 import { Button } from "@/components/ui/Button";
 
@@ -36,9 +36,9 @@ const inputClass =
 
 export default function CheckoutPage() {
   const { cart } = useCart();
-  const router = useRouter();
   const [scriptReady, setScriptReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [paymentNeedsReview, setPaymentNeedsReview] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState({
@@ -60,6 +60,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (submitting || paymentNeedsReview) return;
     setError(null);
 
     if (lines.length === 0) {
@@ -112,23 +113,24 @@ export default function CheckoutPage() {
         },
         theme: { color: "#6b1f2a" },
         handler: async (response: RazorpaySuccessResponse) => {
-          const verifyRes = await fetch("/api/checkout/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              supabaseOrderId: data.supabaseOrderId,
-              ...response,
-            }),
-          });
-          const verifyData = await verifyRes.json();
-          if (!verifyRes.ok) {
+          try {
+            const verifyRes = await fetch("/api/checkout/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                supabaseOrderId: data.supabaseOrderId,
+                ...response,
+              }),
+            });
+            if (!verifyRes.ok) throw new Error("Order confirmation failed");
+            window.location.replace("/checkout/success");
+          } catch {
+            setPaymentNeedsReview(true);
             setError(
-              `Payment received but confirmation failed. Contact us with this payment id: ${response.razorpay_payment_id}`,
+              `We couldn’t confirm your payment. Please don’t pay again. Contact us with payment reference ${response.razorpay_payment_id}.`,
             );
             setSubmitting(false);
-            return;
           }
-          router.push(`/checkout/success?order=${verifyData.orderNumber}`);
         },
         modal: {
           ondismiss: () => setSubmitting(false),
@@ -148,19 +150,23 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        onReady={() => setScriptReady(true)}
-      />
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-2xl px-4 py-12">
+      {lines.length > 0 && (
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="afterInteractive"
+          onReady={() => setScriptReady(true)}
+          onError={() => setError("The payment service couldn’t load. Reload this page to try again.")}
+        />
+      )}
       <h1 className="text-labelashb-h2 text-labelashb-ink">Checkout</h1>
 
       {lines.length === 0 ? (
         <p className="mt-6 text-labelashb-body text-labelashb-ink-soft">
           Your cart is empty.{" "}
-          <a href="/products" className="underline">
+          <Link href="/products" className="underline">
             Continue shopping
-          </a>.
+          </Link>.
         </p>
       ) : (
         <>
@@ -171,7 +177,7 @@ export default function CheckoutPage() {
                 className="flex justify-between text-labelashb-body text-labelashb-ink"
               >
                 <span>
-                  {line.merchandise.product.title} ({line.merchandise.title}) x{" "}
+                  {line.merchandise.product.title} ({line.merchandise.title}) ×{" "}
                   {line.quantity}
                 </span>
                 <span className="tabular-nums">
@@ -192,77 +198,116 @@ export default function CheckoutPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <input
-              required
-              placeholder="Full name"
-              value={form.customerName}
-              onChange={(e) => update("customerName", e.target.value)}
-              className={inputClass}
-            />
-            <input
-              required
-              type="tel"
-              placeholder="Phone"
-              value={form.customerPhone}
-              onChange={(e) => update("customerPhone", e.target.value)}
-              className={inputClass}
-            />
-            <input
-              type="email"
-              placeholder="Email (optional)"
-              value={form.customerEmail}
-              onChange={(e) => update("customerEmail", e.target.value)}
-              className={inputClass}
-            />
-            <input
-              required
-              placeholder="Address line 1"
-              value={form.line1}
-              onChange={(e) => update("line1", e.target.value)}
-              className={inputClass}
-            />
-            <input
-              placeholder="Address line 2 (optional)"
-              value={form.line2}
-              onChange={(e) => update("line2", e.target.value)}
-              className={inputClass}
-            />
-            <div className="grid grid-cols-2 gap-4">
+            <h2 className="text-labelashb-h3">Delivery details</h2>
+            <label className="block space-y-1">
+              <span>Full name</span>
               <input
                 required
-                placeholder="City"
-                value={form.city}
-                onChange={(e) => update("city", e.target.value)}
+                name="customerName"
+                autoComplete="name"
+                value={form.customerName}
+                onChange={(e) => update("customerName", e.target.value)}
                 className={inputClass}
               />
+            </label>
+            <label className="block space-y-1">
+              <span>Phone number</span>
               <input
                 required
-                placeholder="State"
-                value={form.state}
-                onChange={(e) => update("state", e.target.value)}
+                type="tel"
+                name="customerPhone"
+                autoComplete="tel"
+                value={form.customerPhone}
+                onChange={(e) => update("customerPhone", e.target.value)}
                 className={inputClass}
               />
+            </label>
+            <label className="block space-y-1">
+              <span>Email address (optional)</span>
+              <input
+                type="email"
+                name="customerEmail"
+                autoComplete="email"
+                value={form.customerEmail}
+                onChange={(e) => update("customerEmail", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span>Address line 1</span>
+              <input
+                required
+                name="line1"
+                autoComplete="address-line1"
+                value={form.line1}
+                onChange={(e) => update("line1", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span>Address line 2 (optional)</span>
+              <input
+                name="line2"
+                autoComplete="address-line2"
+                value={form.line2}
+                onChange={(e) => update("line2", e.target.value)}
+                className={inputClass}
+              />
+            </label>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block space-y-1">
+                <span>City</span>
+                <input
+                  required
+                  name="city"
+                  autoComplete="address-level2"
+                  value={form.city}
+                  onChange={(e) => update("city", e.target.value)}
+                  className={inputClass}
+                />
+              </label>
+              <label className="block space-y-1">
+                <span>State</span>
+                <input
+                  required
+                  name="state"
+                  autoComplete="address-level1"
+                  value={form.state}
+                  onChange={(e) => update("state", e.target.value)}
+                  className={inputClass}
+                />
+              </label>
             </div>
-            <input
-              required
-              placeholder="Pincode"
-              value={form.pincode}
-              onChange={(e) => update("pincode", e.target.value)}
-              className={inputClass}
-            />
+            <label className="block space-y-1">
+              <span>PIN code</span>
+              <input
+                required
+                name="pincode"
+                autoComplete="postal-code"
+                inputMode="numeric"
+                pattern="[1-9][0-9]{5}"
+                maxLength={6}
+                value={form.pincode}
+                onChange={(e) => update("pincode", e.target.value)}
+                className={inputClass}
+              />
+            </label>
 
             {error && (
-              <p className="text-labelashb-small text-labelashb-error">{error}</p>
+              <p role="alert" className="text-labelashb-small text-labelashb-error">
+                {error}{" "}
+                {paymentNeedsReview && <Link href="/contact" className="underline">Contact Label AshB</Link>}
+              </p>
             )}
 
-            <Button type="submit" disabled={submitting} className="w-full">
+            <Button type="submit" disabled={submitting || paymentNeedsReview || !scriptReady} className="w-full">
               {submitting
-                ? "Processing..."
-                : `Pay ${formatPrice(cart?.cost.totalAmount.amount ?? "0")}`}
+                ? "Processing…"
+                : !scriptReady ? "Loading payment…" : `Pay ${formatPrice(cart?.cost.totalAmount.amount ?? "0")}`}
             </Button>
           </form>
         </>
       )}
-    </div>
+    </main>
   );
 }

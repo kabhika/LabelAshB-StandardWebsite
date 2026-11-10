@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { NormalizedProduct } from "@/lib/shopify/catalog";
-import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
+import { ProductCardExpanded, type ExpandedCardProduct } from "@/components/catalog/ProductCardExpanded";
 
 // The "New in the atelier" lane (Oct 31 refinement pass). Below md this
 // is an intentional ONE-CARD carousel: each slide is the full container
@@ -14,7 +13,7 @@ import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
 // still works, and the arrows give keyboard users the same navigation.
 // md+ is the shared-shell grid from the layout pass (2-up, 4-up from xl)
 // - arrows and scrolling disappear.
-export function NewInLane({ products }: { products: NormalizedProduct[] }) {
+export function NewInLane({ products }: { products: ExpandedCardProduct[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);

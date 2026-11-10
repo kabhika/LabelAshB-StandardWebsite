@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 
 export default function NotFound() {
   return (
-    <main className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center px-6 text-center">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center px-6 text-center">
       <h1 className="text-labelashb-h2 text-labelashb-ink">
         We couldn&apos;t find that page.
       </h1>

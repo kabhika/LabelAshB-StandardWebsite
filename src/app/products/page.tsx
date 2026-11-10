@@ -71,7 +71,7 @@ export default async function ProductsPage({
         {category ? ` in ${category}` : ""}
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[220px_minmax(0,1fr)]">
         <aside>
           <ProductFilters activeCategory={category} activeMaterial={material} />
         </aside>
@@ -86,7 +86,7 @@ export default async function ProductsPage({
             <div className="max-w-md py-8">
               <p className="text-labelashb-body-lg text-labelashb-ink">
                 {category && material
-                  ? `${category} doesn't come in ${materialDisplayLabel(material)}.`
+                  ? `${category} have no pieces in ${materialDisplayLabel(material)}.`
                   : category
                     ? `No pieces in ${category} right now.`
                     : `No pieces in ${materialDisplayLabel(material ?? "")} right now.`}
@@ -95,7 +95,7 @@ export default async function ProductsPage({
               {category && availableMaterialsForCategory.length > 0 && (
                 <div className="mt-6">
                   <p className="text-labelashb-eyebrow uppercase text-labelashb-ink-soft mb-2">
-                    {category} comes in
+                    Available materials
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {availableMaterialsForCategory.map((m) => (

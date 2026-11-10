@@ -1,6 +1,6 @@
 export default function ProductLoading() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
+    <div aria-hidden="true" className="mx-auto w-full max-w-6xl px-6 py-16 motion-reduce:[&_*]:animate-none">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <div className="aspect-labelashb-product animate-pulse bg-labelashb-ground-alt" />
         <div>
@@ -17,6 +17,6 @@ export default function ProductLoading() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

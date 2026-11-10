@@ -9,6 +9,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { writeCartItems } from "@/lib/cart/storage";
 import { markOrderPaid } from "@/lib/orders/mark-paid";
 import { notifyOrderPaid } from "@/lib/notify";
+import { createReceipt, RECEIPT_COOKIE, RECEIPT_MAX_AGE } from "@/lib/orders/receipt";
 
 interface VerifyBody {
   supabaseOrderId: string;
@@ -30,9 +31,14 @@ export async function POST(request: Request) {
     razorpay_order_id: razorpayOrderId,
     razorpay_payment_id: razorpayPaymentId,
     razorpay_signature: razorpaySignature,
-  } = body;
+  } = body ?? {};
 
-  if (!supabaseOrderId || !razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+  if (
+    typeof supabaseOrderId !== "string" || !/^[a-f0-9-]{36}$/i.test(supabaseOrderId) ||
+    typeof razorpayOrderId !== "string" || !razorpayOrderId ||
+    typeof razorpayPaymentId !== "string" || !razorpayPaymentId ||
+    typeof razorpaySignature !== "string" || !/^[a-f0-9]{64}$/i.test(razorpaySignature)
+  ) {
     return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
   }
 
@@ -49,18 +55,20 @@ export async function POST(request: Request) {
     .update(`${razorpayOrderId}|${razorpayPaymentId}`)
     .digest("hex");
 
-  if (expected !== razorpaySignature) {
-    await supabaseAdmin
-      .from("orders")
-      .update({ payment_status: "failed" })
-      .eq("id", supabaseOrderId)
-      .eq("razorpay_order_id", razorpayOrderId);
-
+  if (!crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(razorpaySignature, "hex"))) {
     return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
   }
 
   let result;
   try {
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .select("id")
+      .eq("id", supabaseOrderId)
+      .eq("razorpay_order_id", razorpayOrderId)
+      .maybeSingle();
+    if (error) throw error;
+    if (!order) return NextResponse.json({ error: "Order details do not match." }, { status: 400 });
     result = await markOrderPaid(razorpayOrderId, razorpayPaymentId, razorpaySignature);
   } catch {
     return NextResponse.json({ error: "Could not finalize order." }, { status: 500 });
@@ -78,5 +86,13 @@ export async function POST(request: Request) {
 
   await writeCartItems([]);
 
-  return NextResponse.json({ orderNumber: result.orderNumber });
+  const response = NextResponse.json({ orderNumber: result.orderNumber });
+  response.cookies.set(RECEIPT_COOKIE, createReceipt(result.orderNumber, secret), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/checkout/success",
+    maxAge: RECEIPT_MAX_AGE,
+  });
+  return response;
 }

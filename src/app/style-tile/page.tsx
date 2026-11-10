@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -78,6 +79,11 @@ function NavBandContent({
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Style preview",
+  robots: { index: false, follow: false },
+};
 
 export default async function StyleTilePage() {
   // Style tile grounds its product card in a real, live catalog item —

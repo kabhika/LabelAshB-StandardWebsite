@@ -15,7 +15,7 @@ export default function SizeGuidePage() {
   const { sizeGuide } = facts;
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-2xl px-6 py-16">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },

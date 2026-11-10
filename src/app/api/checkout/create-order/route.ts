@@ -59,22 +59,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { customerName, customerEmail, customerPhone, shippingAddress } = body;
+  const { customerName, customerEmail, customerPhone, shippingAddress } = body ?? {};
+  if (customerEmail != null && typeof customerEmail !== "string") {
+    return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
+  }
 
-  if (!customerName?.trim() || !customerPhone?.trim()) {
+  if (typeof customerName !== "string" || !customerName.trim() ||
+      typeof customerPhone !== "string" || !customerPhone.trim()) {
     return NextResponse.json(
       { error: "Name and phone are required." },
       { status: 400 },
     );
   }
   if (
-    !shippingAddress?.line1?.trim() ||
-    !shippingAddress?.city?.trim() ||
-    !shippingAddress?.state?.trim() ||
-    !shippingAddress?.pincode?.trim()
+    !shippingAddress ||
+    ![shippingAddress.line1, shippingAddress.city, shippingAddress.state].every(
+      (part) => typeof part === "string" && part.trim(),
+    ) ||
+    typeof shippingAddress.pincode !== "string" ||
+    !/^[1-9]\d{5}$/.test(shippingAddress.pincode.trim())
   ) {
     return NextResponse.json(
-      { error: "A complete shipping address is required." },
+      { error: "Enter a complete delivery address and a valid six-digit Indian PIN code." },
       { status: 400 },
     );
   }

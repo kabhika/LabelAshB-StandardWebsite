@@ -22,8 +22,6 @@ export function Gallery({
 
   return (
     <div>
-      {/* No mat + cover (Shree reference, Oct 29): photo fills the
-          frame; bg only covers the load flash. */}
       <div className="relative aspect-labelashb-product w-full overflow-hidden bg-labelashb-ground-alt">
         <div className="relative h-full w-full">
           <Image
@@ -31,19 +29,20 @@ export function Gallery({
             alt={active.altText || productTitle}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            priority
+            loading="eager"
+            fetchPriority={activeIndex === 0 ? "high" : "auto"}
             className="object-contain"
           />
         </div>
       </div>
       {images.length > 1 && (
-        <div className="mt-4 flex gap-2 overflow-x-auto">
+        <div className="mt-4 flex gap-2 overflow-x-auto p-1">
           {images.map((image, index) => (
             <button
               key={image.url}
               type="button"
               onClick={() => setActiveIndex(index)}
-              aria-label={`Show image ${index + 1} of ${images.length}`}
+              aria-label={`Show image ${index + 1} of ${images.length}${image.altText && image.altText !== productTitle ? `: ${image.altText}` : ""}`}
               aria-current={index === activeIndex}
               className={`relative h-24 w-16 shrink-0 overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-accent focus-visible:ring-offset-1 ${
                 index === activeIndex
@@ -53,7 +52,7 @@ export function Gallery({
             >
               <Image
                 src={image.url}
-                alt={image.altText || productTitle}
+                alt=""
                 fill
                 sizes="64px"
                 className="object-contain"

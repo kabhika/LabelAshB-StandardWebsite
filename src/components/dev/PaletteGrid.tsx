@@ -27,12 +27,14 @@ export function PaletteGrid() {
   const [hexValues, setHexValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const styles = getComputedStyle(document.documentElement);
-    const values: Record<string, string> = {};
-    for (const { slug } of TOKENS) {
-      values[slug] = styles.getPropertyValue(`--color-labelashb-${slug}`).trim();
-    }
-    setHexValues(values);
+    const frame = requestAnimationFrame(() => {
+      const styles = getComputedStyle(document.documentElement);
+      const values = Object.fromEntries(
+        TOKENS.map(({ slug }) => [slug, styles.getPropertyValue(`--color-labelashb-${slug}`).trim()]),
+      );
+      setHexValues(values);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return (

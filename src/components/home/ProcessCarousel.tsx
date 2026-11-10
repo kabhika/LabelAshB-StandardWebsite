@@ -30,9 +30,9 @@ export function ProcessCarousel({
             key={image.src}
             src={image.src}
             alt={image.alt}
+            aria-hidden={index !== activeIndex}
             fill
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 82vw"
-            priority={index === 0}
             className={`object-cover transition-opacity duration-700 motion-reduce:transition-none ${
               index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"
             }`}

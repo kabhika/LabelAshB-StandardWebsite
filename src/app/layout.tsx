@@ -6,7 +6,6 @@ import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SITE_URL } from "@/lib/site";
-import facts from "../../_knowledge/facts.json";
 
 // Quiet Luxury pairing (direction B, Oct 2026): Jost for UI/body sitewide,
 // Cormorant Garamond as the display serif. Both variables are set on <html>
@@ -16,11 +15,13 @@ import facts from "../../_knowledge/facts.json";
 const jost = Jost({
   variable: "--font-jost",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
+  display: "swap",
   weight: ["300", "400", "500", "600"],
   style: ["normal", "italic"],
 });
@@ -38,9 +39,7 @@ export const metadata: Metadata = {
   },
   description:
     "Shop handcrafted linen dresses, co-ord sets, shirts, tops and silk clothing by Label AshB.",
-  alternates: {
-    canonical: "/",
-  },
+  twitter: { card: "summary_large_image" },
 };
 
 // viewportFit: "cover" lets content draw under the notch/home-indicator
@@ -58,6 +57,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${jost.variable} ${cormorant.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-labelashb-ground text-labelashb-ink font-labelashb-sans">
         <CartProvider>
+          <a href="#main-content" className="sr-only z-[60] focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-labelashb-ivory focus:px-4 focus:py-3">
+            Skip to main content
+          </a>
           <SiteHeader />
           {children}
           <SiteFooter />

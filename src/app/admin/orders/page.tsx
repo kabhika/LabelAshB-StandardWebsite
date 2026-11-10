@@ -46,29 +46,30 @@ export default async function AdminOrdersPage({
 
   if (!(await isAdmin())) {
     return (
-      <div className="mx-auto max-w-sm px-4 py-20">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-sm px-4 py-20">
         <h1 className="text-labelashb-h2 text-labelashb-ink">Orders admin</h1>
         {!process.env.ADMIN_PASSWORD ? (
           <p className="mt-4 text-labelashb-body text-labelashb-ink-soft">
-            Locked. Set the ADMIN_PASSWORD environment variable to enable this page.
+            Orders administration is currently unavailable.
           </p>
         ) : (
           <form action={adminLogin} className="mt-6 space-y-3">
+            <label htmlFor="admin-password" className="block">Password</label>
             <input
+              id="admin-password"
               type="password"
               name="password"
               required
               autoComplete="current-password"
-              placeholder="Password"
               className="w-full rounded-md border border-labelashb-border bg-transparent px-3 py-2"
             />
-            {params.error && <p className="text-sm text-red-700">Wrong password.</p>}
+            {params.error && <p role="alert" className="text-sm text-red-700">Incorrect password.</p>}
             <button type="submit" className="w-full rounded-md bg-labelashb-ink px-3 py-2 text-white">
               Sign in
             </button>
           </form>
         )}
-      </div>
+      </main>
     );
   }
 
@@ -100,7 +101,7 @@ export default async function AdminOrdersPage({
   const failedAlerts = logRows.filter((l) => l.status === "failed").length;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl px-4 py-10">
       <AutoRefresh seconds={30} />
       <div className="flex items-center justify-between">
         <h1 className="text-labelashb-h2 text-labelashb-ink">Orders</h1>
@@ -217,6 +218,6 @@ export default async function AdminOrdersPage({
           </tbody>
         </table>
       </div>
-    </div>
+    </main>
   );
 }

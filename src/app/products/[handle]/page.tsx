@@ -71,7 +71,7 @@ export default async function ProductPage({
       : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-6 py-16">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd
         data={breadcrumbJsonLd([

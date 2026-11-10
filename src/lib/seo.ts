@@ -6,7 +6,7 @@ import type { NormalizedProduct } from "@/lib/shopify/catalog";
 // bullet specs) - truncate to a clean word boundary rather than cutting
 // mid-word.
 export function truncateDescription(text: string, max = 157): string {
-  const clean = text.replace(/\s+/g, " ").trim();
+  const clean = text.replace(/([.!?])(?=[A-Z][a-z]+ )/g, "$1 ").replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   const cut = clean.slice(0, max);
   const lastSpace = cut.lastIndexOf(" ");
@@ -63,8 +63,8 @@ export function productJsonLd(product: NormalizedProduct) {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    description: product.description,
-    image: product.images.map((img) => img.url),
+    description: product.description.replace(/([.!?])(?=[A-Z][a-z]+ )/g, "$1 "),
+    image: product.images.map((img) => new URL(img.url, SITE_URL).href),
     category: product.category,
     brand: {
       "@type": "Brand",

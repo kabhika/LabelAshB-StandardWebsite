@@ -50,12 +50,16 @@ export function MobileNav({
   const { cart, openCart } = useCart();
   const count = cart?.totalQuantity ?? 0;
   const containerRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
 
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && containerRef.current?.contains(document.activeElement)) {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
     }
     function handleClickOutside(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -79,7 +83,9 @@ export function MobileNav({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        ref={toggleRef}
         aria-expanded={open}
+        aria-controls={open ? "mobile-menu" : undefined}
         aria-label={open ? "Close menu" : "Open menu"}
         className="flex h-11 w-11 items-center justify-center text-labelashb-ground/90 transition-colors hover:text-labelashb-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-[3px] focus-visible:ring-offset-labelashb-espresso"
       >
@@ -102,7 +108,7 @@ export function MobileNav({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full z-40 border-b border-labelashb-olive-light/40 bg-labelashb-ground px-6 shadow-sm">
+        <nav id="mobile-menu" aria-label="Mobile navigation" className="absolute inset-x-0 top-full z-40 max-h-[calc(100dvh-6rem)] overflow-y-auto border-b border-labelashb-olive-light/40 bg-labelashb-ground px-6 shadow-sm">
           <NavGroup
             label="Categories"
             links={categories}
@@ -132,7 +138,7 @@ export function MobileNav({
           >
             Cart{count > 0 ? ` (${count})` : ""}
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );

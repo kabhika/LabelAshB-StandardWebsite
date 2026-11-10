@@ -55,37 +55,31 @@ export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
       </h2>
       <p className="mt-3 text-labelashb-body text-labelashb-ink-soft">
         New fabric drops, made-to-order openings, and the occasional note
-        from the studio. No spam, unsubscribe any time.
-      </p>
-      {/* LABLOVE moved here from the retired exit popup (Oct 31
-          refinement pass) - same terms, presented as a quiet line
-          instead of an auto-appearing overlay. */}
-      <p className="mt-3 text-labelashb-small text-labelashb-ink">
-        New here? Code{" "}
-        <span className="font-medium tracking-[0.08em]">LABLOVE</span>{" "}
-        takes ₹200 off your first order over ₹2,000.
+        from the studio. You can unsubscribe at any time.
       </p>
 
       <AnimatePresence mode="wait" initial={false}>
         {result === "saved" ? (
           <motion.p
             key="confirmed"
+            role="status"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={reduceMotion ? { duration: 0.1 } : CONFIRM_SPRING}
-            className="mt-6 text-labelashb-body text-labelashb-emerald"
+            className="mt-6 text-labelashb-body text-labelashb-ink"
           >
-            You&apos;re on the list - thank you.
+            Thanks for signing up. You’re on the list.
           </motion.p>
         ) : result === "fallback" ? (
           <motion.p
             key="fallback"
+            role="alert"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={reduceMotion ? { duration: 0.1 } : CONFIRM_SPRING}
             className="mt-6 text-labelashb-body text-labelashb-ink-soft"
           >
-            We couldn&apos;t save your email just now -{" "}
+            We couldn’t save your email.{" "}
             <a
               href={toWhatsAppHref(
                 whatsapp,
@@ -97,7 +91,7 @@ export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
             >
               WhatsApp us
             </a>{" "}
-            and we&apos;ll add you personally.
+            and we’ll add you to the list.
           </motion.p>
         ) : (
           <motion.form
@@ -114,6 +108,7 @@ export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
             <input
               id={inputId}
               name="email"
+              autoComplete="email"
               type="email"
               required
               placeholder="you@example.com"
@@ -129,7 +124,7 @@ export function NewsletterSignup({ whatsapp }: { whatsapp: string }) {
               className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0"
             />
             <Button type="submit" variant="primary" disabled={result === "sending"}>
-              {result === "sending" ? "Saving..." : "Notify me"}
+              {result === "sending" ? "Signing up…" : "Sign up"}
             </Button>
           </motion.form>
         )}

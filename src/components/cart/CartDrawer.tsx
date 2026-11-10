@@ -21,22 +21,15 @@ export function CartDrawer() {
     useCart();
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
-  // closeCart isn't memoized in CartContext (new function identity every
-  // render) - a ref keeps this effect from tearing down/re-attaching its
-  // listeners and re-capturing previouslyFocused on every unrelated
-  // re-render while the drawer is open, while still calling the latest
-  // closeCart.
-  const closeCartRef = useRef(closeCart);
-  closeCartRef.current = closeCart;
 
   useEffect(() => {
     if (!isOpen) return;
     previouslyFocused.current = document.activeElement as HTMLElement | null;
-    panelRef.current?.focus();
+    panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        closeCartRef.current();
+        closeCart();
         return;
       }
       if (e.key !== "Tab") return;
@@ -46,7 +39,10 @@ export function CartDrawer() {
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
+      if (!panel.contains(document.activeElement)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();
       } else if (!e.shiftKey && document.activeElement === last) {
@@ -60,7 +56,7 @@ export function CartDrawer() {
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused.current?.focus();
     };
-  }, [isOpen]);
+  }, [closeCart, isOpen]);
 
   if (!isOpen) return null;
 
@@ -70,7 +66,8 @@ export function CartDrawer() {
     <div className="fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
-        aria-label="Close cart"
+        aria-hidden="true"
+        tabIndex={-1}
         onClick={closeCart}
         className="absolute inset-0 bg-labelashb-ink/40"
       />
@@ -95,7 +92,7 @@ export function CartDrawer() {
         </div>
 
         {error && (
-          <p className="mt-4 text-labelashb-small text-labelashb-error">{error}</p>
+          <p role="alert" className="mt-4 text-labelashb-small text-labelashb-error">{error}</p>
         )}
 
         <div className="mt-6 flex-1 overflow-y-auto">
@@ -145,7 +142,7 @@ export function CartDrawer() {
                         line.merchandise.price.currencyCode,
                       )}
                     </p>
-                    <div className="mt-2 flex items-center gap-3">
+                    <div className="mt-2 flex flex-wrap items-center gap-3">
                       <button
                         type="button"
                         disabled={isLoading || line.quantity <= 1}

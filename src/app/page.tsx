@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
 import {
   DISPLAY_CATEGORIES,
@@ -18,7 +17,7 @@ import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { NewInLane } from "@/components/home/NewInLane";
 import { ServiceAssuranceBand } from "@/components/home/ServiceAssuranceBand";
 import { TabbedProductCarousel } from "@/components/home/TabbedProductCarousel";
-import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
+import type { ExpandedCardProduct } from "@/components/catalog/ProductCardExpanded";
 import { CraftBadgesBand } from "@/components/home/CraftBadgesBand";
 import { PromoTileGrid, type PromoTile } from "@/components/home/PromoTileGrid";
 import {
@@ -35,6 +34,8 @@ import facts from "../../_knowledge/facts.json";
 // No "title" key here - inherits root layout's bare "default" title
 // ("Label AshB") instead of running through the "%s | Label AshB"
 // template, which would otherwise double the brand name.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   description:
     "Label AshB: handcrafted linen, silk and cotton dresses, tops and co-ord sets from an independent Indian atelier, ready-to-ship or made to order.",
@@ -144,9 +145,9 @@ function pickCategoryTiles(catalog: NormalizedProduct[]): PromoTile[] {
 // (brand questions, Oct 19 2026) - the old captions named only
 // "handloom linen / mulberry silk".
 const fabricNotes: Record<string, string> = {
-  Linen: "Damask, jacquard, cambric, twill and herringbone - woven to breathe through Indian summers.",
+  Linen: "Breathable damask, jacquard, cambric, twill, and herringbone for Indian summers.",
   Cotton: "Pure cotton, softer with every wash.",
-  Silk: "Mulberry, crepe and Tussar silk - each with its own fall.",
+  Silk: "Mulberry, crepe, and tussar silks, each with a distinct drape.",
 };
 
 function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
@@ -172,6 +173,11 @@ function pickMaterialShowcase(catalog: NormalizedProduct[]): ScrollerImage[] {
 }
 
 const SHOW_CUSTOMER_STORIES = false;
+
+function toExpandedCard(product: NormalizedProduct): ExpandedCardProduct {
+  const { id, handle, title, category, minPrice, maxPrice, currencyCode, inStock, images, variants } = product;
+  return { id, handle, title, category, minPrice, maxPrice, currencyCode, inStock, images: images.slice(0, 2), variants };
+}
 
 export default async function Home() {
   const catalog = await getCatalog();
@@ -211,102 +217,33 @@ export default async function Home() {
   return (
     <>
       <main
+        id="main-content"
+        tabIndex={-1}
         className="labelashb-grain flex flex-1 flex-col bg-labelashb-ivory"
       >
         <JsonLd data={websiteJsonLd} />
 
-        {/* Hero, split by breakpoint (Oct 30 2026 night, client: "let the
-            hero image take on this whole section - it should be of the
-            full screen; don't crop the photos from the side"):
-            - md+: ONE uncropped landscape photo fills the whole section
-              edge to edge (h = viewport minus the ~160px announcement +
-              header band), copy overlaid on a chocolate scrim. No dead
-              flanks, no side-cropped 4:5 pair.
-            - below md: the stacked copy + 4:5 photo hero is KEPT - a
-              landscape photo in a phone-width full-bleed frame would
-              crop 60%+ off the model's sides, so mobile keeps the
-              subject-centered 4:5 crops and the tuned fold budget
-              (46svh image, CTA above the fold). */}
-        {/* Mobile hero (below md) */}
-        <section className="border-b border-labelashb-border px-6 sm:px-8 md:hidden">
-          <div className="flex flex-col">
-            <div className="order-2 flex flex-1 flex-col justify-center py-8">
-              <Reveal>
-                <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
-                  Handmade in Gurgaon, India
-                </p>
-                <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink">
-                  Quietly confident.
-                </h1>
-                <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-olive-light" />
-                <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft">
-                  Hand-embroidered linen, cotton and silk - cut and finished
-                  to order in our atelier, by eight people who care about
-                  every seam.
-                </p>
-                <div className="mt-8">
-                  <Button href="/products" variant="primary">
-                    Explore the collection
-                  </Button>
-                </div>
-              </Reveal>
-            </div>
-
-            {/* Plain-CSS fade+rise (globals.css .labelashb-reveal), not the
-                Reveal component: Reveal's motion.div applies an inline
-                transform, which becomes a containing block for this column's
-                absolutely-positioned carousel and collapses its h-full
-                chain to 0 height. */}
-            <div
-              className="labelashb-reveal relative order-1 mx-auto aspect-[4/5] h-[min(46svh,120vw)] w-auto"
-              style={{ animationDelay: "0.15s" }}
-            >
-              <HeroCarousel slides={heroSlides} />
-            </div>
-          </div>
-        </section>
-
-        {/* Desktop hero (md+): full-bleed. 10rem ≈ the announcement bar +
-            header band above (py-4 + h-24 logo + bar) - keep in sync if
-            the header heights change. Oct 31 refinement pass: capped at
-            760px (client: "reduce the overall hero height... bring the
-            garments, headline and action into focus sooner") - on tall
-            viewports the band no longer towers past the photo. */}
-        <section className="relative hidden h-[calc(100svh-10rem)] overflow-hidden border-b border-labelashb-border md:block md:max-h-[760px]">
+        <section className="relative flex flex-col border-b border-labelashb-border px-6 sm:px-8 md:min-h-[min(760px,max(28rem,calc(100svh-10rem)))] md:overflow-hidden md:px-0">
           <HeroCarousel slides={heroSlides} fullSlides={heroFullSlides} />
-          {/* Chocolate scrim for the overlaid copy - strongest at the
-              bottom-left where the text sits, fading out by mid-frame. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-labelashb-wine/85 via-labelashb-wine/30 to-transparent"
+            className="pointer-events-none absolute inset-0 hidden bg-gradient-to-t from-labelashb-wine/90 via-labelashb-wine/35 to-transparent md:block"
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-labelashb-wine/40 to-transparent"
-          />
-          <div className="absolute inset-x-0 bottom-0 p-10 lg:p-16">
-            <div className="max-w-2xl">
-              <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-gold">
+          <div className="relative py-8 md:mt-auto md:p-10 lg:p-16">
+            <div className="max-w-2xl md:w-fit md:rounded-labelashb-sm md:bg-labelashb-wine/85 md:p-6">
+              <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent md:text-labelashb-gold">
                 Handmade in Gurgaon, India
               </p>
-              <h1 className="font-labelashb-serif mt-4 text-[clamp(2.5rem,1.2rem+3.5vw,4.5rem)] text-labelashb-accent-foreground">
+              <h1 className="font-labelashb-serif mt-4 text-labelashb-display text-labelashb-ink md:text-[clamp(2.5rem,1.2rem+3.5vw,4.5rem)] md:text-labelashb-accent-foreground">
                 Quietly confident.
               </h1>
-              <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-gold" />
-              <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-accent-foreground/85">
-                Hand-embroidered linen, cotton and silk - cut and finished
-                to order in our atelier, by eight people who care about
-                every seam.
+              <span aria-hidden="true" className="mt-5 block h-px w-14 bg-labelashb-olive-light md:bg-labelashb-gold" />
+              <p className="mt-5 max-w-lg text-labelashb-body-lg text-labelashb-ink-soft md:text-labelashb-accent-foreground">
+                Eight people in our Gurgaon atelier cut and finish each piece to order in hand-embroidered linen, cotton, and silk.
               </p>
-              {/* Inverted primary CTA (Button.tsx's fills assume the
-                  champagne ground; on the photo scrim the warm ivory
-                  fills instead, chocolate label). */}
-              <Link
-                href="/products"
-                className="mt-8 inline-flex items-center justify-center rounded-labelashb-sm bg-labelashb-accent-foreground px-6 py-3 text-labelashb-body font-medium text-labelashb-wine transition-transform duration-150 hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2"
-              >
+              <Button href="/products" variant="primary" className="mt-8 md:bg-labelashb-accent-foreground md:text-labelashb-wine md:hover:bg-white md:focus-visible:ring-labelashb-gold">
                 Explore the collection
-              </Link>
+              </Button>
             </div>
           </div>
         </section>
@@ -338,7 +275,7 @@ export default async function Home() {
                     New in the atelier
                   </h2>
                   <div className="mt-labelashb-section-compact">
-                    <NewInLane products={newArrivals} />
+                    <NewInLane products={newArrivals.map(toExpandedCard)} />
                   </div>
                 </Reveal>
               </div>
@@ -350,7 +287,12 @@ export default async function Home() {
               lane above already shows. */}
           <section className="px-6 sm:px-8 lg:px-10" aria-label="Shop by category">
             <div className="w-full">
-              <TabbedProductCarousel products={catalog} excludeIds={newArrivalIds} />
+              <h2 className="sr-only">Browse by category</h2>
+              <TabbedProductCarousel
+                products={inStock.map(toExpandedCard)}
+                categories={DISPLAY_CATEGORIES.filter((category) => inStock.some((p) => p.category === category))}
+                excludeIds={newArrivalIds}
+              />
             </div>
           </section>
 
@@ -445,7 +387,7 @@ export default async function Home() {
                     },
                     {
                       caption: "By hand",
-                      note: "Every motif rises stitch by stitch - embroidery the way Binita learned it as a girl.",
+                      note: "We embroider each motif stitch by stitch, using techniques Binita learned as a girl.",
                       views: [
                         { src: "/atmosphere/studio-handwork.jpg", alt: "Hands guiding patterned fabric through a sewing machine" },
                         { src: "/atmosphere/studio-handwork-2.jpg", alt: "A maker holding a blue garment in the studio" },
@@ -494,9 +436,8 @@ export default async function Home() {
                   <div>
                     <dt className="text-labelashb-body-lg text-labelashb-ink">Made to order</dt>
                     <dd className="mt-1 text-labelashb-body text-labelashb-ink-soft">
-                      Your piece doesn&apos;t exist until you order it. Cut
-                      and finished to your size over 10 to 12 days - never
-                      pulled from a warehouse shelf.
+                      We cut and finish made-to-order pieces in your size.
+                      Depending on the design, they may take 10 to 12 days to ship.
                     </dd>
                   </div>
                   <div>

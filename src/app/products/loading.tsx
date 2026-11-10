@@ -4,11 +4,11 @@
 // Storefront catalog live, not statically.
 export default function ProductsLoading() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
+    <div aria-hidden="true" className="w-full px-6 py-16 motion-reduce:[&_*]:animate-none sm:px-8 lg:px-10">
       <div className="h-11 w-48 animate-pulse bg-labelashb-ground-alt" />
       <div className="mt-2 h-5 w-24 animate-pulse bg-labelashb-ground-alt" />
 
-      <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="flex flex-col gap-6">
           <div className="space-y-3">
             <div className="h-3 w-16 animate-pulse bg-labelashb-ground-alt" />
@@ -28,7 +28,7 @@ export default function ProductsLoading() {
           </div>
         </aside>
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 min-[1920px]:grid-cols-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i}>
               <div className="aspect-labelashb-product animate-pulse bg-labelashb-ground-alt" />
@@ -39,6 +39,6 @@ export default function ProductsLoading() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

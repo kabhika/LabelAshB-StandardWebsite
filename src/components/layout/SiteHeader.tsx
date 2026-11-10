@@ -35,11 +35,6 @@ async function getNavLinks(): Promise<{ categories: NavLink[]; collections: NavL
 // mark AND fits the 112px bar is height-driven: 84px tall (~94px wide).
 // width/height attrs match the file exactly, so next/image reserves the
 // right box and nothing shifts while it loads.
-const LOGO = {
-  desktop: { h: 84, w: Math.round((84 * 528) / 469) },
-  mobile: { h: 44, w: Math.round((44 * 528) / 469) },
-};
-
 export async function SiteHeader() {
   const { categories, collections } = await getNavLinks();
 
@@ -69,45 +64,31 @@ export async function SiteHeader() {
       <div className="relative border-b border-labelashb-olive-light/40 bg-labelashb-espresso">
         <div className="mx-auto grid h-[72px] max-w-[88rem] grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:h-[112px] lg:px-8">
           {/* Left column: menu button below lg, logo at lg+. */}
-          <div className="flex items-center justify-self-start lg:hidden">
+          <div className="col-start-1 row-start-1 flex items-center justify-self-start lg:hidden">
             <MobileNav categories={categories} collections={collections} />
           </div>
           <Link
             href="/"
             aria-label="Label AshB, home"
-            className="hidden justify-self-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2 focus-visible:ring-offset-labelashb-espresso lg:inline-block"
+            className="col-start-2 row-start-1 justify-self-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2 focus-visible:ring-offset-labelashb-espresso lg:col-start-1 lg:justify-self-start"
           >
             <Image
               src="/label-ashb-logo.png"
               alt="Label AshB"
-              width={LOGO.desktop.w}
-              height={LOGO.desktop.h}
-              priority
-              className="h-[84px] w-auto"
+              width={528}
+              height={469}
+              sizes="(min-width: 1024px) 95px, 50px"
+              loading="eager"
+              className="h-11 w-auto lg:h-[84px]"
             />
           </Link>
 
-          {/* Centre column: logo below lg, navigation at lg+. */}
-          <Link
-            href="/"
-            aria-label="Label AshB, home"
-            className="justify-self-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-gold focus-visible:ring-offset-2 focus-visible:ring-offset-labelashb-espresso lg:hidden"
-          >
-            <Image
-              src="/label-ashb-logo.png"
-              alt="Label AshB"
-              width={LOGO.mobile.w}
-              height={LOGO.mobile.h}
-              priority
-              className="h-11 w-auto"
-            />
-          </Link>
-          <nav aria-label="Main" className="hidden justify-self-center lg:block">
+          <nav aria-label="Main" className="col-start-2 row-start-1 hidden justify-self-center lg:block">
             <SiteNav categories={categories} collections={collections} />
           </nav>
 
           {/* Right column: the bag, same on every width. */}
-          <div className="flex items-center justify-self-end">
+          <div className="col-start-3 row-start-1 flex items-center justify-self-end">
             <CartButton />
           </div>
         </div>

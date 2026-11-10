@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DISPLAY_CATEGORIES, type NormalizedProduct } from "@/lib/shopify/catalog";
-import { ProductCardExpanded } from "@/components/catalog/ProductCardExpanded";
+import { ProductCardExpanded, type ExpandedCardProduct } from "@/components/catalog/ProductCardExpanded";
 
 // Same critically-damped pill spring as ProductCardSizePicker.tsx / SizeSelector.tsx
 // (damping 1.0, response 0.3s -> bounce 0 / duration 0.3) - one spring feel
@@ -23,9 +22,11 @@ const MIN_ROW_AFTER_EXCLUDE = 2;
 
 export function TabbedProductCarousel({
   products,
+  categories,
   excludeIds,
 }: {
-  products: NormalizedProduct[];
+  products: ExpandedCardProduct[];
+  categories: string[];
   // Product ids already shown elsewhere on the page (e.g. "New in") -
   // dropped from each category's initial selection so the two sections
   // don't open on the same pieces. Falls back to including them per
@@ -36,16 +37,6 @@ export function TabbedProductCarousel({
   const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  // Tabs only for categories actually present among in-stock products, in
-  // the catalog's own DISPLAY_CATEGORIES order - never a hardcoded 4th tab
-  // for a category that doesn't exist (see PLACEHOLDER-POLICY.md).
-  const categories = useMemo(() => {
-    const present = new Set(
-      products.filter((p) => p.inStock).map((p) => p.category),
-    );
-    return DISPLAY_CATEGORIES.filter((category) => present.has(category));
-  }, [products]);
 
   const [active, setActive] = useState(categories[0] ?? "");
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -116,11 +107,13 @@ export function TabbedProductCarousel({
                 }}
                 type="button"
                 role="tab"
+                id={groupId + "-tab-" + index}
+                aria-controls={isActive ? groupId + "-panel" : undefined}
                 aria-selected={isActive}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => setActive(category)}
                 onKeyDown={(e) => handleTabKeyDown(e, index)}
-                className={`relative whitespace-nowrap pt-1 pb-4 text-labelashb-body-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-offset-1 ${
+                className={`relative whitespace-nowrap pt-1 pb-4 text-labelashb-body-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-labelashb-indigo focus-visible:ring-inset ${
                   isActive
                     ? "text-labelashb-ink"
                     : "text-labelashb-ink-soft hover:text-labelashb-ink"
@@ -162,6 +155,9 @@ export function TabbedProductCarousel({
       </div>
 
       <div
+        role="tabpanel"
+        id={groupId + "-panel"}
+        aria-labelledby={groupId + "-tab-" + categories.indexOf(active)}
         ref={trackRef}
         onScroll={updateScrollState}
         className="mt-labelashb-section-compact flex snap-x snap-mandatory gap-labelashb-carousel-gap overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

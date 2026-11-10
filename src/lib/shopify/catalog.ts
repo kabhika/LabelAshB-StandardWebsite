@@ -12,6 +12,7 @@
 // something that doesn't say "shopify". Left as-is for this diff to keep
 // the change reviewable.
 
+import { cache } from "react";
 import { supabaseCatalog } from "@/lib/supabase/client";
 import {
   PRODUCT_IMAGE_OVERRIDES,
@@ -181,7 +182,7 @@ function normalizeRow(row: ProductRow): NormalizedProduct {
   };
 }
 
-export async function getCatalog(): Promise<NormalizedProduct[]> {
+export const getCatalog = cache(async (): Promise<NormalizedProduct[]> => {
   const { data, error } = await supabaseCatalog
     .from("products")
     .select(PRODUCT_SELECT)
@@ -195,11 +196,11 @@ export async function getCatalog(): Promise<NormalizedProduct[]> {
   return (data as unknown as ProductRow[])
     .filter((row) => !HIDDEN_HANDLES.has(row.handle))
     .map(normalizeRow);
-}
+});
 
-export async function getProductByHandle(
+export const getProductByHandle = cache(async (
   handle: string,
-): Promise<NormalizedProduct | null> {
+): Promise<NormalizedProduct | null> => {
   const { data, error } = await supabaseCatalog
     .from("products")
     .select(PRODUCT_SELECT)
@@ -213,4 +214,4 @@ export async function getProductByHandle(
 
   if (!data || HIDDEN_HANDLES.has(handle)) return null;
   return normalizeRow(data as unknown as ProductRow);
-}
+});

@@ -26,7 +26,6 @@ export function StudioPanels({ panels }: { panels: StudioPanel[] }) {
       className="grid gap-labelashb-carousel-gap md:grid-cols-3 md:grid-rows-[repeat(2,minmax(0,1fr))]"
       role="region"
       aria-label="Inside the Label AshB studio"
-      tabIndex={0}
     >
       {panels.map((panel, i) => (
         <Panel key={panel.caption} panel={panel} featured={i === 0} />
@@ -54,13 +53,13 @@ function Panel({ panel, featured }: { panel: StudioPanel; featured: boolean }) {
             key={view.src}
             src={view.src}
             alt={view.alt}
+            aria-hidden={index !== activeIndex}
             fill
             sizes={
               featured
                 ? "(min-width: 768px) 60vw, 90vw"
                 : "(min-width: 768px) 30vw, 90vw"
             }
-            priority={index === 0 && featured}
             className={`object-cover transition-opacity duration-700 motion-reduce:transition-none ${
               index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"
             }`}

@@ -18,12 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({
     url: `${SITE_URL}${path}`,
-    lastModified: new Date(),
   }));
 
   const productEntries: MetadataRoute.Sitemap = catalog.map((product) => ({
     url: `${SITE_URL}/products/${product.handle}`,
-    lastModified: new Date(),
   }));
 
   return [...staticEntries, ...productEntries];
