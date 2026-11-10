@@ -185,19 +185,22 @@ export default async function Home() {
   const categoryTiles = pickCategoryTiles(catalog);
   const materialShowcase = pickMaterialShowcase(catalog);
 
-  // "New in the atelier" lane (Phase 3, Oct 2026): the four most
-  // recently created in-stock products. created_at comes from Supabase -
-  // the Shopify-era rows all share the migration timestamp, so until new
-  // products are added the tie-break (title) makes the order stable
-  // rather than meaningful; the lane itself still shows real, in-stock
-  // pieces. excludeIds hands this set to the category tabs below so the
-  // two sections don't open on the same garments.
+  // "New in the atelier" lane (Phase 3, Oct 2026): the eight most
+  // recently created in-stock products (widened from 4 on Nov 6 2026
+  // when the client uploaded eight new garments in one drop and only
+  // four surfaced). created_at comes from Supabase - the Shopify-era
+  // rows all share the migration timestamp, so the tie-break (title)
+  // keeps the order stable there. The lane grid takes 4 per row at xl,
+  // 2 per row at md, and scrolls on mobile, so 8 renders as two clean
+  // rows rather than a cramped strip. excludeIds hands this set to the
+  // category tabs below so the two sections don't open on the same
+  // garments.
   const newArrivals = [...inStock]
     .sort(
       (a, b) =>
         b.createdAt.localeCompare(a.createdAt) || a.title.localeCompare(b.title),
     )
-    .slice(0, 4);
+    .slice(0, 8);
   const newArrivalIds = new Set(newArrivals.map((p) => p.id));
 
   const whyUsProduct = inStock.find((p) => p.category === "Co-ord Sets" && p.images.length > 1) ?? inStock[0];

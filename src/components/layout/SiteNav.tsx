@@ -20,6 +20,7 @@ const LINKS = [
   { href: "/products", label: "Shop" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/my-orders", label: "My orders" },
 ];
 
 // Oct 31 2026 redesign: warm-ivory text on the espresso bar, antique-gold
@@ -61,7 +62,7 @@ export function SiteNav({
 
   return (
     <NavigationMenu className="max-w-none">
-      <NavigationMenuList className="gap-9">
+      <NavigationMenuList className="gap-5 xl:gap-9">
         {categories.length > 0 && (
           <NavigationMenuItem>
             <NavigationMenuTrigger className={TRIGGER_CLASS}>

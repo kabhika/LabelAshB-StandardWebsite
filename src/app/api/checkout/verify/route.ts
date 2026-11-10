@@ -11,6 +11,8 @@ import { markOrderPaid } from "@/lib/orders/mark-paid";
 import { notifyOrderPaid } from "@/lib/notify";
 import { trackPurchaseConversionApi } from "@/lib/meta/capi";
 import { createReceipt, RECEIPT_COOKIE, RECEIPT_MAX_AGE } from "@/lib/orders/receipt";
+import { ORDER_HISTORY_COOKIE, ORDER_HISTORY_MAX_AGE, rememberOrder } from "@/lib/orders/browser-history";
+import { cookies } from "next/headers";
 
 interface VerifyBody {
   supabaseOrderId: string;
@@ -95,6 +97,9 @@ export async function POST(request: Request) {
   await writeCartItems([]);
 
   const response = NextResponse.json({ orderNumber: result.orderNumber });
+  // Two cookies, two scopes: the signed receipt drives /checkout/success
+  // (short-lived, path-scoped); the append-only order history drives
+  // /my-orders for this browser (long-lived, site-wide).
   response.cookies.set(RECEIPT_COOKIE, createReceipt(result.orderNumber, secret), {
     httpOnly: true,
     sameSite: "lax",
@@ -102,5 +107,16 @@ export async function POST(request: Request) {
     path: "/checkout/success",
     maxAge: RECEIPT_MAX_AGE,
   });
+  response.cookies.set(
+    ORDER_HISTORY_COOKIE,
+    rememberOrder((await cookies()).get(ORDER_HISTORY_COOKIE)?.value, result.orderId, secret),
+    {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: ORDER_HISTORY_MAX_AGE,
+    },
+  );
   return response;
 }

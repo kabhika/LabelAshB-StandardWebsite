@@ -9,6 +9,7 @@ import { readCartItems } from "@/lib/cart/storage";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { razorpay } from "@/lib/razorpay/client";
 import { authoritativeProductImage } from "@/lib/shopify/product-images";
+import { getCustomer } from "@/lib/supabase/customer-auth";
 
 interface ShippingAddress {
   line1: string;
@@ -169,10 +170,12 @@ export async function POST(request: Request) {
   const subtotal = orderItems.reduce((sum, i) => sum + i.line_total, 0);
   const total = subtotal + SHIPPING_AMOUNT;
   const amountInPaise = Math.round(total * 100);
+  const customer = await getCustomer();
 
   const { data: order, error: orderError } = await supabaseAdmin
     .from("orders")
     .insert({
+      ...(customer ? { customer_user_id: customer.id } : {}),
       customer_name: customerName.trim(),
       customer_email: customerEmail?.trim() || null,
       customer_phone: customerPhone.trim(),

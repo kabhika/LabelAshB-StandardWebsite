@@ -15,16 +15,18 @@ function formatPrice(amount: number, currencyCode: string) {
 // size pills + add-to-cart (ProductCardSizePicker) need the client, so
 // those are the only two "use client" pieces. Everything else - image
 // frame, sold-out badge, name, price - renders server-side.
+
+// Narrowed prop type re-exported for the lanes/carousels that build
+// partial products (kept from the 6 Nov pass; callers type against it).
 export type ExpandedCardProduct = Pick<
   NormalizedProduct,
   "id" | "handle" | "title" | "category" | "minPrice" | "maxPrice" | "currencyCode" | "inStock" | "images" | "variants"
 >;
 
 export function ProductCardExpanded({ product }: { product: ExpandedCardProduct }) {
-  const priceLabel =
-    product.minPrice === product.maxPrice
-      ? formatPrice(product.minPrice, product.currencyCode)
-      : `${formatPrice(product.minPrice, product.currencyCode)}–${formatPrice(product.maxPrice, product.currencyCode)}`;
+  // Base price only (S/M/L), never a range - the +500 XL+ figure shows on
+  // size selection in ProductCardSizePicker (client instruction Nov 6 2026)
+  const priceLabel = formatPrice(product.minPrice, product.currencyCode);
 
   return (
     <article className="group flex h-full flex-col">

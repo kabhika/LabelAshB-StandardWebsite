@@ -41,9 +41,19 @@ export default async function ProductsPage({
   const materialSlugs = material?.split(",");
 
   const catalog = await getCatalog();
+  // Case-insensitive filter matching: the URL is public ad traffic input, and
+  // a hand-typed ?category=dresses (wrong case) previously rendered an empty
+  // listing instead of the dresses grid — paid clicks must never hit that.
   const products = catalog.filter((p) => {
-    if (category && p.category !== category) return false;
-    if (materialSlugs && !materialSlugs.some((m) => p.materials.includes(m))) return false;
+    if (category && p.category.toLowerCase() !== category.toLowerCase()) return false;
+    if (
+      materialSlugs &&
+      !materialSlugs.some((m) =>
+        p.materials.some((pm) => pm.toLowerCase() === m.toLowerCase()),
+      )
+    ) {
+      return false;
+    }
     return true;
   });
 
@@ -69,6 +79,15 @@ export default async function ProductsPage({
       <p className="mt-2 text-labelashb-body text-labelashb-ink-soft">
         {products.length} {products.length === 1 ? "piece" : "pieces"}
         {category ? ` in ${category}` : ""}
+      </p>
+      {/* Two lead-time tiers, mirroring the PDP buy-box and ServiceAssurance
+          Band ("normal ships 3-4 days, customized 10-12 days" - client
+          confirmed Oct 30 2026). Ad traffic lands on this filtered view,
+          never the homepage, so the promise must live here too - but a
+          single "10-12 days" line would undersell ready-to-ship pieces and
+          contradict the product page one click later. */}
+      <p className="mt-1 text-labelashb-small text-labelashb-ink-soft">
+        Made to order: 10–12 days · Ready-to-ship styles: 3–4 days
       </p>
 
       <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[220px_minmax(0,1fr)]">
