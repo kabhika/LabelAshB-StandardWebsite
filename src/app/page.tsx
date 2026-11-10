@@ -339,6 +339,34 @@ export default async function Home() {
             </section>
           )}
 
+          <section className="px-6 sm:px-8 lg:px-10" aria-labelledby="custom-dress-heading">
+            <div className="labelashb-shell grid overflow-hidden bg-labelashb-ground-alt md:grid-cols-2">
+              <div className="relative min-h-80 md:min-h-[480px]">
+                <Image
+                  src="/campaign/custom-dress-look.png"
+                  alt="Ivory dress photographed as inspiration for a personal Label AshB look"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="flex flex-col items-start justify-center px-7 py-12 sm:px-12 md:py-16 lg:px-16">
+                <p className="text-labelashb-eyebrow uppercase tracking-[0.28em] text-labelashb-accent">
+                  A personal conversation
+                </p>
+                <h2 id="custom-dress-heading" className="mt-5 font-labelashb-serif text-4xl leading-tight text-labelashb-ink sm:text-5xl">
+                  A look shaped around you.
+                </h2>
+                <p className="mt-5 max-w-md text-labelashb-body-lg leading-relaxed text-labelashb-ink-soft">
+                  Tell Binita, our founder, about the dress you imagine. Explore the silhouette, colour and details together, then decide what feels like you.
+                </p>
+                <Button href="/custom-dress" variant="primary" className="mt-8">
+                  Explore custom dresses
+                </Button>
+              </div>
+            </div>
+          </section>
+
           {/* Service assurance - solid wine band. Moved off the top-of-page
               position (originally right below the header, which duplicated
               the header's own AnnouncementBar strip too closely) to a

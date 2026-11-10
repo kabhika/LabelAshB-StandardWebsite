@@ -89,6 +89,9 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3">
             <p className={HEADING_CLASS}>Atelier</p>
+            <Link href="/custom-dress" className={LINK_CLASS}>
+              Custom Dress
+            </Link>
             <Link href="/about" className={LINK_CLASS}>
               Our story
             </Link>

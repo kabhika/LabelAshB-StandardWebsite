@@ -18,8 +18,8 @@ export interface NavLink {
 
 const LINKS = [
   { href: "/products", label: "Shop" },
+  { href: "/custom-dress", label: "Custom Dress" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
   { href: "/my-orders", label: "My orders" },
 ];
 
