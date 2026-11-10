@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartContext";
 import { Button } from "@/components/ui/Button";
+import { trackMetaEvent } from "@/lib/meta/pixel";
 
 interface RazorpaySuccessResponse {
   razorpay_payment_id: string;
@@ -53,6 +54,25 @@ export default function CheckoutPage() {
   });
 
   const lines = cart?.lines.edges.map((e) => e.node) ?? [];
+
+  // Meta Pixel InitiateCheckout — once per checkout page arrival with a
+  // non-empty cart. No-op when the pixel isn't configured.
+  const initiateTracked = useRef(false);
+  useEffect(() => {
+    if (initiateTracked.current || lines.length === 0 || !cart) return;
+    initiateTracked.current = true;
+    trackMetaEvent("InitiateCheckout", {
+      value: Number(cart.cost.totalAmount.amount),
+      currency: cart.cost.totalAmount.currencyCode || "INR",
+      num_items: lines.length,
+      content_type: "product",
+      contents: lines.map((line) => ({
+        id: line.merchandise.id,
+        quantity: line.quantity,
+        item_price: Number(line.merchandise.price.amount),
+      })),
+    });
+  }, [cart, lines]);
 
   function update(field: keyof typeof form, value: string) {
     setForm((f) => ({ ...f, [field]: value }));

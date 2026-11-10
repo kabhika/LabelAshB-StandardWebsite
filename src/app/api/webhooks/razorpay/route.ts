@@ -20,6 +20,7 @@ import crypto from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { markOrderPaid } from "@/lib/orders/mark-paid";
 import { notifyOrderPaid } from "@/lib/notify";
+import { trackPurchaseConversionApi } from "@/lib/meta/capi";
 
 interface RazorpayWebhookPayment {
   id: string;
@@ -64,10 +65,15 @@ export async function POST(request: Request) {
   if (event.event === "payment.captured") {
     // Same single paid transition as /api/checkout/verify. If the browser
     // already confirmed this payment, transitioned is false and no second
-    // alert goes out.
+    // alert goes out. Meta CAPI Purchase shares the guard + event_id dedup.
     const result = await markOrderPaid(payment.order_id, payment.id);
     if (result?.transitioned) {
+      const hints = {
+        ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
+        userAgent: request.headers.get("user-agent"),
+      };
       after(() => notifyOrderPaid(result.orderId));
+      after(() => trackPurchaseConversionApi(result.orderId, hints));
     }
   } else if (event.event === "payment.failed") {
     await supabaseAdmin

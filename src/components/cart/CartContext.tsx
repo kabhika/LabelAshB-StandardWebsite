@@ -15,6 +15,7 @@ import {
   removeCartLineAction,
   updateCartLineAction,
 } from "@/app/actions/cart";
+import { trackMetaEvent } from "@/lib/meta/pixel";
 
 interface CartContextValue {
   cart: LocalCart | null;
@@ -48,7 +49,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart(res.cart);
     setError(res.error);
     setIsLoading(false);
-    if (!res.error) setIsOpen(true);
+    if (!res.error) {
+      setIsOpen(true);
+      // Meta Pixel AddToCart — no-op when the pixel isn't configured.
+      const line = res.cart?.lines.edges
+        .map((edge) => edge.node)
+        .find((node) => node.merchandise.id === variantId);
+      if (line) {
+        const itemPrice = Number(line.merchandise.price.amount);
+        trackMetaEvent("AddToCart", {
+          content_name: line.merchandise.product.title,
+          contents: [{ id: variantId, quantity, item_price: itemPrice }],
+          content_type: "product",
+          value: itemPrice * quantity,
+          currency: line.merchandise.price.currencyCode || "INR",
+        });
+      }
+    }
   }, []);
 
   const updateLine = useCallback(async (lineId: string, quantity: number) => {

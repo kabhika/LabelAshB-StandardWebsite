@@ -6,6 +6,7 @@ import { Gallery } from "@/components/catalog/Gallery";
 import { SizeSelector } from "@/components/catalog/SizeSelector";
 import { demoteH1 } from "@/lib/html";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { ViewContentEvent } from "@/components/meta/ViewContentEvent";
 import { breadcrumbJsonLd, productJsonLd, truncateDescription } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import facts from "../../../../_knowledge/facts.json";
@@ -79,6 +80,13 @@ export default async function ProductPage({
           { name: "Shop All", path: "/products" },
           { name: product.title, path: `/products/${product.handle}` },
         ])}
+      />
+      {/* Meta Pixel ViewContent — no-op until the pixel is configured */}
+      <ViewContentEvent
+        handle={product.handle}
+        title={product.title}
+        value={product.minPrice}
+        currency={product.currencyCode}
       />
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <Gallery images={product.images} productTitle={product.title} />

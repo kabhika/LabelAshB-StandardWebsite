@@ -9,6 +9,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { writeCartItems } from "@/lib/cart/storage";
 import { markOrderPaid } from "@/lib/orders/mark-paid";
 import { notifyOrderPaid } from "@/lib/notify";
+import { trackPurchaseConversionApi } from "@/lib/meta/capi";
 import { createReceipt, RECEIPT_COOKIE, RECEIPT_MAX_AGE } from "@/lib/orders/receipt";
 
 interface VerifyBody {
@@ -79,9 +80,16 @@ export async function POST(request: Request) {
   }
 
   // Alerts go out only on the first paid transition, so the webhook
-  // reporting the same payment later never sends a second set.
+  // reporting the same payment later never sends a second set. The Meta
+  // Conversions API Purchase event rides the same guard; Meta also dedups
+  // repeats server-side via the event_id.
   if (result.transitioned) {
+    const hints = {
+      ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
+      userAgent: request.headers.get("user-agent"),
+    };
     after(() => notifyOrderPaid(result.orderId));
+    after(() => trackPurchaseConversionApi(result.orderId, hints));
   }
 
   await writeCartItems([]);
