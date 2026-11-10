@@ -11,6 +11,7 @@ const STATIC_ROUTES = [
   "/returns",
   "/privacy",
   "/contact",
+  "/custom-dress",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
